@@ -7,6 +7,6 @@
         </encoder>
     </appender>
     <logger name="com.azure.data.cosmos" level="error"/>
-    <logger name="com.cse.helium" level="warn" />
+    <logger name="com.cse.ngsa" level="warn" />
     <logger name="com.azure.security.keyvault.secrets.SecretAsyncClient" level="off" />
 </configuration>

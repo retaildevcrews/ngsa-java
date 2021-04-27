@@ -1,0 +1,57 @@
+{
+  "name": "ngsa-java",
+  // Using prebuilt image by default, uncomment build field below to use local Dockerfile instead
+  //"image": "retaildevcrew/ngsa-java-codespaces",
+  
+  // Build based on local Dockerfile
+   "build": {
+     "dockerfile": "Dockerfile",
+     "context": "..",
+     "args": {
+       "VARIANT": "11",
+       "INSTALL_MAVEN": "true",
+       "INSTALL_GRADLE": "false",
+       "INSTALL_NODE": "false",
+       "MAVEN_VERSION": "3.6.3",
+       "NODE_VERSION": "lts/*",
+       "INSTALL_AZURE_CLI": "true",
+       "INSTALL_DOCKER": "true"
+     }
+   },
+
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+  ],
+
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash",
+    // "terminal.integrated.shell.linux": "/bin/zsh",
+    "java.home": "/docker-java-home"
+  },
+
+  "remoteUser": "vscode",
+
+  // Open port 4120 by default
+  "forwardPorts": [4120],
+
+  // Install extensions
+  "extensions": [
+    "vscjava.vscode-java-debug",
+    "vscjava.vscode-java-dependency",
+    "vscjava.vscode-java-pack",
+    "vscjava.vscode-java-test",
+    "redhat.java",
+    "redhat.vscode-xml",
+    "eamodio.gitlens",
+    "davidanson.vscode-markdownlint",
+    "gruntfuggly.todo-tree",
+    "ms-azuretools.vscode-docker",
+    "gabrielbb.vscode-lombok",
+    "sonarsource.sonarlint-vscode",
+    "visualstudioexptteam.vscodeintellicode",
+    "vscjava.vscode-maven"
+  ],
+
+  // Run Bash script in .devcontainer directory
+  "postCreateCommand": "/bin/bash ./.devcontainer/post-install.sh"
+}

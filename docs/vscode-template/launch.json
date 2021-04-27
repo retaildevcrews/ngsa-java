@@ -12,8 +12,8 @@
             "type": "java",
             "name": "Java Launch (web)",
             "request": "launch",
-            "mainClass": "com.cse.helium.app.HeliumJavaApplication",
-            "projectName": "helium"
+            "mainClass": "com.cse.ngsa.app.NgsaJavaApplication",
+            "projectName": "ngsa"
         }
     ]
 }
