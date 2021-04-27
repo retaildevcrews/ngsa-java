@@ -14,9 +14,9 @@ This is a Java Spring Boot Web API reference application designed to "fork and c
 - Connect to and query Cosmos DB
 - Automatically send telemetry and logs to Azure Monitor
 
-> Visual Studio Codespaces is the easiest way to evaluate helium as all of the prerequisites are automatically installed
+> Visual Studio Codespaces is the easiest way to evaluate ngsa as all of the prerequisites are automatically installed
 >
-> Follow the setup steps in the [Helium readme](https://github.com/retaildevcrews/helium) to setup Codespaces
+> Follow the setup steps in the [Ngsa readme](https://github.com/retaildevcrews/ngsa) to setup Codespaces
 
 ## Prerequisites
 
@@ -30,7 +30,7 @@ This is a Java Spring Boot Web API reference application designed to "fork and c
 
 ## Setup
 
-- Initial setup instructions are in the [Helium readme](https://github.com/retaildevcrews/helium)
+- Initial setup instructions are in the [Ngsa readme](https://github.com/retaildevcrews/ngsa)
   - Please complete the setup steps and then continue below
 
 ### Validate az CLI works
@@ -60,7 +60,7 @@ az keyvault secret show --name CosmosDatabase --vault-name $He_Name
 
 ### Using Visual Studio Codespaces
 
-Visual Studio Codespaces is the easiest way to evaluate helium. Follow the setup steps in the [Helium readme](https://github.com/retaildevcrews/helium) to setup Codespaces.
+Visual Studio Codespaces is the easiest way to evaluate ngsa. Follow the setup steps in the [Ngsa readme](https://github.com/retaildevcrews/ngsa) to setup Codespaces.
 
 - Open `launch.json` in the `.vscode` directory
 - Replace `{your key vault name}` with the name of your key vault
@@ -103,7 +103,7 @@ curl localhost:4120/version
 
 ```
 
-Stop helium by typing Ctrl-C or the stop button if run via F5
+Stop ngsa by typing Ctrl-C or the stop button if run via F5
 
 ### Deep Testing
 
@@ -171,7 +171,7 @@ docker run -it --rm -v ./TestFiles:/app/TestFiles -s localhost:4120 -f baseline.
 # Make sure you are in the root of the repo
 # build the image
 
-docker build . -t helium-java
+docker build . -t ngsa-java
 
 # run docker tag and docker push to push to your repo
 

@@ -80,3 +80,4 @@ drun.sh
 singletest.sh
 run_with_appinsights.sh
 druncli.sh
+.DS_Store

@@ -21,12 +21,12 @@ RUN mvn clean package -DskipTests
 FROM  openjdk:11.0-jre-slim AS release
 WORKDIR /app
 
-# Create the helium user so we can run the app as non-root under helium
-RUN groupadd -g 4120 helium && \
-    useradd -u 4120 -g helium -s /bin/sh helium
-USER helium
+# Create the ngsa user so we can run the app as non-root under ngsa
+RUN groupadd -g 4120 ngsa && \
+    useradd -u 4120 -g ngsa -s /bin/sh ngsa
+USER ngsa
 
-COPY --from=dependencies /app/target/helium.jar app.jar
+COPY --from=dependencies /app/target/ngsa.jar app.jar
 COPY --from=dependencies /app/applicationinsights-agent-3.0.0-PREVIEW.2.jar applicationinsights-agent-3.0.0-PREVIEW.2.jar
 EXPOSE 4120
 CMD ["java", "-javaagent:/app/applicationinsights-agent-3.0.0-PREVIEW.2.jar", "-jar", "/app/app.jar"]

@@ -1,4 +1,4 @@
-# Contributing to Helium
+# Contributing to NGSA
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
@@ -60,7 +60,7 @@ You can file new issues by providing the above information at the corresponding 
 
 Before you submit your Pull Request (PR) consider the following guidelines:
 
-- Search the repository (https://github.com/retaildevcrews/helium/pulls) for an open or closed PR
+- Search the repository (https://github.com/retaildevcrews/ngsa-java/pulls) for an open or closed PR
   that relates to your submission. You don't want to duplicate effort.
 - Make your changes in a new git fork:
 - Commit your changes using a descriptive commit message
