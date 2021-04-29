@@ -1,10 +1,9 @@
 package com.cse.ngsa.app.services.configuration;
 
-import com.cse.ngsa.app.services.keyvault.IKeyVaultService;
+import com.cse.ngsa.app.Constants;
+import com.cse.ngsa.app.services.volumes.IVolumeSecretService;
+import com.cse.ngsa.app.services.volumes.Secrets;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import java.text.MessageFormat;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +13,11 @@ import org.springframework.stereotype.Service;
 public class ConfigurationService implements IConfigurationService {
   private static final Logger logger =   LogManager.getLogger(ConfigurationService.class);
 
-  private IKeyVaultService keyVaultService;
+  private IVolumeSecretService volumeSecretService;
 
-  Map<String, String> configEntries = new ConcurrentHashMap<>();
+  Secrets configEntries;
 
-  public Map<String, String> getConfigEntries() {
+  public Secrets getConfigEntries() {
     return configEntries;
   }
 
@@ -27,19 +26,14 @@ public class ConfigurationService implements IConfigurationService {
    */
   @SuppressFBWarnings("DM_EXIT")
   @Autowired
-  public ConfigurationService(IKeyVaultService kvService) {
+  public ConfigurationService(IVolumeSecretService vsService) throws Exception {
     try {
-      if (kvService == null) {
-        logger.info("keyVaultService is null");
+      if (vsService == null) {
+        logger.error("volumeSecretService is null");
         System.exit(-1);
       }
-
-      keyVaultService = kvService;
-      Map<String, String> secrets = keyVaultService.getSecrets();
-      if (logger.isInfoEnabled()) {
-        logger.info(MessageFormat.format("Secrets are {0}", secrets == null ? "NULL" : "NOT NULL"));
-      }
-      configEntries = secrets;
+      volumeSecretService = vsService;
+      configEntries = volumeSecretService.getAllSecretsFromVolume(Constants.SECRETS_VOLUME);
 
     } catch (Exception ex) {
       logger.error(ex.getMessage());

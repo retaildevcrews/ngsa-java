@@ -33,8 +33,8 @@ public class BaseCosmosDbDao {
   public BaseCosmosDbDao(IConfigurationService configService) {
     configurationService = configService;
     cosmosContainer =
-        configurationService.getConfigEntries().get(Constants.COSMOS_COLLECTION_KEYNAME);
-    cosmosDatabase = configurationService.getConfigEntries().get(Constants.COSMOS_DATABASE_KEYNAME);
+        configurationService.getConfigEntries().getCosmosCollection();
+    cosmosDatabase = configurationService.getConfigEntries().getCosmosDatabase();
 
     feedOptions.enableCrossPartitionQuery(true);
     feedOptions.maxDegreeOfParallelism(Constants.MAX_DEGREE_PARALLELISM);

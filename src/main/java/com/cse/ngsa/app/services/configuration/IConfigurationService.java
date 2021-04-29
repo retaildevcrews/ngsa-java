@@ -1,9 +1,9 @@
 package com.cse.ngsa.app.services.configuration;
 
-import java.util.Map;
+import com.cse.ngsa.app.services.volumes.Secrets;
 
 
 public interface IConfigurationService {
 
-  Map<String, String> getConfigEntries();
+  Secrets getConfigEntries();
 }
