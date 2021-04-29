@@ -5,10 +5,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "env" : {
-                "KEYVAULT_NAME": "{your keyvault name}",
-                "AUTH_TYPE": "CLI"
-            },
             "type": "java",
             "name": "Java Launch (web)",
             "request": "launch",

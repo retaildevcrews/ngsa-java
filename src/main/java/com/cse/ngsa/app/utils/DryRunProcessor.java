@@ -1,8 +1,7 @@
 package com.cse.ngsa.app.utils;
 
 import com.cse.ngsa.app.config.BuildConfig;
-import com.cse.ngsa.app.services.keyvault.IEnvironmentReader;
-import com.cse.ngsa.app.services.keyvault.IKeyVaultService;
+import com.cse.ngsa.app.services.volumes.IVolumeSecretService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +23,8 @@ public class DryRunProcessor {
   private BuildConfig buildConfig;
 
   @Autowired
-  IKeyVaultService keyVaultService;
+  IVolumeSecretService volumeSecretService;
 
-  @Autowired
-  IEnvironmentReader environmentReader;
 
   private static final Logger logger = LogManager.getLogger(DryRunProcessor.class);
 
@@ -39,7 +36,7 @@ public class DryRunProcessor {
     logger.info("Application Context has been fully started up");
     logger.info("All beans are now instantiated and ready to go!");
     CommonUtils.validateCliDryRunOption(applicationArguments,
-        keyVaultService, buildConfig, environmentReader);
+            volumeSecretService, buildConfig);
   }
 
 }

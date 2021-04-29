@@ -2,9 +2,8 @@ package com.cse.ngsa.app.utils;
 
 import com.cse.ngsa.app.Constants;
 import com.cse.ngsa.app.config.BuildConfig;
-import com.cse.ngsa.app.services.keyvault.EnvironmentReader;
-import com.cse.ngsa.app.services.keyvault.IEnvironmentReader;
-import com.cse.ngsa.app.services.keyvault.IKeyVaultService;
+import com.cse.ngsa.app.services.volumes.IVolumeSecretService;
+import com.cse.ngsa.app.services.volumes.Secrets;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.text.MessageFormat;
 import java.util.Arrays;
@@ -71,15 +70,14 @@ public class CommonUtils {
    * validate cli dry run option.
    */
   public static void validateCliDryRunOption(ApplicationArguments applicationArguments,
-                                              IKeyVaultService keyVaultService,
-                                              BuildConfig buildConfig,
-                                              IEnvironmentReader environmentReader) {
+                                              IVolumeSecretService volumeSecretService,
+                                              BuildConfig buildConfig) {
     if (applicationArguments != null) {
       SimpleCommandLinePropertySource commandLinePropertySource =
           new SimpleCommandLinePropertySource(applicationArguments.getSourceArgs());
       Arrays.stream(commandLinePropertySource.getPropertyNames()).forEach(s -> {
         if (s.equals("dry-run") || s.equals("d")) {
-          printDryRunParameters(keyVaultService, buildConfig, environmentReader);
+          printDryRunParameters(volumeSecretService, buildConfig);
           System.exit(0);
         }
       });
@@ -88,51 +86,26 @@ public class CommonUtils {
 
   @SuppressFBWarnings({"NP_UNWRITTEN_FIELD", "UWF_UNWRITTEN_FIELD"})
   @SuppressWarnings ("squid:S106") // System.out needed to print usage
-  static void printDryRunParameters(IKeyVaultService keyVaultService, BuildConfig buildConfig,
-                                    IEnvironmentReader environmentReader) {
+  static void printDryRunParameters(IVolumeSecretService volumeSecretService,
+                                    BuildConfig buildConfig) {
     System.out.println(MessageFormat.format("Version                    {0}",
         buildConfig.getBuildVersion()));
-    System.out.println(MessageFormat.format("Auth Type                  {0}",
-        environmentReader.getAuthType()));
-    System.out.println(MessageFormat.format("Cosmos Server              {0}",
-        keyVaultService.getSecret(Constants.COSMOS_URL_KEYNAME).block()));
 
-    String cosmosKey = keyVaultService.getSecretValue(Constants.COSMOS_KEY_KEYNAME).block();
+    Secrets sec = volumeSecretService.getAllSecretsFromVolume(Constants.SECRETS_VOLUME);
+
+    System.out.println(MessageFormat.format("Cosmos Server              {0}",
+            sec.getCosmosUrl()));
+
+    String cosmosKey = sec.getCosmosKey();
 
     System.out.println(MessageFormat.format("Cosmos Key                 {0}",
         cosmosKey == null || cosmosKey.isEmpty() ? "(not set)".length() : cosmosKey.length()));
 
     System.out.println(MessageFormat.format("Cosmos Database            {0}",
-        keyVaultService.getSecret(Constants.COSMOS_DATABASE_KEYNAME).block()));
+            sec.getCosmosDatabase()));
+
     System.out.println(MessageFormat.format("Cosmos Collection          {0}",
-        keyVaultService.getSecret(Constants.COSMOS_COLLECTION_KEYNAME).block()));
-
-    String appInsightsKey = keyVaultService.getSecretValue(Constants.APP_INSIGHTS_KEY).block();
-
-    System.out.println(MessageFormat.format("App Insights Key           {0}",
-        appInsightsKey == null || appInsightsKey.isEmpty() ? "(not set)".length()
-            : appInsightsKey.length()));
-  }
-
-  /**
-   * validateCliKeyvaultAndAuthType - validate the authtype and keyvault name from CLI.
-   */
-  public static void validateCliKeyvaultAndAuthTypeOption(ApplicationArguments applicationArguments,
-                                                          EnvironmentReader environmentReader) {
-    if (applicationArguments != null) {
-      SimpleCommandLinePropertySource commandLinePropertySource =
-          new SimpleCommandLinePropertySource(applicationArguments.getSourceArgs());
-      Arrays.stream(commandLinePropertySource.getPropertyNames()).forEach(s -> {
-        if (s.equals("auth-type")) {
-          environmentReader.setAuthType(commandLinePropertySource.getProperty(s));
-        } else if (s.equals("keyvault-name")) {
-          environmentReader.setKeyVaultName(commandLinePropertySource.getProperty(s));
-        } else if (s.equals("help")) {
-          CommonUtils.printCmdLineHelp();
-          System.exit(0);
-        }
-      });
-    }
+            sec.getCosmosCollection()));
   }
 
   /**
@@ -148,4 +121,12 @@ public class CommonUtils {
         + "\t\t--dry-run\r\n"
         + "\t\t--log-level=<trace|info|warn|error|fatal>\"");
   }
+
+  /**
+   * Checks if a String is not null, not empty and not whitespace.
+   */
+  public static boolean isNullWhiteSpace(final String string) {
+    return string == null || string.isEmpty() || string.trim().isEmpty();
+  }
+
 }

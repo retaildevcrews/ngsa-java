@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
-/** ActorController. */
+/** GenresController. */
 @RestController
 @RequestMapping(path = "/api/genres", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(tags = "Genres")

@@ -4,7 +4,6 @@ import com.azure.data.cosmos.ConnectionPolicy;
 import com.azure.data.cosmos.ConsistencyLevel;
 import com.azure.data.cosmos.RetryOptions;
 import com.azure.data.cosmos.internal.RequestOptions;
-import com.cse.ngsa.app.Constants;
 import com.cse.ngsa.app.services.configuration.IConfigurationService;
 import com.microsoft.azure.spring.data.cosmosdb.config.AbstractCosmosConfiguration;
 import com.microsoft.azure.spring.data.cosmosdb.config.CosmosDBConfig;
@@ -46,10 +45,10 @@ public class CosmosDbConfig extends AbstractCosmosConfiguration {
   public CosmosDBConfig buildCosmosDbConfig() {
     try {
 
-      String uri = configurationService.getConfigEntries().get(Constants.COSMOS_URL_KEYNAME);
-      String key = configurationService.getConfigEntries().get(Constants.COSMOS_KEY_KEYNAME);
+      String uri = configurationService.getConfigEntries().getCosmosUrl();
+      String key = configurationService.getConfigEntries().getCosmosKey();
       String dbName = configurationService.getConfigEntries()
-          .get(Constants.COSMOS_DATABASE_KEYNAME);
+          .getCosmosDatabase();
 
       ConnectionPolicy policy = new ConnectionPolicy();
       RetryOptions retryOptions = new RetryOptions();
