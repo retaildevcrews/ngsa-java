@@ -8,9 +8,6 @@ ADD pom.xml /app
 FROM base AS dependencies
 ADD . /app
 
-# While creating the docker container as part of the CI/CD, the managed identity is not set
-# and thus many tests will fail, so skipping during docker build. Instead they will run as part
-# of the CI/CD.
 RUN mvn clean packages
 
 #
