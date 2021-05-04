@@ -33,7 +33,7 @@ jobs:
         username: ${{ secrets.GHCR_ID }}
         password: ${{ secrets.GHCR_PAT }}
 
-    - name : Set Secrets
+    - name: Set Secrets
       run: |
             echo ${{ secrets.NGSA_PRE_COSMOS_RO_KEY}} >| secrets/CosmosKey
             echo ${{ secrets.NGSA_PRE_COSMOS_URL }} >| secrets/CosmosUrl
