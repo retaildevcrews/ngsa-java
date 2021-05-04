@@ -8,8 +8,7 @@ ADD pom.xml /app
 FROM base AS dependencies
 ADD . /app
 
-RUN echo "Breakpoint" && ls && ls ./secrets && cat ./secrets/*
-#RUN mvn clean package
+RUN mvn clean package
 
 #
 # ---- Release App ----
