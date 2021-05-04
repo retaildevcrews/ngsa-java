@@ -36,12 +36,15 @@ jobs:
 
     - name: Set Secrets
       run: |
+            echo "Breakpoint"
+            pwd
+            ls
             echo ${{ secrets.NGSA_PRE_COSMOS_RO_KEY}} >| secrets/CosmosKey
             echo ${{ secrets.NGSA_PRE_COSMOS_URL }} >| secrets/CosmosUrl
 
     - name: Docker Build
       run: |
-        docker build . -t image
+        # docker build . -t image
 
     - name: Delete Secrets
       run: |
