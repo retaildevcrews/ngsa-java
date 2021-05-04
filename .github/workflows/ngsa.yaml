@@ -38,11 +38,10 @@ jobs:
       run: |
             echo ${{ secrets.COSMOS_KEY}} >| secrets/CosmosKey
             echo ${{ secrets.COSMOS_URL }} >| secrets/CosmosUrl
-            echo "Breakpoint2"
 
     - name: Docker Build
       run: |
-            docker build . -t image
+            docker build . --progress plain -t image
 
     - name: Delete Secrets
       run: |
