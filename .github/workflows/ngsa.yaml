@@ -36,8 +36,8 @@ jobs:
 
     - name: Set Secrets
       run: |
-            echo ${{ secrets.COSMOS_KEY}} >| secrets/CosmosKey
-            echo ${{ secrets.COSMOS_URL }} >| secrets/CosmosUrl
+            echo -n ${{ secrets.COSMOS_KEY}} >| secrets/CosmosKey
+            echo -n ${{ secrets.COSMOS_URL }} >| secrets/CosmosUrl
 
     - name: Docker Build
       run: |
