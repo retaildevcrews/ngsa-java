@@ -328,12 +328,12 @@ public class MovieControllerTest {
   }
 
   @Test
-  public void testMoviesWithBadActorId_5(){
+  public void testMoviesWithNonExistentActorId_1(){
     webClient.get().uri("/api/movies?actorId=nm12345")
         .header(HttpHeaders.ACCEPT, "application/json")
         .exchange()
-        .expectHeader().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON);
-       // .expectBodyList(Movie.class).hasSize(0);
+        .expectHeader().contentType(MediaType.APPLICATION_JSON);
+//        .expectBodyList(Movie.class).hasSize(0);
   }
 
   @Test

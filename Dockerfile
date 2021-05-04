@@ -8,10 +8,7 @@ ADD pom.xml /app
 FROM base AS dependencies
 ADD . /app
 
-# While creating the docker container as part of the CI/CD, the managed identity is not set
-# and thus many tests will fail, so skipping during docker build. Instead they will run as part
-# of the CI/CD.
-RUN mvn clean package -DskipTests
+RUN mvn clean package
 
 #
 # ---- Release App ----
@@ -25,4 +22,4 @@ USER ngsa
 
 COPY --from=dependencies /app/target/ngsa.jar app.jar
 EXPOSE 4120
-CMD ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
