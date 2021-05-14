@@ -2,7 +2,6 @@
 FROM azul/zulu-openjdk-alpine:11.0.10 AS base
 WORKDIR /app
 ARG MAVEN_VERSION=3.6.3
-ADD pom.xml /app
 
 # Install Maven
 RUN wget http://www-us.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz && \
