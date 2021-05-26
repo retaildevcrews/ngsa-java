@@ -164,7 +164,7 @@ public class HealthzController {
         }
       }
     }
-    return returnStatus;
+    return returnStatus.toLowerCase();
   }
 
   /** convertResultsListToDictionary converts the list from the chain to a dictionary. */
@@ -194,7 +194,7 @@ public class HealthzController {
     resultsDict.put("componentType", "datastore");
     resultsDict.put("observedUnit", "ms");
     resultsDict.put("observedValue", duration);
-    resultsDict.put(STATUS_TEXT, passStatus.toLowerCase());
+    resultsDict.put(STATUS_TEXT, passStatus);
     resultsDict.put("targetValue", expectedDuration);
     resultsDict.put("time",  new Date().toInstant().toString());
 
