@@ -18,14 +18,19 @@ import reactor.core.publisher.Flux;
 @RequestMapping(path = "/api/benchmark", produces = MediaType.TEXT_PLAIN_VALUE)
 @Api(tags = "Benchmark")
 public class BenchmarkController {
-  private static final Logger logger =   LogManager.getLogger(BenchmarkController.class);
-  private static final int maxBenchSize = 1024 * 1024;
+  private static final Logger logger = LogManager.getLogger(BenchmarkController.class);
+  private static final int MaxBenchStrSize = 1024 * 1024;
   /* Java 1.5+
   private final String repeatedBenchString = 
           new String(new char[1024 * 1024 / 16]).replace("\0", "0123456789ABCDEF");
   */
-  private final String repeatedBenchString =
-                "0123456789ABCDEF".repeat(1024 * 1024 / 16); /*Java 11*/
+  private final String benchmarkString;
+
+  /** BenchmarkController constructor. */
+  public BenchmarkController() {
+    var initialStr = "0123456789ABCDEF";
+    benchmarkString = initialStr.repeat(MaxBenchStrSize / initialStr.length() + 1);
+  }
 
   /** getBenchmark. */
   @GetMapping(
@@ -41,20 +46,21 @@ public class BenchmarkController {
 
     try {
       if (benchmarkSize < 1) {
-        String err = "Invalid Size. Size must be > 0";
+        var err = "Invalid Size. Size must be > 0";
         logger.error(err);
 
         return Flux.error(new ResponseStatusException(
           HttpStatus.BAD_REQUEST, String.format("Benchmark Error: %s", err)));
 
-      } else if (benchmarkSize > maxBenchSize) {
-        String err = "Invalid Size. Size must be <= 1024 * 1024 (1 MB)";
+      } else if (benchmarkSize > MaxBenchStrSize) {
+        var err = "Invalid Size. Size must be <= 1024 * 1024 (1 MB)";
         logger.error(err);
 
         return Flux.error(new ResponseStatusException(
           HttpStatus.BAD_REQUEST, String.format("Benchmark Error: %s", err)));
       }
-      return Flux.just(repeatedBenchString.substring(0, benchmarkSize));
+
+      return Flux.just(benchmarkString.substring(0, benchmarkSize));
     } catch (Exception ex) {
       logger.error("Error received in BenchmarkController", ex);
 
