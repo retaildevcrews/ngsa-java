@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping(path = "/api/benchmark", produces = MediaType.TEXT_PLAIN_VALUE)
@@ -36,7 +36,7 @@ public class BenchmarkController {
   @GetMapping(
       value = "/{size}",
       produces = MediaType.TEXT_PLAIN_VALUE)
-  public Flux<String> getBenchmark(
+  public Mono<String> getBenchmark(
       @ApiParam(value = "The size of the benchmark data ( 0 < size <= 1MB )",
                 example = "214", required = true)
       @PathVariable("size")
@@ -49,22 +49,22 @@ public class BenchmarkController {
         var err = "Invalid Size. Size must be > 0";
         logger.error(err);
 
-        return Flux.error(new ResponseStatusException(
+        return Mono.error(new ResponseStatusException(
           HttpStatus.BAD_REQUEST, String.format("Benchmark Error: %s", err)));
 
       } else if (benchmarkSize > MaxBenchStrSize) {
         var err = "Invalid Size. Size must be <= 1024 * 1024 (1 MB)";
         logger.error(err);
 
-        return Flux.error(new ResponseStatusException(
+        return Mono.error(new ResponseStatusException(
           HttpStatus.BAD_REQUEST, String.format("Benchmark Error: %s", err)));
       }
 
-      return Flux.just(benchmarkString.substring(0, benchmarkSize));
+      return Mono.just(benchmarkString.substring(0, benchmarkSize));
     } catch (Exception ex) {
       logger.error("Error received in BenchmarkController", ex);
 
-      return Flux.error(new ResponseStatusException(
+      return Mono.error(new ResponseStatusException(
         HttpStatus.INTERNAL_SERVER_ERROR, "benchmark Error"));
     }
   }
