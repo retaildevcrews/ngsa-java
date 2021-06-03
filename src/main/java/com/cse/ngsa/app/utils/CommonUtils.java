@@ -116,7 +116,6 @@ public class CommonUtils {
     System.out.println("\r\nUsage:\r\n"
         + "   mvn clean spring-boot:run \r\n "
         + "\t-Dspring-boot.run.arguments=\" --help \r\n"
-        + "\t\t--service.name\r\n"
         + "\t\t--cpu.target.load\r\n"
         + "\t\t--cpu.max.load\r\n"
         + "\t\t--dry-run\r\n"
