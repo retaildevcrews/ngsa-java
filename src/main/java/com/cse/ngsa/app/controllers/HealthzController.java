@@ -6,6 +6,7 @@ import com.cse.ngsa.app.dao.ActorsDao;
 import com.cse.ngsa.app.dao.GenresDao;
 import com.cse.ngsa.app.dao.MoviesDao;
 import com.cse.ngsa.app.health.ietf.IeTfStatus;
+import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -58,13 +60,24 @@ public class HealthzController {
 
     Mono<List<Map<String, Object>>> resultsMono = buildHealthCheckChain();
 
+    HttpHeaders headers = new HttpHeaders();
+    long cpuLoad = Math.round(ManagementFactory.getPlatformMXBean(
+            com.sun.management.OperatingSystemMXBean.class).getProcessCpuLoad() * 100L);
+
+    headers.add("X-Load-Feedback",
+        String.format("service=%s, current-load=%s, target-load=%s, max-load=%s ",
+        environment.getProperty("service.name"),
+        cpuLoad,
+        environment.getProperty("cpu.target.load"),
+        environment.getProperty("cpu.max.load")));
+
     return resultsMono.map(data -> {
       String healthStatus = getOverallHealthStatus(data);
       int resCode = healthStatus.equals(IeTfStatus.FAIL.name())
           ? HttpStatus.SERVICE_UNAVAILABLE.value()
           : HttpStatus.OK.value();
       return new ResponseEntity<>(healthStatus,
-          null,
+          headers,
           HttpStatus.valueOf(resCode));
     });
   }
@@ -90,7 +103,7 @@ public class HealthzController {
       webInstanceRole = "unknown";
     }
 
-    ieTfResult.put("serviceId", "ngsa-java");
+    ieTfResult.put("serviceId", environment.getProperty("service.name"));
     ieTfResult.put("description", "Ngsa Java Health Check");
     ieTfResult.put("instance", webInstanceRole);
     ieTfResult.put("version", buildConfig.getBuildVersion());

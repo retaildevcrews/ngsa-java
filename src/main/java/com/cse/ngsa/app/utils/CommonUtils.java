@@ -116,8 +116,8 @@ public class CommonUtils {
     System.out.println("\r\nUsage:\r\n"
         + "   mvn clean spring-boot:run \r\n "
         + "\t-Dspring-boot.run.arguments=\" --help \r\n"
-        + "\t\t--auth-type=<CLI|MI|VS>\r\n"
-        + "\t\t--keyvault-name=<keyVaultName>\r\n"
+        + "\t\t--cpu.target.load\r\n"
+        + "\t\t--cpu.max.load\r\n"
         + "\t\t--dry-run\r\n"
         + "\t\t--log-level=<trace|info|warn|error|fatal>\"");
   }
