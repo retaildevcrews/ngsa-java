@@ -4,20 +4,20 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping(path = "/api/benchmark", produces = MediaType.TEXT_PLAIN_VALUE)
+@RequestMapping(path = "/api/benchmark", produces = {MediaType.TEXT_PLAIN_VALUE,
+    MediaType.APPLICATION_PROBLEM_JSON_VALUE})
 @Api(tags = "Benchmark")
-public class BenchmarkController {
+public class BenchmarkController extends Controller {
   private static final Logger logger = LogManager.getLogger(BenchmarkController.class);
   private static final int MaxBenchStrSize = 1024 * 1024;
   /* Java 1.5+
@@ -33,39 +33,31 @@ public class BenchmarkController {
   }
 
   /** getBenchmark. */
-  @GetMapping(
-      value = "/{size}",
-      produces = MediaType.TEXT_PLAIN_VALUE)
-  public Mono<String> getBenchmark(
+  @GetMapping(value = "/{size}")
+  @SuppressWarnings({"squid:S2629", "squid:S1612"})  
+  public Mono<ResponseEntity<String>> getBenchmark(
       @ApiParam(value = "The size of the benchmark data ( 0 < size <= 1MB )",
                 example = "214", required = true)
       @PathVariable("size")
-      int benchmarkSize,
+      String benchmarkSizeStr,
       ServerHttpRequest request
   ) {
 
-    try {
-      if (benchmarkSize < 1) {
-        var err = "Invalid Size. Size must be > 0";
-        logger.error(err);
+    if (Boolean.TRUE == validator.isValidBenchmarkSize(benchmarkSizeStr, MaxBenchStrSize)) {
 
-        return Mono.error(new ResponseStatusException(
-          HttpStatus.BAD_REQUEST, String.format("Benchmark Error: %s", err)));
+      int benchmarkSize = Integer.parseInt(benchmarkSizeStr);
+      return Mono.justOrEmpty(ResponseEntity.ok(
+          benchmarkString.substring(0, benchmarkSize)));
 
-      } else if (benchmarkSize > MaxBenchStrSize) {
-        var err = "Invalid Size. Size must be <= 1024 * 1024 (1 MB)";
-        logger.error(err);
+    } else {
 
-        return Mono.error(new ResponseStatusException(
-          HttpStatus.BAD_REQUEST, String.format("Benchmark Error: %s", err)));
-      }
+      String invalidResponse = super.invalidParameterResponses
+          .invalidBenchmarkSizeResponse(request.getURI().getPath());
+      logger.error("Benchmark data size parameter should be 0 < size <= 1024*1024");
 
-      return Mono.just(benchmarkString.substring(0, benchmarkSize));
-    } catch (Exception ex) {
-      logger.error("Error received in BenchmarkController", ex);
-
-      return Mono.error(new ResponseStatusException(
-        HttpStatus.INTERNAL_SERVER_ERROR, "benchmark Error"));
+      return Mono.just(ResponseEntity.badRequest()
+        .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+        .body(invalidResponse));
     }
   }
 }

@@ -139,4 +139,19 @@ public class ParameterValidator {
     return true;
   }
 
+  /** isValidRating. */
+  public Boolean isValidBenchmarkSize(String benchmarkSizeStr, int maxBenchStrSize) {
+    if (!StringUtils.isEmpty(benchmarkSizeStr)) {
+      try {
+        int benchmarkSize = Integer.parseInt(benchmarkSizeStr);
+        if (benchmarkSize < 0 || benchmarkSize > maxBenchStrSize) {
+          return false;
+        }
+      } catch (Exception ex) {
+        return false;
+      }
+    }
+    return true;
+  }
+
 }
