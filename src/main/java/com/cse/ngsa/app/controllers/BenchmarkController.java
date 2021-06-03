@@ -19,7 +19,7 @@ import reactor.core.publisher.Mono;
 @Api(tags = "Benchmark")
 public class BenchmarkController extends Controller {
   private static final Logger logger = LogManager.getLogger(BenchmarkController.class);
-  public static final int MaxBenchStrSize = 1024 * 1024;
+  private static final int MaxBenchStrSize = 1024 * 1024;
   /* Java 1.5+
   private final String repeatedBenchString = 
           new String(new char[1024 * 1024 / 16]).replace("\0", "0123456789ABCDEF");
@@ -43,14 +43,9 @@ public class BenchmarkController extends Controller {
       ServerHttpRequest request
   ) {
 
-    if (Boolean.TRUE == validator.isValidBenchmarkSize(benchmarkSizeStr)) {
+    if (Boolean.TRUE == validator.isValidBenchmarkSize(benchmarkSizeStr, MaxBenchStrSize)) {
 
       int benchmarkSize = Integer.parseInt(benchmarkSizeStr);
-      // return Mono.just(newString) causes exception
-      // TODO: We can just return response entity without Mono
-      // return ResponseEntity.ok()
-      //     .contentType(MediaType.TEXT_PLAIN)
-      //     .body(newString);
       return Mono.justOrEmpty(ResponseEntity.ok(
           benchmarkString.substring(0, benchmarkSize)));
 
