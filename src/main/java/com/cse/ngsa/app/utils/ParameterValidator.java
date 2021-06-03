@@ -1,5 +1,6 @@
 package com.cse.ngsa.app.utils;
 
+import com.cse.ngsa.app.controllers.BenchmarkController;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -139,4 +140,18 @@ public class ParameterValidator {
     return true;
   }
 
+  /** isValidRating. */
+  public Boolean isValidBenchmarkSize(String benchmarkSizeStr) {
+    if (!StringUtils.isEmpty(benchmarkSizeStr)) {
+      try {
+        int benchmarkSize = Integer.parseInt(benchmarkSizeStr);
+        if (benchmarkSize < 0 || benchmarkSize > BenchmarkController.MaxBenchStrSize) {
+          return false;
+        }
+      } catch (Exception ex) {
+        return false;
+      }
+    }
+    return true;
+  }
 }

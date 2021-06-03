@@ -55,6 +55,12 @@ public class InvalidParameterResponses {
       "The parameter 'movieId' should start with 'tt' and be between 7 and 11 characters in total."
       );
 
+  private static final String BENCHMARK_SIZE_ERROR = String.format(
+      VALIDATION_ERROR_TEMPLATE,
+      "benchmarkSize",
+      "The parameter 'benchmarkSize' should be a number greater than 0 and less than 1024*1024"
+      );
+
   public enum SearchParameter {
     Q,
     PAGE_SIZE,
@@ -124,6 +130,10 @@ public class InvalidParameterResponses {
 
   public String invalidMovieDirectReadResponse(String instance) {
     return response(DOC_URL + "#movies-direct-read", instance, MOVIEID_ERROR);
+  }
+
+  public String invalidBenchmarkSizeResponse(String instance) {
+    return response(DOC_URL, instance, BENCHMARK_SIZE_ERROR);
   }
   
 }
