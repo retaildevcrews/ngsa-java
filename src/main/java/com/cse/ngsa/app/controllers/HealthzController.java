@@ -61,8 +61,6 @@ public class HealthzController {
     Mono<List<Map<String, Object>>> resultsMono = buildHealthCheckChain();
 
     HttpHeaders headers = new HttpHeaders();
-
-
     long cpuLoad = Math.round(ManagementFactory.getPlatformMXBean(
             com.sun.management.OperatingSystemMXBean.class).getProcessCpuLoad() * 100L);
 
