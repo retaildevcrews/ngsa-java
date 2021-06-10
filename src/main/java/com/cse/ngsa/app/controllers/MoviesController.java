@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,6 +44,8 @@ public class MoviesController extends Controller {
       @ApiParam(value = "The ID of the movie to look for", example = "tt0000002", required = true)
           @PathVariable("id")
           String movieId,
+          @RequestAttribute(value = "MS-CV", required = false) String corrVect,
+    //   @RequestHeader(value = "MS-CV", required = false) String corrVect,
       ServerHttpRequest request) {
 
     if (logger.isInfoEnabled()) {
