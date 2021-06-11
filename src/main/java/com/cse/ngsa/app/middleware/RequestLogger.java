@@ -2,9 +2,13 @@ package com.cse.ngsa.app.middleware;
 
 import java.net.InetSocketAddress;
 import java.text.MessageFormat;
+import java.time.Instant;
+import java.util.Arrays;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -36,6 +40,8 @@ public class RequestLogger implements WebFilter {
     return webFilterChain.filter(serverWebExchange).doFinally(signalType -> {
       // compute request duration and get status code
       long duration = System.currentTimeMillis() - startTime;
+      // Essentially ttfb in Java's case is the same as duraion
+      long ttfb = duration;
       int statusCode = serverWebExchange.getResponse().getStatusCode().value();
       
       // don't log favicon.ico 404s
@@ -48,10 +54,41 @@ public class RequestLogger implements WebFilter {
         return;
       }
 
+      // In general, no need to check if serverWebExchabge have MS-CV attribute
+      // But a good practice to check for it anyway
+      // CorrelationVector cv;
+      // if (serverWebExchange.getAttributes().containsKey(CorrelationVector.HEADER_NAME)) {
+        //   cv = (CorrelationVector)serverWebExchange.getAttribute(CorrelationVector.HEADER_NAME);
+        // } else {
+          //   // This one should'nt happen!
+          //   LogManager.getRootLogger().error("MS-CV Attribute not found");
+          //   cv = CorrelationVectorExtensions.extend(serverWebExchange);
+          // }
+      JSONObject logData = new JSONObject();
+      var currentRequest = serverWebExchange.getRequest();
+      String userAgent = currentRequest.getHeaders().
+        getOrDefault("User-Agent", Arrays.asList("")).get(0);
+      // TODO: Crude json initialization
+      logData.put("Date", Instant.now().toString());
+      logData.put("LogName", "Ngsa.RequestLog"); // TODO: Q: What should be the value?
+      logData.put("StatusCode", statusCode);
+      logData.put("TTFB", ttfb);
+      logData.put("Duration", duration);
+      logData.put("Verb", currentRequest.getMethod().toString());
+      logData.put("Path", pathQueryString);
+      logData.put("Host", currentRequest.getHeaders().getHost().toString());
+      logData.put("ClientIP", requestAddress);
+      logData.put("UserAgent", userAgent);
+      logData.put("CVector", "PLACEHOLDER-CV-VALUE");
+      logData.put("CVectorBase", "PLACEHOLDER-CV-BASE-VALUE");
+      logData.put("Category", "Category"); // TODO: Update all props below
+      logData.put("SubCategory", "SubCategory");
+      logData.put("Mode", "Direct");
+      logData.put("Zone", "dev");
+      logData.put("Region", "dev");
+      logData.put("CosmosName", "in-memory");
       // log results to console
-      logger.info(MessageFormat.format(
-          "{0}\t{1}\t{2}\t{3}", 
-          statusCode, duration, requestAddress, pathQueryString));
+      logger.info(logData.toString());
     });
   }
 
