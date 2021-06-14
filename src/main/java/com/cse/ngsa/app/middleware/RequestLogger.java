@@ -3,6 +3,9 @@ package com.cse.ngsa.app.middleware;
 import java.net.InetSocketAddress;
 import java.time.Instant;
 import java.util.Arrays;
+
+import com.cse.ngsa.app.utils.QueryUtils;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -78,10 +81,11 @@ public class RequestLogger implements WebFilter {
       logData.put("UserAgent", userAgent);
       logData.put("CVector", "PLACEHOLDER-CV-VALUE");
       logData.put("CVectorBase", "PLACEHOLDER-CV-BASE-VALUE");
-      logData.put("Category", "Category"); // TODO: Update all props below
-      logData.put("SubCategory", "SubCategory");
-      logData.put("Mode", "Direct");
-      logData.put("Zone", "dev");
+      String[] categoryAndMode = QueryUtils.getCategoryAndMode(serverWebExchange.getRequest());
+      logData.put("Category", categoryAndMode[0]);
+      logData.put("SubCategory", categoryAndMode[1]);
+      logData.put("Mode", categoryAndMode[2]);
+      logData.put("Zone", "dev"); // TODO: Update all props below
       logData.put("Region", "dev");
       logData.put("CosmosName", "in-memory");
       // log results to console
