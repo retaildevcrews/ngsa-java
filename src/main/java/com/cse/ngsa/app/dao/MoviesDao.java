@@ -62,7 +62,6 @@ public class MoviesDao extends BaseCosmosDbDao implements IDao {
               .onErrorResume(throwable ->
                       findAPIExceptionHandler("Failed to upsert item", throwable));
     });
-
   }
 
   /** deleteMovieById. */
