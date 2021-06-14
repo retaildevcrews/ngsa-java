@@ -7,6 +7,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import net.minidev.json.annotate.JsonIgnore;
 import org.springframework.util.StringUtils;
 
@@ -14,6 +15,7 @@ import org.springframework.util.StringUtils;
  * Movie.
  */
 @Getter
+@Setter
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 
@@ -24,6 +26,9 @@ public class Movie extends MovieBase {
   @SuppressFBWarnings("UUF_UNUSED_FIELD")
   @JsonIgnore
   private String id;
+
+  @SuppressFBWarnings("UUF_UNUSED_FIELD")
+  private String movieId;
 
   @SuppressFBWarnings("UUF_UNUSED_FIELD")
   @PartitionKey
@@ -42,6 +47,9 @@ public class Movie extends MovieBase {
   private String textSearch;
 
   @SuppressFBWarnings("UUF_UNUSED_FIELD")
+  private String type;
+
+  @SuppressFBWarnings("UUF_UNUSED_FIELD")
   private List<Role> roles;
 
 
@@ -55,7 +63,8 @@ public class Movie extends MovieBase {
   public static String computePartitionKey(String id) {
     // validate id
     if (!StringUtils.isEmpty(id) && id.length() > 5
-        && StringUtils.startsWithIgnoreCase(id, "tt")) {
+        && (StringUtils.startsWithIgnoreCase(id, "tt")
+            || StringUtils.startsWithIgnoreCase(id, "zz"))) {
       int idInt = Integer.parseInt(id.substring(2));
       return String.valueOf(idInt % 10);
     }
