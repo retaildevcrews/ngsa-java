@@ -14,10 +14,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
@@ -37,7 +40,7 @@ public class MoviesController extends Controller {
 
   /** getMovie. */
   @GetMapping(value = "/{id}")
-  // to suprress wrapping the logger.error() in a conditional and lambda to function
+  // to supress wrapping the logger.error() in a conditional and lambda to function
   @SuppressWarnings({"squid:S2629", "squid:S1612"})  
   public Object getMovie(
       @ApiParam(value = "The ID of the movie to look for", example = "tt0000002", required = true)
@@ -68,6 +71,58 @@ public class MoviesController extends Controller {
       return ResponseEntity.badRequest()
           .contentType(MediaType.APPLICATION_PROBLEM_JSON)
           .body(invalidResponse);
+    }
+  }
+
+  /** upsertMovie. */
+  @PutMapping(value = "/{id}")
+  // to supress wrapping the logger.error() in a conditional and lambda to function
+  @SuppressWarnings({"squid:S2629", "squid:S1612"})
+  public Object upsertMovie(
+          @PathVariable("id")
+                  String movieId,
+          ServerHttpRequest request) {
+
+    if (logger.isInfoEnabled()) {
+      logger.info(MessageFormat.format("upsertMovie (movieId={0})", movieId));
+    }
+
+    String movieIdOrig = movieId.replace("zz","tt");
+    if (Boolean.TRUE.equals(validator.isValidMovieId(movieIdOrig) && movieId.startsWith("zz"))) {
+      return moviesDao.upsertMovieById(movieIdOrig);
+    } else {
+      logger.error(MessageFormat.format("Invalid Movie ID parameter {0}", movieId));
+      String invalidResponse = super.invalidParameterResponses
+              .invalidMovieDeleteResponse(request.getURI().getPath());
+      return ResponseEntity.badRequest()
+              .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+              .body(invalidResponse);
+    }
+  }
+
+  /** deleteMovie. */
+  @DeleteMapping(value = "/{id}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  // to supress wrapping the logger.error() in a conditional and lambda to function
+  @SuppressWarnings({"squid:S2629", "squid:S1612"})
+  public Object deleteMovie(
+          @PathVariable("id")
+                  String movieId,
+          ServerHttpRequest request) {
+
+    if (logger.isInfoEnabled()) {
+      logger.info(MessageFormat.format("deleteMovie (movieId={0})", movieId));
+    }
+    if (Boolean.TRUE.equals(validator.isValidMovieId(movieId.replace("zz","tt")))
+            && movieId.startsWith("zz")) {
+      return moviesDao.deleteMovieById(movieId);
+    } else {
+      logger.error(MessageFormat.format("Invalid Movie ID parameter {0}", movieId));
+      String invalidResponse = super.invalidParameterResponses
+                  .invalidMovieDeleteResponse(request.getURI().getPath());
+      return ResponseEntity.badRequest()
+                  .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                  .body(invalidResponse);
     }
   }
 

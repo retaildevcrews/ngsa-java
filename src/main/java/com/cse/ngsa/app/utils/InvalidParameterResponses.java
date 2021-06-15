@@ -132,6 +132,10 @@ public class InvalidParameterResponses {
     return response(DOC_URL + "#movies-direct-read", instance, MOVIEID_ERROR);
   }
 
+  public String invalidMovieDeleteResponse(String instance) {
+    return response(DOC_URL + "#movies-direct-read", instance, "");
+  }
+
   public String invalidBenchmarkSizeResponse(String instance) {
     return response(DOC_URL, instance, BENCHMARK_SIZE_ERROR);
   }
