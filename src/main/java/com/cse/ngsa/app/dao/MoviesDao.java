@@ -12,7 +12,10 @@ import java.text.MessageFormat;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -40,9 +43,42 @@ public class MoviesDao extends BaseCosmosDbDao implements IDao {
             .getItem(movieId, Movie.computePartitionKey(movieId))
             .read()
             .flatMap(
-                cosmosItemResponse -> 
+                cosmosItemResponse ->
                     Mono.justOrEmpty(cosmosItemResponse.properties().toObject(Movie.class)))
             .onErrorResume(throwable -> findAPIExceptionHandler("Failed to find item", throwable));
+  }
+
+  /** upsertMovieById. */
+  public Mono<Movie> upsertMovieById(String movieId) {
+
+    return getMovieById(movieId).flatMap(movie -> {
+      String id = movieId.replace("tt", "zz");
+      movie.setId(id);
+      movie.setMovieId(id);
+      movie.setType("Movie-Dupe");
+      return getContainer().upsertItem(movie).flatMap(
+          cosmosItemResponse ->
+                      Mono.just(cosmosItemResponse.properties().toObject(Movie.class)))
+              .onErrorResume(throwable ->
+                      findAPIExceptionHandler("Failed to upsert item", throwable));
+    });
+  }
+
+  /** deleteMovieById. */
+  public Mono<ResponseEntity<Object>> deleteMovieById(String movieId) {
+    return getContainer()
+            .getItem(movieId,Movie.computePartitionKey(movieId))
+            .delete().flatMap(
+                cosmosItemResponse ->
+                        Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()))
+            .onErrorResume((e) -> {
+              if (e.getMessage().contains("Resource Not Found")) {
+                return Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build());
+              }
+              return Mono.error(
+                      new ResponseStatusException(
+              HttpStatus.INTERNAL_SERVER_ERROR, Constants.MOVIE_CONTROLLER_EXCEPTION));
+            });
   }
 
   /**
@@ -65,13 +101,11 @@ public class MoviesDao extends BaseCosmosDbDao implements IDao {
     parameterList.add(new SqlParameter("@offset", pageNumber));
     parameterList.add(new SqlParameter("@limit", pageSize));
 
-
     if (queryParams.containsKey("q")) {
       String query = queryParams.get("q").toString();
       formedQuery.append(movieContains);
       parameterList.add(new SqlParameter("@query", query));
     }
-
 
     if (queryParams.containsKey("year")) {
       Integer year = (Integer) queryParams.get("year");

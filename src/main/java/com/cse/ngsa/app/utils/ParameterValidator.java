@@ -31,7 +31,7 @@ public class ParameterValidator {
 
   /** isValidMovieId. */
   public Boolean isValidMovieId(String movieId) {
-    return isValidId(movieId, "tt");
+    return isValidId(movieId, "tt") || isValidId(movieId, "zz");
   }
 
   /**
