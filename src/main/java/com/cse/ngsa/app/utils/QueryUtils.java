@@ -4,15 +4,20 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 
 /**
- * Query Utilities
+ * Query Utilities.
  */
 public class QueryUtils {
+  
+  private QueryUtils() {
+  }
+
   /**
-   * 
+   * Detects category, sub-category and mode from request URI.
    * @param request HttpRequest
    * @return String Array with category, subCategory and mode in that order 
    */
   public static String[] getCategoryAndMode(ServerHttpRequest request) {
+    
     String category;
     String mode;
     String subCategory;
