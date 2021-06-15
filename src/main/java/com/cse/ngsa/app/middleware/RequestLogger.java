@@ -48,17 +48,6 @@ public class RequestLogger implements WebFilter {
       if (logger.getLevel().isMoreSpecificThan(Level.WARN) && statusCode < 400) {
         return;
       }
-      
-      // In general, no need to check if serverWebExchabge have MS-CV attribute
-      // But a good practice to check for it anyway
-      // CorrelationVector cv;
-      // if (serverWebExchange.getAttributes().containsKey(CorrelationVector.HEADER_NAME)) {
-      //   cv = (CorrelationVector)serverWebExchange.getAttribute(CorrelationVector.HEADER_NAME);
-      // } else {
-      //   // This one should'nt happen!
-      //   LogManager.getRootLogger().error("MS-CV Attribute not found");
-      //   cv = CorrelationVectorExtensions.extend(serverWebExchange);
-      // }
 
       JSONObject logData = new JSONObject();
       var currentRequest = serverWebExchange.getRequest();
@@ -66,9 +55,8 @@ public class RequestLogger implements WebFilter {
           .getOrDefault("User-Agent", Arrays.asList("")).get(0);
       // compute request duration and get status code
       long duration = System.currentTimeMillis() - startTime;
-      // TODO: Crude json initialization
       logData.put("Date", Instant.now().toString());
-      logData.put("LogName", "Ngsa.RequestLog"); // TODO: Q: What should be the value?
+      logData.put("LogName", "Ngsa.RequestLog");
       logData.put("StatusCode", statusCode);
       logData.put("TTFB", duration); // Essentially ttfb in Java's case is the same as duraion
       logData.put("Duration", duration);
