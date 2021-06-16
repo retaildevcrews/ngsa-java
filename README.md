@@ -1,22 +1,6 @@
-# Managed Identity and Key Vault with Java Spring Boot
+# NGSA Java App
 
-> Build a Java Web API application using Managed Identity, Key Vault and Cosmos DB that is designed to be deployed to Azure App Service or AKS
-
-![License](https://img.shields.io/badge/license-MIT-green.svg)
-
-This is a Java Spring Boot Web API reference application designed to "fork and code" with the following features:
-
-- Securely build, deploy and run an Azure App Service (Web App for Containers) application
-- Securely build, deploy and run an Azure Kubernetes Service (AKS) application
-- Use Managed Identity to securely access resources
-- Securely store secrets in Key Vault
-- Securely build and deploy the Docker container to Azure Container Registry (ACR) or Docker Hub
-- Connect to and query Cosmos DB
-- Automatically send telemetry and logs to Azure Monitor
-
-> Visual Studio Codespaces is the easiest way to evaluate ngsa as all of the prerequisites are automatically installed
->
-> Follow the setup steps in the [Ngsa readme](https://github.com/retaildevcrews/ngsa) to setup Codespaces
+NGSA Java App is inteneded for platform testing and monitoring in one or many Kubernetes clusters and/or cloud deployments.
 
 ## Prerequisites
 
@@ -26,48 +10,113 @@ This is a Java Spring Boot Web API reference application designed to "fork and c
 - Docker CLI ([download](https://docs.docker.com/install/))
 - Java 11+ ([download](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html))
 - Maven ([download](https://maven.apache.org/download.cgi))
+- Cosmos DB setup (follow the steps in the [imdb readme](https://github.com/retaildevcrews/imdb.git) )
 - Visual Studio Code (optional) ([download](https://code.visualstudio.com/download))
 
-## Setup
-
-- Initial setup instructions are in the [Ngsa readme](https://github.com/retaildevcrews/ngsa)
-  - Please complete the setup steps and then continue below
-
-### Validate az CLI works
-
-> In Visual Studio Codespaces, open a terminal by pressing ctl + `
-
-```bash
-
-# make sure you are logged into Azure
-az account show
-
-# if not, log in
-az login
+## Ngsa-java Usage
 
 ```
 
-### Verify Key Vault Access
+usage: mvn [options] [<goal(s)>] [<phase(s)>]
 
-```bash
+Options:
+ -am,--also-make                        If project list is specified, also
+                                        build projects required by the
+                                        list
+ -amd,--also-make-dependents            If project list is specified, also
+                                        build projects that depend on
+                                        projects on the list
+ -B,--batch-mode                        Run in non-interactive (batch)
+                                        mode (disables output color)
+ -b,--builder <arg>                     The id of the build strategy to
+                                        use
+ -C,--strict-checksums                  Fail the build if checksums don't
+                                        match
+ -c,--lax-checksums                     Warn if checksums don't match
+ -cpu,--check-plugin-updates            Ineffective, only kept for
+                                        backward compatibility
+ -D,--define <arg>                      Define a system property
+ -e,--errors                            Produce execution error messages
+ -emp,--encrypt-master-password <arg>   Encrypt master security password
+ -ep,--encrypt-password <arg>           Encrypt server password
+ -f,--file <arg>                        Force the use of an alternate POM
+                                        file (or directory with pom.xml)
+ -fae,--fail-at-end                     Only fail the build afterwards;
+                                        allow all non-impacted builds to
+                                        continue
+ -ff,--fail-fast                        Stop at first failure in
+                                        reactorized builds
+ -fn,--fail-never                       NEVER fail the build, regardless
+                                        of project result
+ -gs,--global-settings <arg>            Alternate path for the global
+                                        settings file
+ -gt,--global-toolchains <arg>          Alternate path for the global
+                                        toolchains file
+ -h,--help                              Display help information
+ -l,--log-file <arg>                    Log file where all build output
+                                        will go (disables output color)
+ -llr,--legacy-local-repository         Use Maven 2 Legacy Local
+                                        Repository behaviour, ie no use of
+                                        _remote.repositories. Can also be
+                                        activated by using
+                                        -Dmaven.legacyLocalRepo=true
+ -N,--non-recursive                     Do not recurse into sub-projects
+ -npr,--no-plugin-registry              Ineffective, only kept for
+                                        backward compatibility
+ -npu,--no-plugin-updates               Ineffective, only kept for
+                                        backward compatibility
+ -nsu,--no-snapshot-updates             Suppress SNAPSHOT updates
+ -ntp,--no-transfer-progress            Do not display transfer progress
+                                        when downloading or uploading
+ -o,--offline                           Work offline
+ -P,--activate-profiles <arg>           Comma-delimited list of profiles
+                                        to activate
+ -pl,--projects <arg>                   Comma-delimited list of specified
+                                        reactor projects to build instead
+                                        of all projects. A project can be
+                                        specified by [groupId]:artifactId
+                                        or by its relative path
+ -q,--quiet                             Quiet output - only show errors
+ -rf,--resume-from <arg>                Resume reactor from specified
+                                        project
+ -s,--settings <arg>                    Alternate path for the user
+                                        settings file
+ -t,--toolchains <arg>                  Alternate path for the user
+                                        toolchains file
+ -T,--threads <arg>                     Thread count, for instance 2.0C
+                                        where C is core multiplied
+ -U,--update-snapshots                  Forces a check for missing
+                                        releases and updated snapshots on
+                                        remote repositories
+ -up,--update-plugins                   Ineffective, only kept for
+                                        backward compatibility
+ -v,--version                           Display version information
+ -V,--show-version                      Display version information
+                                        WITHOUT stopping build
+ -X,--debug                             Produce execution debug output
 
-# verify you have access to Key Vault
-az keyvault secret show --name CosmosDatabase --vault-name $He_Name
+ ```
 
-```
-[]
-## Run the application
+## Run the Application
 
 ### Using Visual Studio Codespaces
 
+> Visual Studio Codespaces is the easiest way to evaluate ngsa-java. 
+
 Visual Studio Codespaces is the easiest way to evaluate ngsa. Follow the setup steps in the [Ngsa readme](https://github.com/retaildevcrews/ngsa) to setup Codespaces.
 
-- Open `launch.json` in the `.vscode` directory
-- Replace `{your key vault name}` with the name of your key vault
-  - the file saves automatically
-- Press F5
-- Wait for `Netty started on ports(s):4120` in the Java Debug Console
-- Skip to the testing step below
+1. Set up Codespaces from the GitHub repo
+
+2. Input credentials in CosmosUrl and CosmosKey files within secrets folder (Create files if necessary)
+
+3. Run the application
+
+```bash
+
+# run the application
+mvn spring-boot:run
+
+```
 
 ### Using bash shell
 
@@ -105,123 +154,9 @@ curl localhost:4120/version
 
 Stop ngsa by typing Ctrl-C or the stop button if run via F5
 
-### Deep Testing
-
-We use [Web Validate](https://github.com/microsoft/webvalidate) to run deep verification tests on the Web API
-
-If you have dotnet core sdk installed (Codespaces has dotnet core installed)
-
-```bash
-
-# install Web Validate as a dotnet global tool
-# this is automatically installed in CodeSpaces
-dotnet tool install -g webvalidate
-
-# make sure you are in the root of the repository
-
-# run the validation tests
-# validation tests are located in the TestFiles directory
-cd TestFiles
-
-webv -s localhost:4120 -f baseline.json
-
-# there may be a validation error on the /healthz/ietf endpoint test
-#   json: status: warn : Expected: pass
-# the "warn" status indicates a slower than normal response time
-# and will occasionally occur
-
-# bad.json tests error conditions that return 4xx codes
-
-# benchmark.json is a 300 request test that covers the entire API
-
-# cd to root of repo
-cd ..
-
-```
-
-Test using Docker image
-
-```bash
-
-# make sure you are in the root of the repository
-
-# run the validation tests
-# validation tests are located in the TestFiles directory
-docker run -it --rm -v ./TestFiles:/app/TestFiles -s localhost:4120 -f baseline.json
-
-# there may be a validation error on the /healthz/ietf endpoint test
-#   json: status: warn : Expected: pass
-# the "warn" status indicates a slower than normal response time
-# and will occasionally occur
-
-# bad.json tests error conditions that return 4xx codes
-
-# benchmark.json is a 300 request test that covers the entire API
-
-```
-
-### Build the release container using Docker
-
-> A release build requires MI to connect to Key Vault.
-
-- The unit tests run as part of the Docker build process
-
-```bash
-
-# Make sure you are in the root of the repo
-# build the image
-
-docker build . -t ngsa-java
-
-# run docker tag and docker push to push to your repo
-
-```
-
-## CI-CD
-
-> Make sure to fork the repo before experimenting with CI-CD
-
-This repo uses [GitHub Actions](.github/workflows/dockerCI.yml) for Continuous Integration.
-
-- CI supports pushing to Azure Container Registry or DockerHub
-- The action is setup to execute on a PR or commit to ```master```
-  - The action does not run on commits to branches other than ```master```
-- The action always publishes an image with the ```:beta``` tag
-- If you tag the repo with a version i.e. ```v1.0.8``` the action will also
-  - Tag the image with ```:1.0.8```
-  - Tag the image with ```:stable```
-  - Note that the ```v``` is case sensitive (lower case)
-- Once the `secrets` below are set, create a new branch, make a change to a file (md file changes are ignored), commit and push your change, create a PR into your local master
-- Check the `Actions` tab on the GitHub repo main page
-
-CD is supported via webhooks in Azure App Services connected to the ACR or DockerHub repository.
-
-### CI to Azure Container Registry
-
-In order to push to ACR, you set the following `secrets` in your GitHub repo:
-
-- Azure Login Information
-  - TENANT
-  - SERVICE_PRINCIPAL
-  - SERVICE_PRINCIPAL_SECRET
-
-- ACR Information
-  - ACR_REG
-  - ACR_REPO
-  - ACR_IMAGE
-
-### CI to DockerHub
-
-In order to push to DockerHub, you must set the following `secrets` in your GitHub repo:
-
-- DOCKER_REPO
-- DOCKER_USER
-- DOCKER_PAT
-  - Personal Access Token (recommended) or password
-
 ## Contributing
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
+This project welcomes contributions and suggestions. Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
 the rights to use your contribution. For details, visit [Microsoft Contributor License Agreement](https://cla.opensource.microsoft.com).
 
