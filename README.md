@@ -103,8 +103,6 @@ Options:
 
 > Visual Studio Codespaces is the easiest way to evaluate ngsa-java. 
 
-Visual Studio Codespaces is the easiest way to evaluate ngsa. Follow the setup steps in the [Ngsa readme](https://github.com/retaildevcrews/ngsa) to setup Codespaces.
-
 1. Set up Codespaces from the GitHub repo
 
 2. Input credentials in CosmosUrl and CosmosKey files within secrets folder (Create files if necessary)
