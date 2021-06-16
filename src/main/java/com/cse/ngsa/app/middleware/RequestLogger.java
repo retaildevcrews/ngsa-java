@@ -1,6 +1,8 @@
 package com.cse.ngsa.app.middleware;
 
+import com.cse.ngsa.app.utils.CorrelationVectorExtensions;
 import com.cse.ngsa.app.utils.QueryUtils;
+import com.microsoft.correlationvector.CorrelationVector;
 import java.net.InetSocketAddress;
 import java.time.Instant;
 import java.util.Arrays;
@@ -65,8 +67,18 @@ public class RequestLogger implements WebFilter {
       logData.put("Host", currentRequest.getHeaders().getHost().toString());
       logData.put("ClientIP", requestAddress);
       logData.put("UserAgent", userAgent);
-      logData.put("CVector", "PLACEHOLDER-CV-VALUE");
-      logData.put("CVectorBase", "PLACEHOLDER-CV-BASE-VALUE");
+      // In general, no need to check if serverWebExchabge have MS-CV attribute
+      // But a good practice to check for it anyway
+      CorrelationVector cv;
+      if (serverWebExchange.getAttributes().containsKey(CorrelationVector.HEADER_NAME)) {
+        cv = (CorrelationVector)serverWebExchange.getAttribute(CorrelationVector.HEADER_NAME);
+      } else {
+        // This should never happen!
+        LogManager.getRootLogger().error("MS-CV Attribute not found. Creating a new one");
+        cv = CorrelationVectorExtensions.extend(serverWebExchange);
+      }
+      logData.put("CVector", cv.getValue());
+      logData.put("CVectorBase", cv.getBaseVector());
       String[] categoryAndMode = QueryUtils.getCategoryAndMode(serverWebExchange.getRequest());
       logData.put("Category", categoryAndMode[0]);
       logData.put("SubCategory", categoryAndMode[1]);

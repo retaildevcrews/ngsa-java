@@ -46,7 +46,6 @@ public class MoviesController extends Controller {
       @ApiParam(value = "The ID of the movie to look for", example = "tt0000002", required = true)
           @PathVariable("id")
           String movieId,
-    //   @RequestHeader(value = "MS-CV", required = false) String corrVect,
       ServerHttpRequest request) {
 
     if (logger.isInfoEnabled()) {
