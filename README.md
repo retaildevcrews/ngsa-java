@@ -101,7 +101,7 @@ Options:
 
 ### Using Visual Studio Codespaces
 
-> Visual Studio Codespaces is the easiest way to evaluate ngsa-java. 
+> Visual Studio Codespaces is the easiest way to evaluate ngsa-java.
 
 1. Set up Codespaces from the GitHub repo
 
