@@ -55,7 +55,7 @@ az login
 az keyvault secret show --name CosmosDatabase --vault-name $He_Name
 
 ```
-
+[]
 ## Run the application
 
 ### Using Visual Studio Codespaces
