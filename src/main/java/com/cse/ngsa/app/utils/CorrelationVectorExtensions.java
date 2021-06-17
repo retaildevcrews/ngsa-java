@@ -2,8 +2,11 @@ package com.cse.ngsa.app.utils;
 
 import com.microsoft.correlationvector.CorrelationVector;
 import com.microsoft.correlationvector.CorrelationVectorVersion;
+import java.util.List;
+import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.server.ServerWebExchange;
 
 /**
@@ -29,27 +32,28 @@ public class CorrelationVectorExtensions {
     }
 
     CorrelationVector cv;
-    var headers = webx.getRequest().getHeaders();
-    // get the cv from the header
-    if (headers.containsKey(CorrelationVector.HEADER_NAME)) {
-      try {
-        // extend the correlation vector
-        var corrVectHeaders = headers.get(CorrelationVector.HEADER_NAME);
+    HttpHeaders headers = webx.getRequest().getHeaders();
+    // Get the CV from header
+    try {
+      // Get correlation vector value.
+      // It will return null if header doesn't exists
+      List<String> corrVectHeaders = headers.get(CorrelationVector.HEADER_NAME);
 
-        // If corrVectHeaders is null, it will throw nullpointer exception
+      // If corrVectHeaders is null it doesn't exist
+      if (corrVectHeaders == null) {
+        // Create a new one if no CV Header is found
+        cv = new CorrelationVector(CorrelationVectorVersion.V2);
+      } else {
         if (corrVectHeaders.size() > 1) {
+          // Should not happen! 
           logger.warn("More than one CorrelationVector Header was found");
         }
-
         cv = CorrelationVector.extend(corrVectHeaders.get(0));
-      } catch (Exception ex) {
-        // in case of exception
-        // create a new correlation vector
-        logger.warn(String.format("Excpetion thrown: %s", ex.getMessage()));
-        cv = new CorrelationVector(CorrelationVectorVersion.V2);
       }
-    } else {
-      // create a new correlation vector
+    } catch (Exception ex) {
+      // In case of some unknown exception
+      // Create a new correlation vector
+      logger.warn(String.format("Excpetion thrown: %s", ex.getMessage()));
       cv = new CorrelationVector(CorrelationVectorVersion.V2);
     }
 
@@ -70,7 +74,7 @@ public class CorrelationVectorExtensions {
       throw new NullPointerException("CorrelationVector or SeverWebExchange arg is null!");
     }
 
-    var attributes = webx.getAttributes();
+    Map<String, Object> attributes = webx.getAttributes();
 
     if (attributes.containsKey(CorrelationVector.HEADER_NAME)) {
       attributes.replace(CorrelationVector.HEADER_NAME, cv);

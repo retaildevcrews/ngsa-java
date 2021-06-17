@@ -1,6 +1,7 @@
 package com.cse.ngsa.app.middleware;
 
 import com.cse.ngsa.app.utils.CorrelationVectorExtensions;
+import com.microsoft.correlationvector.CorrelationVector;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -16,7 +17,7 @@ public class CorrelationVectorFilter implements WebFilter {
 
     // Check for Correlation Vector in request header
     // Create one if doesn't exist
-    var cv = CorrelationVectorExtensions.extend(serverWebExchange);
+    CorrelationVector cv = CorrelationVectorExtensions.extend(serverWebExchange);
     // And save them as attributes
     CorrelationVectorExtensions.putCorrelationVectIntoAttribute(cv, serverWebExchange);
 
