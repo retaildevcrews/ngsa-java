@@ -62,7 +62,8 @@ public class RequestLogger implements WebFilter {
       logData.put("Duration", duration);
       logData.put("Verb", currentRequest.getMethod().toString());
       logData.put("Path", pathQueryString);
-      logData.put("Host", currentRequest.getHeaders().getHost().toString());
+      InetSocketAddress host = currentRequest.getHeaders().getHost();
+      logData.put("Host", host == null ? "" : host.toString());
       logData.put("ClientIP", requestAddress);
       logData.put("UserAgent", userAgent);
       logData.put("CVector", "PLACEHOLDER-CV-VALUE");
