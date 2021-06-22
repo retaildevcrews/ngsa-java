@@ -1,268 +1,34 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <groupId>com.cse</groupId>
+    <artifactId>ngsa-parent</artifactId>
+    <version>1.1.1</version> <!-- This will be inherited by submodules if version was absent in their pom-->
+    <packaging>pom</packaging> <!--As aggregator (and parent)-->
+    <name>ngsa-parent</name>
+    <url>http://maven.apache.org</url>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.3.4.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
     </parent>
-<reporting>
-    <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jxr-plugin</artifactId>
-            <version>3.0.0</version>
-        </plugin>
-    </plugins>
-</reporting>
-<groupId>com.cse</groupId>
-    <artifactId>ngsa</artifactId>
-    <version>1.1.1</version>
-    <name>ngsa-java</name>
-    <description>NGSA Java with Spring Boot</description>
     <properties>
-        <java.version>11</java.version>
-        <azure.version>2.2.0</azure.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    <repositories>
-        <repository>
-        <id>jcenter-snapshots</id>
-        <name>jcenter</name>
-        <url>http://oss.jfrog.org/artifactory/oss-snapshot-local/</url>
-        </repository>
-    </repositories>
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-to-slf4j</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
-            <version>2.3.4.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>com.microsoft.azure</groupId>
-            <artifactId>azure-client-authentication</artifactId>
-            <version>1.7.9</version>
-        </dependency>
-        <dependency>
-            <groupId>com.microsoft.azure</groupId>
-            <artifactId>adal4j</artifactId>
-            <version>1.6.6</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/javax.servlet/servlet-api -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.microsoft.azure</groupId>
-            <artifactId>azure</artifactId>
-            <version>1.36.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.vaadin.external.google</groupId>
-                    <artifactId>android-json</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.microsoft.azure</groupId>
-            <artifactId>spring-data-cosmosdb</artifactId>
-            <version>2.3.0</version>
-        </dependency>
-        <dependency>
-            <groupId>io.projectreactor</groupId>
-            <artifactId>reactor-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>3.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>3.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-spring-webflux</artifactId>
-            <version>3.0.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>2.13.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>2.13.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.6.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.stefanbirkner</groupId>
-            <artifactId>system-rules</artifactId>
-            <version>1.19.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.spotbugs</groupId>
-            <artifactId>spotbugs-annotations</artifactId>
-            <version>4.1.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.microsoft</groupId>
-            <artifactId>CorrelationVector</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20210307</version>
-        </dependency>
-        </dependencies>
+    <modules>
+        <module>CorrelationVector</module>
+        <module>ngsa</module>
+    </modules>
     <build>
-        <finalName>${project.artifactId}</finalName>
-    <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>3.1.1</version>
-            <configuration>
-                <configLocation>google_checks.xml</configLocation>
-                <encoding>UTF-8</encoding>
-                <consoleOutput>true</consoleOutput>
-                <failsOnError>true</failsOnError>
-                <linkXRef>false</linkXRef>
-                <failOnViolation>true</failOnViolation>
-                <violationSeverity>warning</violationSeverity>
-            </configuration>
-            <executions>
-                <execution>
-                <id>validate</id>
-                <phase>compile</phase>
-                <goals>
-                    <goal>check</goal>
-                </goals>
-                </execution>
-            </executions>
-        </plugin>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jar-plugin</artifactId>
-            <configuration>
-                <archive>
-                    <manifest>
-                    <addClasspath>true</addClasspath>
-                    <mainClass>com.cse.ngsa.app.NgsaJavaApplication</mainClass>
-                    <addDefaultImplementationEntries>false</addDefaultImplementationEntries>
-                    </manifest>
-                    <manifestEntries>
-                        <Implementation-Build>$\{buildNumber}</Implementation-Build>
-                    </manifestEntries>
-                </archive>
-            </configuration>
-        </plugin>
-        <plugin>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <configuration>
-                <descriptorRefs>
-                    <descriptorRef>jar-with-dependencies</descriptorRef>
-                </descriptorRefs>
-            </configuration>
-            <executions>
-                <execution>
-                    <id>make-assembly</id>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>single</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
-        <plugin>
+        <plugins>
+          <plugin>
+            <!--Bubble down spring-boot:run to modules-->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-maven-plugin</artifactId>
-            <executions>
-                <execution>
-                    <id>build-info</id>
-                    <goals>
-                        <goal>build-info</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.8.0</version>
             <configuration>
-                <release>11</release>
+              <skip>true</skip>
             </configuration>
-        </plugin>
-        <plugin>
-            <artifactId>maven-failsafe-plugin</artifactId>
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>integration-test</goal>
-                        <goal>verify</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-pmd-plugin</artifactId>
-            <version>3.13.0</version>
-            <configuration>
-                <failOnViolation>true</failOnViolation>
-                <printFailingErrors>true</printFailingErrors>
-            </configuration>
-            <executions>
-                <execution>
-                    <phase>compile</phase>
-                    <goals>
-                        <goal>check</goal>
-                        <goal>cpd-check</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
-    </plugins>
-  </build>
+          </plugin>
+        </plugins>
+      </build>
 </project>

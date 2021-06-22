@@ -3,12 +3,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-	<groupId>com.microsoft</groupId>
+    <parent>
+        <groupId>com.cse</groupId>
+        <artifactId>ngsa-parent</artifactId>
+        <version>1.1.1</version>
+    </parent>
+    <groupId>com.microsoft</groupId>
     <artifactId>CorrelationVector</artifactId>
     <version>1.0</version>
-    <packaging>jar</packaging>
-	
+
     <properties>
         <finalOutputDirectory>${project.basedir}/output</finalOutputDirectory>        
     </properties>
