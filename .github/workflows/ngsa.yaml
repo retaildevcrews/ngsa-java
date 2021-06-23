@@ -45,7 +45,7 @@ jobs:
 
     - name: Delete Secrets
       run: |
-            rm -rf ./secrets
+            rm -rf ./ngsa/secrets
 
     # - name: Docker Tag and Push
     #   run: |
