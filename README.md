@@ -17,12 +17,15 @@ NGSA Java App is inteneded for platform testing and monitoring in one or many Ku
 
 ```
 
-mvn clean spring-boot:run
--Dspring-boot.run.arguments=" --help
-    --cpu.target.load
-    --cpu.max.load
-    --dry-run
-    --log-level=<trace|info|warn|error|fatal>"
+Usage:
+        mvn clean spring-boot:run -Dspring-boot.run.arguments=[options] 
+
+Options: 
+        --help                                                   Show help and usage information
+        --cpu.target.load                                        Target level for bursting metrics (int) [default: 60]
+        --cpu.max.load                                           Max level for bursting metrics (int) [default: 80]
+        --dry-run                                                Validates configuration
+        --log-level=<trace|info|warn|error|fatal>                Log Level [default: Error]
 
 ```
 
@@ -34,9 +37,11 @@ mvn clean spring-boot:run
 
 1. Set up Codespaces from the GitHub repo
 
-2. Input credentials in CosmosUrl and CosmosKey files within secrets folder (Create files if necessary)
+2. Create CosmosKey file within the ngsa/secrets folder
 
-3. Run the application
+3. Input credentials in CosmosUrl and CosmosKey files within ngsa/secrets folder 
+
+4. Run the application
 
 ```bash
 
@@ -48,6 +53,16 @@ mvn clean spring-boot:run
 ### Using bash shell
 
 > This will work from a terminal in Visual Studio Codespaces as well
+
+1. Clone the repo
+
+> git clone https://github.com/retaildevcrews/ngsa-java.git
+
+2. Create CosmosKey file within ngsa/secrets folder
+
+3. Input credentials in CosmosUrl and CosmosKey files within ngsa/secrets folder
+
+4. Run the application
 
 ```bash
 
