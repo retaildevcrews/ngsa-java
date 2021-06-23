@@ -30,9 +30,6 @@ public class CommonUtils {
    */
   public static void handleCliOptions(String[] args) {
     if (args != null) {
-      if (args.length == 0) {
-        printCmdLineHelp();
-      }
       SimpleCommandLinePropertySource commandLinePropertySource =
           new SimpleCommandLinePropertySource(args);
       Arrays.stream(commandLinePropertySource.getPropertyNames()).forEach(s -> {
