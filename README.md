@@ -66,11 +66,6 @@ mvn clean spring-boot:run
 
 ```bash
 
-# environment variables should already be set by running the saveenv.sh script
-# He_Name was set during setup and is your Key Vault name
-# export AUTH_TYPE=CLI
-# export KEYVAULT_NAME=$He_Name
-
 # run the application
 mvn clean spring-boot:run
 
