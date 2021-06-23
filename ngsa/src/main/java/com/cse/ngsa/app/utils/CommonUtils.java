@@ -24,11 +24,11 @@ public class CommonUtils {
   }
 
   /**
-   * handleCliLogLevelOption.
+   * handleCliOptions.
    *
    * @param args the log level in string form.
    */
-  public static void handleCliLogLevelOption(String[] args) {
+  public static void handleCliOptions(String[] args) {
     if (args != null) {
       SimpleCommandLinePropertySource commandLinePropertySource =
           new SimpleCommandLinePropertySource(args);
@@ -42,8 +42,12 @@ public class CommonUtils {
           Configurator.setLevel("com.cse.ngsa",
               level);
         }
+        if (s.equals("help") || s.equals("h")) {
+          printCmdLineHelp();
+          System.exit(0);
+        }
       });
-    }
+    } 
   }
 
   private static Level setLogLevel(String logLevel) {
@@ -114,12 +118,15 @@ public class CommonUtils {
   @SuppressWarnings ("squid:S106") // System.out needed to print usage
   public static void printCmdLineHelp() {
     System.out.println("\r\nUsage:\r\n"
-        + "   mvn clean spring-boot:run \r\n "
-        + "\t-Dspring-boot.run.arguments=\" --help \r\n"
-        + "\t\t--cpu.target.load\r\n"
-        + "\t\t--cpu.max.load\r\n"
-        + "\t\t--dry-run\r\n"
-        + "\t\t--log-level=<trace|info|warn|error|fatal>\"");
+        + "\tmvn clean spring-boot:run -Dspring-boot.run.arguments=[options] \r\n"
+        + "\r\nOptions: \r\n"
+        + "\t--help                                    \t\t Show help and usage information\r\n"
+        + "\t--cpu.target.load                         "
+        + "\t\t Target level for bursting metrics (int) [default: 60]\r\n"
+        + "\t--cpu.max.load                            "
+        + "\t\t Max level for bursting metrics (int) [default: 80]\r\n"
+        + "\t--dry-run                                 \t\t Validates configuration\r\n"
+        + "\t--log-level=<trace|info|warn|error|fatal> \t\t Log Level [default: Error]\"");
   }
 
   /**
