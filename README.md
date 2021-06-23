@@ -1,22 +1,6 @@
-# Managed Identity and Key Vault with Java Spring Boot
+# NGSA Java App
 
-> Build a Java Web API application using Managed Identity, Key Vault and Cosmos DB that is designed to be deployed to Azure App Service or AKS
-
-![License](https://img.shields.io/badge/license-MIT-green.svg)
-
-This is a Java Spring Boot Web API reference application designed to "fork and code" with the following features:
-
-- Securely build, deploy and run an Azure App Service (Web App for Containers) application
-- Securely build, deploy and run an Azure Kubernetes Service (AKS) application
-- Use Managed Identity to securely access resources
-- Securely store secrets in Key Vault
-- Securely build and deploy the Docker container to Azure Container Registry (ACR) or Docker Hub
-- Connect to and query Cosmos DB
-- Automatically send telemetry and logs to Azure Monitor
-
-> Visual Studio Codespaces is the easiest way to evaluate ngsa as all of the prerequisites are automatically installed
->
-> Follow the setup steps in the [Ngsa readme](https://github.com/retaildevcrews/ngsa) to setup Codespaces
+NGSA Java App is inteneded for platform testing and monitoring in one or many Kubernetes clusters and/or cloud deployments.
 
 ## Prerequisites
 
@@ -26,48 +10,40 @@ This is a Java Spring Boot Web API reference application designed to "fork and c
 - Docker CLI ([download](https://docs.docker.com/install/))
 - Java 11+ ([download](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html))
 - Maven ([download](https://maven.apache.org/download.cgi))
+- Cosmos DB setup (follow the steps in the [imdb readme](https://github.com/retaildevcrews/imdb.git) )
 - Visual Studio Code (optional) ([download](https://code.visualstudio.com/download))
 
-## Setup
-
-- Initial setup instructions are in the [Ngsa readme](https://github.com/retaildevcrews/ngsa)
-  - Please complete the setup steps and then continue below
-
-### Validate az CLI works
-
-> In Visual Studio Codespaces, open a terminal by pressing ctl + `
-
-```bash
-
-# make sure you are logged into Azure
-az account show
-
-# if not, log in
-az login
+## Ngsa-java Usage
 
 ```
 
-### Verify Key Vault Access
-
-```bash
-
-# verify you have access to Key Vault
-az keyvault secret show --name CosmosDatabase --vault-name $He_Name
+mvn clean spring-boot:run
+-Dspring-boot.run.arguments=" --help
+    --cpu.target.load
+    --cpu.max.load
+    --dry-run
+    --log-level=<trace|info|warn|error|fatal>"
 
 ```
 
-## Run the application
+## Run the Application
 
 ### Using Visual Studio Codespaces
 
-Visual Studio Codespaces is the easiest way to evaluate ngsa. Follow the setup steps in the [Ngsa readme](https://github.com/retaildevcrews/ngsa) to setup Codespaces.
+> Visual Studio Codespaces is the easiest way to evaluate ngsa-java.
 
-- Open `launch.json` in the `.vscode` directory
-- Replace `{your key vault name}` with the name of your key vault
-  - the file saves automatically
-- Press F5
-- Wait for `Netty started on ports(s):4120` in the Java Debug Console
-- Skip to the testing step below
+1. Set up Codespaces from the GitHub repo
+
+2. Input credentials in CosmosUrl and CosmosKey files within secrets folder (Create files if necessary)
+
+3. Run the application
+
+```bash
+
+# run the application
+mvn clean spring-boot:run
+
+```
 
 ### Using bash shell
 
@@ -81,7 +57,7 @@ Visual Studio Codespaces is the easiest way to evaluate ngsa. Follow the setup s
 # export KEYVAULT_NAME=$He_Name
 
 # run the application
-mvn spring-boot:run
+mvn clean spring-boot:run
 
 ```
 
@@ -105,123 +81,9 @@ curl localhost:4120/version
 
 Stop ngsa by typing Ctrl-C or the stop button if run via F5
 
-### Deep Testing
-
-We use [Web Validate](https://github.com/microsoft/webvalidate) to run deep verification tests on the Web API
-
-If you have dotnet core sdk installed (Codespaces has dotnet core installed)
-
-```bash
-
-# install Web Validate as a dotnet global tool
-# this is automatically installed in CodeSpaces
-dotnet tool install -g webvalidate
-
-# make sure you are in the root of the repository
-
-# run the validation tests
-# validation tests are located in the TestFiles directory
-cd TestFiles
-
-webv -s localhost:4120 -f baseline.json
-
-# there may be a validation error on the /healthz/ietf endpoint test
-#   json: status: warn : Expected: pass
-# the "warn" status indicates a slower than normal response time
-# and will occasionally occur
-
-# bad.json tests error conditions that return 4xx codes
-
-# benchmark.json is a 300 request test that covers the entire API
-
-# cd to root of repo
-cd ..
-
-```
-
-Test using Docker image
-
-```bash
-
-# make sure you are in the root of the repository
-
-# run the validation tests
-# validation tests are located in the TestFiles directory
-docker run -it --rm -v ./TestFiles:/app/TestFiles -s localhost:4120 -f baseline.json
-
-# there may be a validation error on the /healthz/ietf endpoint test
-#   json: status: warn : Expected: pass
-# the "warn" status indicates a slower than normal response time
-# and will occasionally occur
-
-# bad.json tests error conditions that return 4xx codes
-
-# benchmark.json is a 300 request test that covers the entire API
-
-```
-
-### Build the release container using Docker
-
-> A release build requires MI to connect to Key Vault.
-
-- The unit tests run as part of the Docker build process
-
-```bash
-
-# Make sure you are in the root of the repo
-# build the image
-
-docker build . -t ngsa-java
-
-# run docker tag and docker push to push to your repo
-
-```
-
-## CI-CD
-
-> Make sure to fork the repo before experimenting with CI-CD
-
-This repo uses [GitHub Actions](.github/workflows/dockerCI.yml) for Continuous Integration.
-
-- CI supports pushing to Azure Container Registry or DockerHub
-- The action is setup to execute on a PR or commit to ```master```
-  - The action does not run on commits to branches other than ```master```
-- The action always publishes an image with the ```:beta``` tag
-- If you tag the repo with a version i.e. ```v1.0.8``` the action will also
-  - Tag the image with ```:1.0.8```
-  - Tag the image with ```:stable```
-  - Note that the ```v``` is case sensitive (lower case)
-- Once the `secrets` below are set, create a new branch, make a change to a file (md file changes are ignored), commit and push your change, create a PR into your local master
-- Check the `Actions` tab on the GitHub repo main page
-
-CD is supported via webhooks in Azure App Services connected to the ACR or DockerHub repository.
-
-### CI to Azure Container Registry
-
-In order to push to ACR, you set the following `secrets` in your GitHub repo:
-
-- Azure Login Information
-  - TENANT
-  - SERVICE_PRINCIPAL
-  - SERVICE_PRINCIPAL_SECRET
-
-- ACR Information
-  - ACR_REG
-  - ACR_REPO
-  - ACR_IMAGE
-
-### CI to DockerHub
-
-In order to push to DockerHub, you must set the following `secrets` in your GitHub repo:
-
-- DOCKER_REPO
-- DOCKER_USER
-- DOCKER_PAT
-  - Personal Access Token (recommended) or password
-
 ## Contributing
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
+This project welcomes contributions and suggestions. Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
 the rights to use your contribution. For details, visit [Microsoft Contributor License Agreement](https://cla.opensource.microsoft.com).
 
