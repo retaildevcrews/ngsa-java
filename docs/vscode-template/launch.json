@@ -6,10 +6,11 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Java Launch (web)",
+            "name": "Launch Ngsa Project",
             "request": "launch",
             "mainClass": "com.cse.ngsa.app.NgsaJavaApplication",
-            "projectName": "ngsa"
+            "projectName": "ngsa",
+            "cwd": "${workspaceFolder}/ngsa"
         }
     ]
 }
