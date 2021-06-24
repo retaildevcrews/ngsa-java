@@ -6,7 +6,7 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Launch Ngsa Project",
+            "name": "Java Launch (web)",
             "request": "launch",
             "mainClass": "com.cse.ngsa.app.NgsaJavaApplication",
             "projectName": "ngsa",
