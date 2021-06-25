@@ -23,6 +23,7 @@
     <properties>
         <java.version>11</java.version>
         <azure.version>2.2.0</azure.version>
+        <resource.delimiter>@</resource.delimiter>
     </properties>
     <repositories>
         <repository>

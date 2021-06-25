@@ -7,8 +7,10 @@ import com.cse.ngsa.app.services.volumes.Secrets;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.text.MessageFormat;
 import java.util.Arrays;
+import javax.annotation.PostConstruct;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.core.env.SimpleCommandLinePropertySource;
 import org.springframework.stereotype.Component;
@@ -18,6 +20,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CommonUtils {
+
+  @Value("${build.version}")
+  private String appVersion;
+
+  @Value("${build.timestamp}")
+  private String buildTime;
 
   private CommonUtils() {
     // disable constructor for utility class
@@ -41,14 +49,23 @@ public class CommonUtils {
           }
           Configurator.setLevel("com.cse.ngsa",
               level);
-        }
-        if (s.equals("help") || s.equals("h")) {
+        } else if (s.equals("help") || s.equals("h")) {
           printCmdLineHelp();
+          System.exit(0);
+        } else if (s.equals("version") || s.equals("v")) {
+          CommonUtils commonUtils = new CommonUtils();
+          commonUtils.printCmdLineVersion();
           System.exit(0);
         }
       });
     } 
   }
+
+  @PostConstruct
+  private void printCmdLineVersion() {
+    System.out.printf("\r\nApplication Version:\r\n \t%s%s \n", appVersion, buildTime);
+  }
+  
 
   private static Level setLogLevel(String logLevel) {
     switch (logLevel) {
