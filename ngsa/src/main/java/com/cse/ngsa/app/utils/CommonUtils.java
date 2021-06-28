@@ -59,6 +59,9 @@ public class CommonUtils {
     } 
   }
 
+  /**
+   * prints the application version.
+   */
   @PostConstruct
   private void printCmdLineVersion() {
     if (context != null) {
