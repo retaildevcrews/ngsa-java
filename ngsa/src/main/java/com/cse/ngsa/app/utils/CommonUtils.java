@@ -145,7 +145,7 @@ public class CommonUtils {
         + "\t\t Max level for bursting metrics (int) [default: 80]\r\n"
         + "\t--dry-run                                 \t\t Validates configuration\r\n"
         + "\t--log-level=<trace|info|warn|error|fatal> \t\t Log Level [default: Error]\r\n"
-        + "\t--version                                \t\t Show version information\r\n");
+        + "\t--version                                 \t\t Show version information\r\n");
   }
 
   /**
