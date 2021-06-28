@@ -51,3 +51,5 @@ jobs:
 
         # Push to the repo
         docker push -a $DOCKER_REPO
+
+        
