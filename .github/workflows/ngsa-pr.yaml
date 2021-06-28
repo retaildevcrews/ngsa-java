@@ -1,19 +1,14 @@
-name: Build NGSA-Java
+name: Build NGSA-Java-PR
 
 on:
-  schedule:
-    # Run Sunday at 6:00 AM UTC
-    - cron: "0 6 * * 0"
-
-  push:
-    branches:
-      - main
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
 
     paths:
-    - 'Dockerfile'
-    - 'ngsa/src/main/java/**'
-    - 'ngsa/src/test/java/**'
-    - '.github/workflows/ngsa.yaml'
+      - 'Dockerfile'
+      - 'ngsa/src/main/java/**'
+      - 'ngsa/src/test/java/**'
+      - '.github/workflows/ngsa-pr.yaml'
 
 jobs:
 
@@ -40,18 +35,19 @@ jobs:
 
     - name: Docker Build
       run: |
-            docker build . --progress plain -t image
-
+            docker build . --progress auto -t image 
+            
     - name: Delete Secrets
       run: |
             rm -rf ./ngsa/secrets
 
     - name: Docker Tag and Push
       run: |
-        # VERSION=$(docker run --rm image --version)
+        # run image to validate the build
+        # docker run --rm image --version
 
-        # tag the repo with :beta
-        docker tag image $DOCKER_REPO:beta
+        # tag the repo with :dev
+        docker tag image $DOCKER_REPO:dev
 
         # Push to the repo
         docker push -a $DOCKER_REPO
