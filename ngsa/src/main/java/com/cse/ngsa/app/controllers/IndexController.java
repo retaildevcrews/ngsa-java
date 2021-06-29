@@ -23,7 +23,7 @@ public class IndexController {
   public ResponseEntity<InputStreamResource> indexController(ServerHttpResponse response) 
       throws IOException {
     response.setStatusCode(HttpStatus.OK);
-    Resource resource = new ClassPathResource("static/swagger-ui.html");
+    Resource resource = new ClassPathResource("static/index.html");
     InputStreamResource inputStreamResource = new InputStreamResource(resource.getInputStream());
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.setContentLength(resource.getInputStream().available());

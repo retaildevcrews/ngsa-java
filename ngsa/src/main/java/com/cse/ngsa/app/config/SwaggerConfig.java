@@ -8,13 +8,13 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @PropertySource(
-    value = "classpath:/static/swagger/ngsa.json",
+    value = "classpath:/static/swagger.json",
     factory = JsonConfigReader.class
 )
 @ConfigurationProperties
 public class SwaggerConfig {
 
-  /* info stores the 'info' dictionary value from ngsa.json */
+  /* info stores the 'info' dictionary value from swagger.json */
   private Map<String, String> info;
 
   public Map<String, String> getInfo() {
