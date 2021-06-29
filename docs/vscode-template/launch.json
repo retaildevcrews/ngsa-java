@@ -9,7 +9,8 @@
             "name": "Java Launch (web)",
             "request": "launch",
             "mainClass": "com.cse.ngsa.app.NgsaJavaApplication",
-            "projectName": "ngsa"
+            "projectName": "ngsa",
+            "cwd": "${workspaceFolder}/ngsa"
         }
     ]
 }
