@@ -5,7 +5,7 @@
   "options": {"shell": {"executable": "bash", "args": ["-lic"]}},
   "tasks": [
     {
-      "label": "compile (maven)",
+      "label": "debug-compile (maven)",
       "type": "shell",
       "command": [
         "mvn",
@@ -25,12 +25,12 @@
       "command": ["mvn", "clean","package"],
       "group": "build"
     },
-    // {
-    //   "label": "verify",
-    //   "type": "shell",
-    //   "command": "mvn -B verify",
-    //   "group": "build"
-    // },
+    {
+      "label": "full-compile (maven)",
+      "type": "shell",
+      "command": ["mvn", "compile"],
+      "group": "build"
+    },
     {
       "label": "test",
       "type": "shell",
