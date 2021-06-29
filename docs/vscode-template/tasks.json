@@ -1,0 +1,41 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "options": {"shell": {"executable": "bash", "args": ["-lic"]}},
+  "tasks": [
+    {
+      "label": "debug-compile (maven)",
+      "type": "shell",
+      "command": [
+        "mvn",
+        "compile",
+        "-Dpmd.skip=true", // without pmd check
+        "-Dcheckstyle.skip=true" // without style check
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "package",
+      "type": "shell",
+      "command": ["mvn", "clean","package"],
+      "group": "build"
+    },
+    {
+      "label": "full-compile (maven)",
+      "type": "shell",
+      "command": ["mvn", "compile"],
+      "group": "build"
+    },
+    {
+      "label": "test",
+      "type": "shell",
+      "command": "mvn -B test",
+      "group": "test"
+    }
+  ]
+}

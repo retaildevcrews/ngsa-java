@@ -28,6 +28,6 @@ RUN addgroup -g 4120 ngsa && \
 
 USER ngsa
 
-COPY --from=dependencies /app/target/ngsa.jar app.jar
+COPY --from=dependencies /app/ngsa/target/ngsa.jar app.jar
 EXPOSE 4120
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
