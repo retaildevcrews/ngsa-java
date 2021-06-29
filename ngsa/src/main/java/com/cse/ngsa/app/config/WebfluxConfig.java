@@ -11,10 +11,10 @@ public class WebfluxConfig implements WebFluxConfigurer {
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
     registry.addResourceHandler("/webjars/**")
         .addResourceLocations("classpath:/META-INF/resources/webjars/");
-    registry.addResourceHandler("/swagger-ui.html**")
+    registry.addResourceHandler("/index.html**")
         .addResourceLocations("classpath:/static/");
-    registry.addResourceHandler("/swagger/ngsa.json**")
-        .addResourceLocations("classpath:/static/swagger/");
+    registry.addResourceHandler("/swagger.json**")
+        .addResourceLocations("classpath:/static/");
 
   }
 }
