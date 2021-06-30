@@ -68,7 +68,6 @@ public class CommonUtils {
     }
   }
 
-
   private static Level setLogLevel(String logLevel) {
     switch (logLevel) {
       case "trace":
@@ -140,9 +139,9 @@ public class CommonUtils {
         + "\tmvn clean spring-boot:run -Dspring-boot.run.arguments=[options] \r\n"
         + "\r\nOptions: \r\n"
         + "\t--help                                    \t\t Show help and usage information\r\n"
-        + "\t--cpu.target.load                         "
+        + "\t--burst-target                             "
         + "\t\t Target level for bursting metrics (int) [default: 60]\r\n"
-        + "\t--cpu.max.load                            "
+        + "\t--burst-max                                "
         + "\t\t Max level for bursting metrics (int) [default: 80]\r\n"
         + "\t--dry-run                                 \t\t Validates configuration\r\n"
         + "\t--log-level=<trace|info|warn|error|fatal> \t\t Log Level [default: Error]\r\n"

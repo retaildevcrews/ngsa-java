@@ -68,8 +68,8 @@ public class HealthzController {
         String.format("service=%s, current-load=%s, target-load=%s, max-load=%s ",
         environment.getProperty("service.name"),
         cpuLoad,
-        environment.getProperty("cpu.target.load"),
-        environment.getProperty("cpu.max.load")));
+        environment.getProperty("burst-target"),
+        environment.getProperty("burst-max")));
 
     return resultsMono.map(data -> {
       String healthStatus = getOverallHealthStatus(data);
