@@ -15,7 +15,7 @@ ENV PATH=/app/apache-maven/bin:${PATH}
 FROM base AS dependencies
 ADD . /app
 
-RUN mvn clean package
+RUN mvn clean package -DskipTests
 
 #
 # ---- Release App ----
