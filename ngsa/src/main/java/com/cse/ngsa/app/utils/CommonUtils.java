@@ -50,8 +50,6 @@ public class CommonUtils {
           printCmdLineHelp();
           System.exit(0);
         } else if (s.equals("version") || s.equals("v")) {
-          CommonUtils commonUtils = new CommonUtils();
-          commonUtils.printCmdLineVersion();
           System.exit(0);
         }
       });
@@ -61,6 +59,7 @@ public class CommonUtils {
   /**
    * prints the application version.
    */
+  @SuppressWarnings("PMD.UnusedPrivateMethod") // Invoked when bean is initialized
   @PostConstruct
   private void printCmdLineVersion() {
     if (buildConfig != null) {
