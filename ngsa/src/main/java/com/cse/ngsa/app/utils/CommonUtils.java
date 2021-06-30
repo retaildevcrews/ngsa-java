@@ -12,7 +12,6 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.SimpleCommandLinePropertySource;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +22,7 @@ import org.springframework.stereotype.Component;
 public class CommonUtils {
 
   @Autowired
-  ApplicationContext context;
+  BuildConfig buildConfig;
 
   private CommonUtils() {
     // disable constructor for utility class
@@ -64,8 +63,8 @@ public class CommonUtils {
    */
   @PostConstruct
   private void printCmdLineVersion() {
-    if (context != null) {
-      String version = context.getBean(BuildConfig.class).getBuildVersion();
+    if (buildConfig != null) {
+      String version = buildConfig.getBuildVersion();
       System.out.printf("\r\nApplication Version:\r\n \t%s \n\n", version);
     }
   }
