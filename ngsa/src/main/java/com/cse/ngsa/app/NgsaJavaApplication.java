@@ -18,7 +18,7 @@ public class NgsaJavaApplication {
   */
   public static void main(String[] args) {
     
-    CommonUtils.handleCliOptions(args);
     SpringApplication.run(NgsaJavaApplication.class, args);
+    CommonUtils.handleCliOptions(args);
   }
 }
