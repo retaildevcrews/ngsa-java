@@ -26,7 +26,6 @@ public final class Constants {
 
   public static final String BURST_HEADER_KEY = "X-Load-Feedback";
 
-
   private Constants() {
     // private constructor to hide public constructor
   }
