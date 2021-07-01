@@ -26,6 +26,7 @@ Options:
         --cpu.max.load                                           Max level for bursting metrics (int) [default: 80]
         --dry-run                                                Validates configuration
         --log-level=<trace|info|warn|error|fatal>                Log Level [default: Error]
+        --version                                                Shows version information       
 
 ```
 
