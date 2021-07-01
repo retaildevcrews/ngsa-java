@@ -3,12 +3,22 @@ package com.cse.ngsa.app.middleware;
 import com.cse.ngsa.app.utils.CorrelationVectorExtensions;
 import com.cse.ngsa.app.utils.QueryUtils;
 import com.microsoft.correlationvector.CorrelationVector;
+import io.micrometer.core.annotation.Timed;
+import io.micrometer.core.instrument.DistributionSummary;
+import io.micrometer.core.instrument.Meter;
+import io.micrometer.core.instrument.Timer;
+import io.micrometer.core.instrument.Meter.Type;
+import io.micrometer.core.instrument.config.MeterFilter;
+import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
+import io.micrometer.prometheus.PrometheusMeterRegistry;
 import java.net.InetSocketAddress;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import java.time.Duration;
 import org.json.JSONObject;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
@@ -19,9 +29,57 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class RequestLogger implements WebFilter {
-
+  
   private static final Logger logger =   LogManager.getLogger(RequestLogger.class);
- 
+
+  PrometheusMeterRegistry simpleMeterRegistry;
+  private DistributionSummary distributionSummary;
+  private Timer distTimer;
+  public RequestLogger(PrometheusMeterRegistry registry) {
+
+    // registry.config().commonTags("region", "us-east-1");
+
+    simpleMeterRegistry = registry;
+    // distributionSummary = DistributionSummary
+    //     .builder("NgsaAppSummary")
+    //     .description("Summary of NGSA App request duration")
+    //     .publishPercentileHistogram(true)
+    //     .publishPercentiles(.9, .95, .99)
+    //     .serviceLevelObjectives(1,2,4,8,16,32,64,128,256,512)
+    //     .register(simpleMeterRegistry);
+    
+    // If we set our base-unit, we should also set the naming convention
+    simpleMeterRegistry.config().namingConvention((String name, Type type, String baseUnit)->{
+      if (name.startsWith("Ngsa")) {
+        return name;
+      }
+      return name;
+    });
+    distributionSummary = DistributionSummary
+        .builder("NgsaAppDuration")
+        // .baseUnit("") // it will get append at the end of name  
+        .description("Histogram of NGSA App request duration")
+        .register(simpleMeterRegistry);
+    // distTimer = Timer
+    //     .builder("NgsaAppDuration")
+    //     // .baseUnit("") // Don't set  
+    //     .description("Histogram of NGSA App request duration")
+    //     .register(simpleMeterRegistry);
+    // simpleMeterRegistry.config().meterFilter(new MeterFilter() {
+    //     @Override
+    //     public DistributionStatisticConfig configure(Meter.Id id, DistributionStatisticConfig config) {
+    //       if (id.getName().equals("NgsaAppDuration")) {
+    //         return DistributionStatisticConfig.builder()
+    //         // .serviceLevelObjectives(1,2,4,8,16,32,64,128,256,512)
+    //             // .percentiles(0.9, 0.95, 0.99, 1.0)
+    //             .percentilesHistogram(true)
+    //             .build()
+    //             .merge(config);
+    //     }
+    //     return config;
+    //   }
+    // });
+  }
   /**
    * filter gathers the request and response metadata and logs
    *   the results to console.
@@ -33,7 +91,7 @@ public class RequestLogger implements WebFilter {
     String requestAddress = getRequestAddress(
         serverWebExchange.getRequest().getRemoteAddress());
     String pathQueryString = getPathQueryString(serverWebExchange.getRequest());
-
+    
     // set start time
     long startTime = System.currentTimeMillis();
       
@@ -51,10 +109,11 @@ public class RequestLogger implements WebFilter {
         return;
       }
 
+      
       JSONObject logData = new JSONObject();
       var currentRequest = serverWebExchange.getRequest();
       String userAgent = currentRequest.getHeaders()
-          .getOrDefault("User-Agent", Arrays.asList("")).get(0);
+      .getOrDefault("User-Agent", Arrays.asList("")).get(0);
       // compute request duration and get status code
       long duration = System.currentTimeMillis() - startTime;
       logData.put("Date", Instant.now().toString());
@@ -81,6 +140,11 @@ public class RequestLogger implements WebFilter {
       logData.put("CVector", cv.getValue());
       logData.put("CVectorBase", cv.getBaseVector());
       String[] categoryAndMode = QueryUtils.getCategoryAndMode(serverWebExchange.getRequest());
+      // var snapshot = distributionSummary.takeSnapshot();
+      // simpleMeterRegistry.summary("NgsaAppSummary").record(snapshot.count());
+      distributionSummary.record(duration);
+      // distTimer.record(duration, TimeUnit.M);
+      // distributionSummary.takeSnapshot().
       logData.put("Category", categoryAndMode[0]);
       logData.put("SubCategory", categoryAndMode[1]);
       logData.put("Mode", categoryAndMode[2]);
