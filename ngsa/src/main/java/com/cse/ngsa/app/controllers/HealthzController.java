@@ -6,7 +6,7 @@ import com.cse.ngsa.app.dao.ActorsDao;
 import com.cse.ngsa.app.dao.GenresDao;
 import com.cse.ngsa.app.dao.MoviesDao;
 import com.cse.ngsa.app.health.ietf.IeTfStatus;
-import java.lang.management.ManagementFactory;
+import com.cse.ngsa.app.utils.CommonUtils;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,14 +36,20 @@ public class HealthzController {
 
   @Autowired private BuildConfig buildConfig;
 
-  @Autowired Environment environment;
+  @Autowired
+  CommonUtils commonUtils;
+
+  @Autowired 
+  Environment environment;
 
   @Autowired
   GenresDao genresDao;
 
-  @Autowired MoviesDao moviesDao;
+  @Autowired 
+  MoviesDao moviesDao;
 
-  @Autowired ActorsDao actorsDao;
+  @Autowired 
+  ActorsDao actorsDao;
 
   // Used to update start time to calculate duration.
   // Using a list, because the variable must be final when used in the map.
@@ -61,15 +67,7 @@ public class HealthzController {
     Mono<List<Map<String, Object>>> resultsMono = buildHealthCheckChain();
 
     HttpHeaders headers = new HttpHeaders();
-    long cpuLoad = Math.round(ManagementFactory.getPlatformMXBean(
-            com.sun.management.OperatingSystemMXBean.class).getProcessCpuLoad() * 100L);
-
-    headers.add("X-Load-Feedback",
-        String.format("service=%s, current-load=%s, target-load=%s, max-load=%s ",
-        environment.getProperty("service.name"),
-        cpuLoad,
-        environment.getProperty("burst-target"),
-        environment.getProperty("burst-max")));
+    headers.add(Constants.BURST_HEADER_KEY, commonUtils.getBurstHeaderValue());
 
     return resultsMono.map(data -> {
       String healthStatus = getOverallHealthStatus(data);

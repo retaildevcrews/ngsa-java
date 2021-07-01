@@ -5,6 +5,7 @@ import com.cse.ngsa.app.config.BuildConfig;
 import com.cse.ngsa.app.services.volumes.IVolumeSecretService;
 import com.cse.ngsa.app.services.volumes.Secrets;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import java.lang.management.ManagementFactory;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import javax.annotation.PostConstruct;
@@ -12,6 +13,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
+import org.springframework.core.env.Environment;
 import org.springframework.core.env.SimpleCommandLinePropertySource;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +25,9 @@ public class CommonUtils {
 
   @Autowired
   BuildConfig buildConfig;
+
+  @Autowired 
+  Environment environment;
 
   private CommonUtils() {
     // disable constructor for utility class
@@ -153,6 +158,23 @@ public class CommonUtils {
    */
   public static boolean isNullWhiteSpace(final String string) {
     return string == null || string.isEmpty() || string.trim().isEmpty();
+  }
+
+  /**
+   * Prepares burst header values.
+   */
+  public String getBurstHeaderValue() {
+    long cpuLoad = Math.round(ManagementFactory.getPlatformMXBean(
+        com.sun.management.OperatingSystemMXBean.class).getProcessCpuLoad() * 100L);
+
+    String burstHeaderValue = String.format(
+        "service=%s, current-load=%s, target-load=%s, max-load=%s ",
+        environment.getProperty("service.name"),
+        cpuLoad,
+        environment.getProperty("burst-target"),
+        environment.getProperty("burst-max"));
+    
+    return burstHeaderValue;
   }
 
 }
