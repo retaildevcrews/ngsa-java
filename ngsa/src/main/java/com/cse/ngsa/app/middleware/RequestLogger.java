@@ -1,25 +1,19 @@
 package com.cse.ngsa.app.middleware;
 
+import com.cse.ngsa.app.services.configuration.IConfigurationService;
 import com.cse.ngsa.app.utils.CorrelationVectorExtensions;
 import com.cse.ngsa.app.utils.QueryUtils;
 import com.microsoft.correlationvector.CorrelationVector;
-import io.micrometer.core.annotation.Timed;
 import io.micrometer.core.instrument.DistributionSummary;
-import io.micrometer.core.instrument.Meter;
-import io.micrometer.core.instrument.Timer;
-import io.micrometer.core.instrument.Meter.Type;
-import io.micrometer.core.instrument.config.MeterFilter;
-import io.micrometer.core.instrument.distribution.DistributionStatisticConfig;
-import io.micrometer.prometheus.PrometheusMeterRegistry;
+import io.micrometer.core.instrument.MeterRegistry;
 import java.net.InetSocketAddress;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import java.time.Duration;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -32,34 +26,26 @@ public class RequestLogger implements WebFilter {
   
   private static final Logger logger =   LogManager.getLogger(RequestLogger.class);
 
-  PrometheusMeterRegistry simpleMeterRegistry;
   private DistributionSummary distributionSummary;
-  private Timer distTimer;
-  public RequestLogger(PrometheusMeterRegistry registry) {
+  @Autowired private IConfigurationService configService;
 
-    // registry.config().commonTags("region", "us-east-1");
-
-    simpleMeterRegistry = registry;
-    // distributionSummary = DistributionSummary
-    //     .builder("NgsaAppSummary")
-    //     .description("Summary of NGSA App request duration")
-    //     .publishPercentileHistogram(true)
-    //     .publishPercentiles(.9, .95, .99)
-    //     .serviceLevelObjectives(1,2,4,8,16,32,64,128,256,512)
-    //     .register(simpleMeterRegistry);
+  public RequestLogger(MeterRegistry registry) {
     
     // If we set our base-unit, we should also set the naming convention
-    simpleMeterRegistry.config().namingConvention((String name, Type type, String baseUnit)->{
-      if (name.startsWith("Ngsa")) {
-        return name;
-      }
-      return name;
-    });
+    // registry.config().namingConvention((String name, Type type, String baseUnit)->{
+    //   if (name.startsWith("Ngsa")) {
+    //     return name;
+    //   }
+    //   return name;
+    // });
     distributionSummary = DistributionSummary
         .builder("NgsaAppDuration")
         // .baseUnit("") // it will get append at the end of name  
         .description("Histogram of NGSA App request duration")
-        .register(simpleMeterRegistry);
+        // TODO: Change the region and zone according to property
+        // TODO: After adding tags it sort of crashed. investigate
+        .tags("cosmos","dev", "region", "dev", "zone", "dev")
+        .register(registry);
     // distTimer = Timer
     //     .builder("NgsaAppDuration")
     //     // .baseUnit("") // Don't set  
