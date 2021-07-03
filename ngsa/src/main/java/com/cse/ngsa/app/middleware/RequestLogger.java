@@ -26,11 +26,12 @@ public class RequestLogger implements WebFilter {
   
   private static final Logger logger =   LogManager.getLogger(RequestLogger.class);
 
-  private DistributionSummary distributionSummary;
+  private DistributionSummary appDurationHist;
+  // private DistributionSummary appSummary;
   @Autowired private IConfigurationService configService;
-
+  MeterRegistry promRegistry;
   public RequestLogger(MeterRegistry registry) {
-    
+    promRegistry = registry;
     // If we set our base-unit, we should also set the naming convention
     // registry.config().namingConvention((String name, Type type, String baseUnit)->{
     //   if (name.startsWith("Ngsa")) {
@@ -38,20 +39,34 @@ public class RequestLogger implements WebFilter {
     //   }
     //   return name;
     // });
-    distributionSummary = DistributionSummary
-        .builder("NgsaAppDuration")
-        // .baseUnit("") // it will get append at the end of name  
-        .description("Histogram of NGSA App request duration")
-        // TODO: Change the region and zone according to property
-        // TODO: After adding tags it sort of crashed. investigate
-        .tags("cosmos","dev", "region", "dev", "zone", "dev")
-        .register(registry);
+    // appDurationHist = DistributionSummary
+    //     .builder("NgsaAppDuration")
+    //     // .baseUnit("") // it will get append at the end of name  
+    //     .description("Histogram of NGSA App request duration")
+    //     // TODO: Change the region and zone according to property
+    //     // TODO: After adding tags it sort of crashed. investigate
+    //     .tags("cosmos","dev", "region", "dev", "zone", "dev")
+    //     .register(registry);
+    // appSummary = DistributionSummary
+    //     .builder("NgsaAppSummary")
+    //     .description("Summary of NGSA App request duration")
+    //     // .tags("cosmos","dev", "region", "dev", "zone", "dev")
+    //     .register(registry);
+    // registry.config().meterFilter(new MeterFilter() {
+    //     @Override
+    //     public Meter.Id map(Meter.Id id) {
+    //       if (metricDesc.containsKey(id.getName())) {
+    //         return new Meter.Id(id.getName(), Tags.of(id.getTags()), id.getBaseUnit(), metricDesc.get(id.getName()), id.getType());
+    //       }
+    //       return id;
+    //    }
+    // });    
     // distTimer = Timer
     //     .builder("NgsaAppDuration")
     //     // .baseUnit("") // Don't set  
     //     .description("Histogram of NGSA App request duration")
     //     .register(simpleMeterRegistry);
-    // simpleMeterRegistry.config().meterFilter(new MeterFilter() {
+    // registry.config().meterFilter(new MeterFilter() {
     //     @Override
     //     public DistributionStatisticConfig configure(Meter.Id id, DistributionStatisticConfig config) {
     //       if (id.getName().equals("NgsaAppDuration")) {
@@ -95,7 +110,6 @@ public class RequestLogger implements WebFilter {
         return;
       }
 
-      
       JSONObject logData = new JSONObject();
       var currentRequest = serverWebExchange.getRequest();
       String userAgent = currentRequest.getHeaders()
@@ -128,7 +142,19 @@ public class RequestLogger implements WebFilter {
       String[] categoryAndMode = QueryUtils.getCategoryAndMode(serverWebExchange.getRequest());
       // var snapshot = distributionSummary.takeSnapshot();
       // simpleMeterRegistry.summary("NgsaAppSummary").record(snapshot.count());
-      distributionSummary.record(duration);
+      DistributionSummary
+        .builder("NgsaAppDuration")  
+        .description("Histogram of NGSA App request duration")
+        .tags("cosmos","dev", "region", "dev", "zone", "dev", "mode", categoryAndMode[2])
+        .register(promRegistry) // it won't not register everytime
+        .record(duration);
+      DistributionSummary
+        .builder("NgsaAppSummary")
+        .description("Summary of NGSA App request duration")
+        .tags("cosmos","dev", "region", "dev", "zone", "dev", "mode", categoryAndMode[2])
+        .register(promRegistry) // it won't not register everytime
+        .record(duration);
+      //appDurationHist.record(duration);
       // distTimer.record(duration, TimeUnit.M);
       // distributionSummary.takeSnapshot().
       logData.put("Category", categoryAndMode[0]);
