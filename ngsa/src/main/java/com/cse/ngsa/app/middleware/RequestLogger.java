@@ -26,60 +26,10 @@ public class RequestLogger implements WebFilter {
   
   private static final Logger logger =   LogManager.getLogger(RequestLogger.class);
 
-  private DistributionSummary appDurationHist;
-  // private DistributionSummary appSummary;
   @Autowired private IConfigurationService configService;
   MeterRegistry promRegistry;
   public RequestLogger(MeterRegistry registry) {
     promRegistry = registry;
-    // If we set our base-unit, we should also set the naming convention
-    // registry.config().namingConvention((String name, Type type, String baseUnit)->{
-    //   if (name.startsWith("Ngsa")) {
-    //     return name;
-    //   }
-    //   return name;
-    // });
-    // appDurationHist = DistributionSummary
-    //     .builder("NgsaAppDuration")
-    //     // .baseUnit("") // it will get append at the end of name  
-    //     .description("Histogram of NGSA App request duration")
-    //     // TODO: Change the region and zone according to property
-    //     // TODO: After adding tags it sort of crashed. investigate
-    //     .tags("cosmos","dev", "region", "dev", "zone", "dev")
-    //     .register(registry);
-    // appSummary = DistributionSummary
-    //     .builder("NgsaAppSummary")
-    //     .description("Summary of NGSA App request duration")
-    //     // .tags("cosmos","dev", "region", "dev", "zone", "dev")
-    //     .register(registry);
-    // registry.config().meterFilter(new MeterFilter() {
-    //     @Override
-    //     public Meter.Id map(Meter.Id id) {
-    //       if (metricDesc.containsKey(id.getName())) {
-    //         return new Meter.Id(id.getName(), Tags.of(id.getTags()), id.getBaseUnit(), metricDesc.get(id.getName()), id.getType());
-    //       }
-    //       return id;
-    //    }
-    // });    
-    // distTimer = Timer
-    //     .builder("NgsaAppDuration")
-    //     // .baseUnit("") // Don't set  
-    //     .description("Histogram of NGSA App request duration")
-    //     .register(simpleMeterRegistry);
-    // registry.config().meterFilter(new MeterFilter() {
-    //     @Override
-    //     public DistributionStatisticConfig configure(Meter.Id id, DistributionStatisticConfig config) {
-    //       if (id.getName().equals("NgsaAppDuration")) {
-    //         return DistributionStatisticConfig.builder()
-    //         // .serviceLevelObjectives(1,2,4,8,16,32,64,128,256,512)
-    //             // .percentiles(0.9, 0.95, 0.99, 1.0)
-    //             .percentilesHistogram(true)
-    //             .build()
-    //             .merge(config);
-    //     }
-    //     return config;
-    //   }
-    // });
   }
   /**
    * filter gathers the request and response metadata and logs
@@ -140,8 +90,6 @@ public class RequestLogger implements WebFilter {
       logData.put("CVector", cv.getValue());
       logData.put("CVectorBase", cv.getBaseVector());
       String[] categoryAndMode = QueryUtils.getCategoryAndMode(serverWebExchange.getRequest());
-      // var snapshot = distributionSummary.takeSnapshot();
-      // simpleMeterRegistry.summary("NgsaAppSummary").record(snapshot.count());
       DistributionSummary
         .builder("NgsaAppDuration")  
         .description("Histogram of NGSA App request duration")
@@ -154,9 +102,6 @@ public class RequestLogger implements WebFilter {
         .tags("cosmos","dev", "region", "dev", "zone", "dev", "mode", categoryAndMode[2])
         .register(promRegistry) // it won't not register everytime
         .record(duration);
-      //appDurationHist.record(duration);
-      // distTimer.record(duration, TimeUnit.M);
-      // distributionSummary.takeSnapshot().
       logData.put("Category", categoryAndMode[0]);
       logData.put("SubCategory", categoryAndMode[1]);
       logData.put("Mode", categoryAndMode[2]);
