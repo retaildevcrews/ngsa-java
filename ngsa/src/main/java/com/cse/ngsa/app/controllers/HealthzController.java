@@ -108,13 +108,16 @@ public class HealthzController {
 
     Mono<List<Map<String, Object>>> resultsMono = buildHealthCheckChain();
 
+    HttpHeaders headers = new HttpHeaders();
+    headers.add(Constants.BURST_HEADER_KEY, commonUtils.getBurstHeaderValue());
+
     return resultsMono.map(data -> {
       ieTfResult.put(STATUS_TEXT, getOverallHealthStatus(data));
       Map<String, Object> resultsDictionary = convertResultsListToDictionary(data);
 
       ieTfResult.put("checks", resultsDictionary);
       return ieTfResult;
-    }).map(result -> ResponseEntity.ok().body(result));
+    }).map(result -> ResponseEntity.ok().headers(headers).body(result));
   }
 
   /** buildHelthCheckChain build the chain of calls using concatWith. */
