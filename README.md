@@ -22,6 +22,8 @@ Usage:
 
 Options: 
         --help                                                   Show help and usage information
+        --burst-header                                           Enable burst metrics header in healthz and version requests
+        --burst-service                                          Service name for bursting metrics (string) [default: ngsa-java]
         --burst-target                                           Target level for bursting metrics (int) [default: 60]
         --burst-max                                              Max level for bursting metrics (int) [default: 80]
         --dry-run                                                Validates configuration

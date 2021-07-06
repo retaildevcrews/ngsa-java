@@ -67,7 +67,9 @@ public class HealthzController {
     Mono<List<Map<String, Object>>> resultsMono = buildHealthCheckChain();
 
     HttpHeaders headers = new HttpHeaders();
-    headers.add(Constants.BURST_HEADER_KEY, commonUtils.getBurstHeaderValue());
+    if (environment.getProperty("burst-header") != null) {
+      headers.add(Constants.BURST_HEADER_KEY, commonUtils.getBurstHeaderValue());
+    }
 
     return resultsMono.map(data -> {
       String healthStatus = getOverallHealthStatus(data);
@@ -109,7 +111,9 @@ public class HealthzController {
     Mono<List<Map<String, Object>>> resultsMono = buildHealthCheckChain();
 
     HttpHeaders headers = new HttpHeaders();
-    headers.add(Constants.BURST_HEADER_KEY, commonUtils.getBurstHeaderValue());
+    if (environment.getProperty("burst-header") != null) {
+      headers.add(Constants.BURST_HEADER_KEY, commonUtils.getBurstHeaderValue());
+    }
 
     return resultsMono.map(data -> {
       ieTfResult.put(STATUS_TEXT, getOverallHealthStatus(data));

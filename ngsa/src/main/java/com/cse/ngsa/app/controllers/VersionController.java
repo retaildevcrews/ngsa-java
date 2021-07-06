@@ -50,12 +50,14 @@ public class VersionController {
 
       versionResult.put("apiVersion",
           context.getBean(SwaggerConfig.class).getInfo().get("version"));
-      versionResult.put("appVersion", 
+      versionResult.put("appVersion",
           context.getBean(BuildConfig.class).getBuildVersion());
       versionResult.put("language", "java");
 
       response.setStatusCode(HttpStatus.OK);
-      response.getHeaders().add(Constants.BURST_HEADER_KEY, commonUtils.getBurstHeaderValue());
+      if (environment.getProperty("burst-header") != null) {
+        response.getHeaders().add(Constants.BURST_HEADER_KEY, commonUtils.getBurstHeaderValue());
+      }
       
       return Mono.just(versionResult);
     } catch (Exception ex) {

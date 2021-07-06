@@ -144,6 +144,8 @@ public class CommonUtils {
         + "\tmvn clean spring-boot:run -Dspring-boot.run.arguments=[options] \r\n"
         + "\r\nOptions: \r\n"
         + "\t--help                                    \t\t Show help and usage information\r\n"
+        + "\t--burst-service                             "
+        + "\t\t Service name for bursting metrics (string) [default: ngsa-java]\r\n"
         + "\t--burst-target                             "
         + "\t\t Target level for bursting metrics (int) [default: 60]\r\n"
         + "\t--burst-max                                "
@@ -169,7 +171,7 @@ public class CommonUtils {
 
     String burstHeaderValue = String.format(
         "service=%s, current-load=%s, target-load=%s, max-load=%s ",
-        environment.getProperty("service.name"),
+        environment.getProperty("burst-service"),
         cpuLoad,
         environment.getProperty("burst-target"),
         environment.getProperty("burst-max"));
