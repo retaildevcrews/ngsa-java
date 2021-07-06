@@ -144,6 +144,8 @@ public class CommonUtils {
         + "\tmvn clean spring-boot:run -Dspring-boot.run.arguments=[options] \r\n"
         + "\r\nOptions: \r\n"
         + "\t--help                                    \t\t Show help and usage information\r\n"
+        + "\t--burst-header                             "
+        + "\t\t Enable burst metrics header in healthz and version requests\r\n"
         + "\t--burst-service                             "
         + "\t\t Service name for bursting metrics (string) [default: ngsa-java]\r\n"
         + "\t--burst-target                             "
