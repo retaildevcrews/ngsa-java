@@ -55,7 +55,7 @@ public class VersionController {
       versionResult.put("language", "java");
 
       response.setStatusCode(HttpStatus.OK);
-      if (environment.getProperty("burst-header") != null) {
+      if (environment.getProperty(Constants.BURST_HEADER_ARGUMENT) != null) {
         response.getHeaders().add(Constants.BURST_HEADER_KEY, commonUtils.getBurstHeaderValue());
       }
       

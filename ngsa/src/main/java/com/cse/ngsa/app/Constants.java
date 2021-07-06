@@ -24,6 +24,7 @@ public final class Constants {
 
   public static final String SECRETS_VOLUME = "secrets";
 
+  public static final String BURST_HEADER_ARGUMENT = "burst-header";
   public static final String BURST_HEADER_KEY = "X-Load-Feedback";
 
   private Constants() {
