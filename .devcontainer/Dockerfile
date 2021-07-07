@@ -17,8 +17,8 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     curl -O https://cdn.azul.com/zulu/bin/zulu-repo_1.0.0-2_all.deb && \
     apt-get install ./zulu-repo_1.0.0-2_all.deb && \
     apt-get update && \
-    apt-get -y upgrade && \
-    apt-get install zulu11-jdk -y
+    apt-get -y install zulu11-jdk && \
+    apt-get -y upgrade
 
 COPY .devcontainer/library-scripts /tmp/library-scripts/
 
