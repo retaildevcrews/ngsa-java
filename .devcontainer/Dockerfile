@@ -1,5 +1,6 @@
 ARG VARIANT="11"
 FROM mcr.microsoft.com/vscode/devcontainers/base
+USER root
 
 ENV DEBIAN_FRONTEND=noninteractive
 
