@@ -66,7 +66,7 @@ public class RequestLogger implements WebFilter {
       JSONObject logData = new JSONObject();
       var currentRequest = serverWebExchange.getRequest();
       String userAgent = currentRequest.getHeaders()
-      .getOrDefault("User-Agent", Arrays.asList("")).get(0);
+          .getOrDefault("User-Agent", Arrays.asList("")).get(0);
       // compute request duration and get status code
       long duration = System.currentTimeMillis() - startTime;
       logData.put("Date", Instant.now().toString());
@@ -110,20 +110,20 @@ public class RequestLogger implements WebFilter {
         // Using .getProcessCPULoad() direclty makes process_cpu_usage unusable
         // Not sure why
         Gauge.builder("NgsaCpuPercent", cpuMonitor, x -> x.getCpuUsagePercent())
-          .description("CPU Percent Used")
-          .register(promRegistry);
+            .description("CPU Percent Used")
+            .register(promRegistry);
         DistributionSummary
-          .builder("NgsaAppDuration")
-          .description("Histogram of NGSA App request duration")
-          .tags(promTags)
-          .register(promRegistry) // it won't not register everytime
-          .record(duration);
+            .builder("NgsaAppDuration")
+            .description("Histogram of NGSA App request duration")
+            .tags(promTags)
+            .register(promRegistry) // it won't not register everytime
+            .record(duration);
         DistributionSummary
-          .builder("NgsaAppSummary")
-          .description("Summary of NGSA App request duration")
-          .tags(promTags)
-          .register(promRegistry) // it won't not register everytime
-          .record(duration);
+            .builder("NgsaAppSummary")
+            .description("Summary of NGSA App request duration")
+            .tags(promTags)
+            .register(promRegistry) // it won't not register everytime
+            .record(duration);
       }
       logData.put("Category", categoryAndMode[0]);
       logData.put("SubCategory", categoryAndMode[1]);

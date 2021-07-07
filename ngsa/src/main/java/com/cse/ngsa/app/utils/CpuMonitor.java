@@ -1,31 +1,35 @@
 package com.cse.ngsa.app.utils;
 
+import com.sun.management.OperatingSystemMXBean;
 import java.lang.management.ManagementFactory;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import javax.management.Attribute;
-import javax.management.AttributeList;
-import javax.management.ObjectName;
-
-import com.sun.management.OperatingSystemMXBean;
-
 import org.springframework.stereotype.Component;
 
+/**
+ * Cpu Usage Monitor Class.
+ */
 @Component
 public class CpuMonitor {
   private double cpuUsagePercent = 0;
   private OperatingSystemMXBean opMxBean = null;
 
+  /**
+   * Gets the CPU Usage as Percentage.
+   * @return Double CPU Usage Percentage
+   */
   public double getCpuUsagePercent() {
     // Thread synchronization is not required
     return cpuUsagePercent;
   }
 
+  /**
+   * Constructor.
+   */
   public CpuMonitor() {
-    if ( ManagementFactory.getOperatingSystemMXBean() instanceof OperatingSystemMXBean ) {
+    if (ManagementFactory.getOperatingSystemMXBean() instanceof OperatingSystemMXBean) {
       opMxBean = (OperatingSystemMXBean)ManagementFactory.getOperatingSystemMXBean();
-      new Timer().schedule(new TimerTask(){
+      new Timer().schedule(new TimerTask() {
         @Override
         public void run() {
           calcCpuUsage();
@@ -35,27 +39,9 @@ public class CpuMonitor {
     }
   }
 
-  // TODO: Clean up
-  public static double getProcessCpuLoad() throws Exception {
-
-    var mbs    = ManagementFactory.getPlatformMBeanServer();
-    ObjectName name    = ObjectName.getInstance("java.lang:type=OperatingSystem");
-    AttributeList list = mbs.getAttributes(name, new String[]{ "ProcessCpuLoad" });
-
-    if (list.isEmpty())     return Double.NaN;
-
-    Attribute att = (Attribute)list.get(0);
-    Double value  = (Double)att.getValue();
-
-    // usually takes a couple of seconds before we get real values
-    if (value == -1.0)      return Double.NaN;
-    // returns a percentage value with 1 decimal point precision
-    return ((int)(value * 100000) / 1000.0);
-  }
-
   private synchronized void calcCpuUsage() {
-    if ( opMxBean == null ) {
-        return;
+    if (opMxBean == null) {
+      return;
     }
 
     // Alternative cpu usage calculation
