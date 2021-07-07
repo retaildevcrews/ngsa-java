@@ -1,5 +1,5 @@
-ARG VARIANT="11"
-FROM mcr.microsoft.com/vscode/devcontainers/java:0-${VARIANT}
+ARG VARIANT="3.13"
+FROM mcr.microsoft.com/vscode/devcontainers/base:0-alpine-${VARIANT}
 
 ENV DEBIAN_FRONTEND=noninteractive
 
