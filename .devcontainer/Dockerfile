@@ -17,7 +17,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get install ./zulu-repo_1.0.0-2_all.deb && \
     apt-get update && \
     apt-get -y upgrade && \
-    apt-get install zulu11-jdk
+    apt-get install zulu11-jdk -y
 
 COPY .devcontainer/library-scripts /tmp/library-scripts/
 
