@@ -9,6 +9,7 @@
       "type": "shell",
       "command": [
         "mvn",
+        "clean",
         "compile",
         "-Dpmd.skip=true", // without pmd check
         "-Dcheckstyle.skip=true" // without style check
