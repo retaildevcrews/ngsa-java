@@ -85,4 +85,17 @@ public class QueryUtils {
 
     return new String[] { category, subCategory, mode };
   }
+
+  public static String getPrometheusCode(int statusCode)
+  {
+    if (statusCode >= 500) {
+        return "Error";
+    } else if (statusCode == 429) {
+        return "Retry";
+    } else if (statusCode >= 400) {
+        return "Warn";
+    }
+    
+    return "OK";
+  }
 }

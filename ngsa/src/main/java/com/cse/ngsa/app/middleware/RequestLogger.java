@@ -1,10 +1,11 @@
 package com.cse.ngsa.app.middleware;
 
-import com.cse.ngsa.app.services.configuration.IConfigurationService;
 import com.cse.ngsa.app.utils.CorrelationVectorExtensions;
+import com.cse.ngsa.app.utils.CpuMonitor;
 import com.cse.ngsa.app.utils.QueryUtils;
 import com.microsoft.correlationvector.CorrelationVector;
 import io.micrometer.core.instrument.DistributionSummary;
+import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import java.net.InetSocketAddress;
 import java.time.Instant;
@@ -26,11 +27,13 @@ public class RequestLogger implements WebFilter {
   
   private static final Logger logger =   LogManager.getLogger(RequestLogger.class);
 
-  @Autowired private IConfigurationService configService;
   MeterRegistry promRegistry;
+  @Autowired CpuMonitor cpuMonitor;
+
   public RequestLogger(MeterRegistry registry) {
     promRegistry = registry;
   }
+
   /**
    * filter gathers the request and response metadata and logs
    *   the results to console.
@@ -77,6 +80,7 @@ public class RequestLogger implements WebFilter {
       logData.put("Host", host == null ? "" : host.toString());
       logData.put("ClientIP", requestAddress);
       logData.put("UserAgent", userAgent);
+
       // In general, no need to check if serverWebExchabge have MS-CV attribute
       // But a good practice to check for it anyway
       CorrelationVector cv;
@@ -89,22 +93,41 @@ public class RequestLogger implements WebFilter {
       }
       logData.put("CVector", cv.getValue());
       logData.put("CVectorBase", cv.getBaseVector());
+      
+      // Get category and mode from Request
       String[] categoryAndMode = QueryUtils.getCategoryAndMode(serverWebExchange.getRequest());
-      DistributionSummary
-        .builder("NgsaAppDuration")  
-        .description("Histogram of NGSA App request duration")
-        .tags("cosmos","dev", "region", "dev", "zone", "dev", "mode", categoryAndMode[2])
-        .register(promRegistry) // it won't not register everytime
-        .record(duration);
-      DistributionSummary
-        .builder("NgsaAppSummary")
-        .description("Summary of NGSA App request duration")
-        .tags("cosmos","dev", "region", "dev", "zone", "dev", "mode", categoryAndMode[2])
-        .register(promRegistry) // it won't not register everytime
-        .record(duration);
+      String mode = categoryAndMode[2];
+
+      if (mode.equals("Direct")
+          || mode.equals("Query")
+          || mode.equals("Delete")
+          || mode.equals("Upsert")) {
+        String[] promTags = {"code", QueryUtils.getPrometheusCode(statusCode),
+            "cosmos", "True", // Hardcoding True since we only implemented Cosmos
+            "region", "dev",
+            "zone", "dev",
+            "mode", mode};
+        // Using .getProcessCPULoad() direclty makes process_cpu_usage unusable
+        // Not sure why
+        Gauge.builder("NgsaCpuPercent", cpuMonitor, x -> x.getCpuUsagePercent())
+          .description("CPU Percent Used")
+          .register(promRegistry);
+        DistributionSummary
+          .builder("NgsaAppDuration")
+          .description("Histogram of NGSA App request duration")
+          .tags(promTags)
+          .register(promRegistry) // it won't not register everytime
+          .record(duration);
+        DistributionSummary
+          .builder("NgsaAppSummary")
+          .description("Summary of NGSA App request duration")
+          .tags(promTags)
+          .register(promRegistry) // it won't not register everytime
+          .record(duration);
+      }
       logData.put("Category", categoryAndMode[0]);
       logData.put("SubCategory", categoryAndMode[1]);
-      logData.put("Mode", categoryAndMode[2]);
+      logData.put("Mode", mode);
       logData.put("Zone", "dev"); // TODO: Update all props below
       logData.put("Region", "dev");
       logData.put("CosmosName", "in-memory");
