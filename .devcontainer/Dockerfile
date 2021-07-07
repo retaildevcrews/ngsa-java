@@ -1,5 +1,5 @@
 ARG VARIANT="11"
-FROM mcr.microsoft.com/vscode/devcontainers/java:0-${VARIANT}
+FROM mcr.microsoft.com/vscode/devcontainers/base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -12,7 +12,12 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get -y install --no-install-recommends apt-utils dialog && \
     apt-get -y install --no-install-recommends apt-transport-https ca-certificates software-properties-common libssl-dev libffi-dev \
         dotnet-sdk-3.1 build-essential gnupg-agent dnsutils httpie bash-completion curl wget git unzip jq lsb-release procps gnupg2 && \
-    apt-get -y upgrade
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 0xB1998361219BD9C9 && \
+    curl -O https://cdn.azul.com/zulu/bin/zulu-repo_1.0.0-2_all.deb && \
+    apt-get install ./zulu-repo_1.0.0-2_all.deb && \
+    apt-get update && \
+    apt-get -y upgrade && \
+    apt-get install zulu11-jdk
 
 COPY .devcontainer/library-scripts /tmp/library-scripts/
 
