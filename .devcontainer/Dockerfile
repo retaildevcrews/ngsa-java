@@ -1,5 +1,5 @@
-ARG VARIANT="3.13"
-FROM mcr.microsoft.com/vscode/devcontainers/base:0-alpine-${VARIANT}
+ARG VARIANT=3.13
+FROM mcr.microsoft.com/vscode/devcontainers/base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -22,9 +22,17 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 COPY .devcontainer/library-scripts /tmp/library-scripts/
 
 # [Option] Install Maven
-ARG INSTALL_MAVEN="true"
-ARG MAVEN_VERSION="3.6.3"
-RUN if [ "${INSTALL_MAVEN}" = "true" ]; then su vscode -c "source /usr/local/sdkman/bin/sdkman-init.sh && sdk install maven \"${MAVEN_VERSION}\""; fi
+# ARG INSTALL_MAVEN="true"
+# ARG MAVEN_VERSION="3.6.3"
+# RUN if [ "${INSTALL_MAVEN}" = "true" ]; then su vscode -c "source /usr/local/sdkman/bin/sdkman-init.sh && sdk install maven \"${MAVEN_VERSION}\""; fi
+
+# Install Maven
+ARG MAVEN_VERSION=3.6.3
+RUN wget http://www-us.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz && \
+    tar -xf apache-maven-${MAVEN_VERSION}-bin.tar.gz && \
+    mv apache-maven-${MAVEN_VERSION}/ apache-maven/
+
+ENV PATH=/app/apache-maven/bin:${PATH}
 
 # [Option] Install Node.js
 ARG  INSTALL_NODE="false"
