@@ -1,6 +1,5 @@
 ARG VARIANT="11"
 FROM mcr.microsoft.com/vscode/devcontainers/base
-USER root
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -23,9 +22,9 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 COPY .devcontainer/library-scripts /tmp/library-scripts/
 
 # [Option] Install Maven
-ARG INSTALL_MAVEN="true"
-ARG MAVEN_VERSION="3.6.3"
-RUN if [ "${INSTALL_MAVEN}" = "true" ]; then su vscode -c "source /usr/local/sdkman/bin/sdkman-init.sh && sdk install maven \"${MAVEN_VERSION}\""; fi
+# ARG INSTALL_MAVEN="true"
+# ARG MAVEN_VERSION="3.6.3"
+# RUN if [ "${INSTALL_MAVEN}" = "true" ]; then su vscode -c "source /usr/local/sdkman/bin/sdkman-init.sh && sdk install maven \"${MAVEN_VERSION}\""; fi
 
 # [Option] Install Node.js
 ARG  INSTALL_NODE="false"
