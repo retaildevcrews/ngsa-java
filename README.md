@@ -8,7 +8,7 @@ NGSA Java App is inteneded for platform testing and monitoring in one or many Ku
   - Will not work in Cloud Shell or WSL1
 - Azure CLI ([download](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest))
 - Docker CLI ([download](https://docs.docker.com/install/))
-- Java 11+ ([download](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html))
+- Java 11+ ([download](https://www.azul.com/downloads/?package=jdk))
 - Maven ([download](https://maven.apache.org/download.cgi))
 - Cosmos DB setup (follow the steps in the [imdb readme](https://github.com/retaildevcrews/imdb.git) )
 - Visual Studio Code (optional) ([download](https://code.visualstudio.com/download))
