@@ -1,15 +1,20 @@
 package com.cse.ngsa.app.middleware;
 
+import com.cse.ngsa.app.services.configuration.IConfigurationService;
 import com.cse.ngsa.app.utils.CorrelationVectorExtensions;
 import com.cse.ngsa.app.utils.QueryUtils;
 import com.microsoft.correlationvector.CorrelationVector;
 import java.net.InetSocketAddress;
 import java.time.Instant;
 import java.util.Arrays;
+import javax.annotation.PostConstruct;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -21,7 +26,22 @@ import reactor.core.publisher.Mono;
 public class RequestLogger implements WebFilter {
 
   private static final Logger logger =   LogManager.getLogger(RequestLogger.class);
- 
+
+  @Autowired private IConfigurationService cfgSvc;
+  @Value("${region:dev}") private String ngsaRegion;
+  @Value("${zone:dev}") private String ngsaZone;
+  @Value("${request-log-level:INFO}") private String ngsaRequestLogger;
+
+  // Suppressing since its invoked when bean is initialized
+  @SuppressWarnings("PMD.UnusedPrivateMethod")
+  @PostConstruct
+  private void setLoggingLevel() {
+
+    // Setting logger level for this class only
+    Configurator.setLevel(this.getClass().getTypeName(),
+        Level.getLevel(ngsaRequestLogger.toUpperCase()));
+  }
+
   /**
    * filter gathers the request and response metadata and logs
    *   the results to console.
@@ -84,9 +104,9 @@ public class RequestLogger implements WebFilter {
       logData.put("Category", categoryAndMode[0]);
       logData.put("SubCategory", categoryAndMode[1]);
       logData.put("Mode", categoryAndMode[2]);
-      logData.put("Zone", "dev"); // TODO: Update all props below
-      logData.put("Region", "dev");
-      logData.put("CosmosName", "in-memory");
+      logData.put("Zone", ngsaZone);
+      logData.put("Region", ngsaRegion);
+      logData.put("CosmosName", cfgSvc.getConfigEntries().getCosmosName());
       // log results to console
       logger.info(logData.toString());
     });
