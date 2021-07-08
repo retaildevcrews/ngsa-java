@@ -18,7 +18,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get -y install zulu11-jdk && \
     apt-get -y upgrade
 
-COPY ./library-scripts /tmp/library-scripts/
+COPY .devcontainer/library-scripts /tmp/library-scripts/
 
 # [Option] Install Maven
 ARG INSTALL_MAVEN="true"
