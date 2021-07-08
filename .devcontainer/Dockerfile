@@ -18,7 +18,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get -y install zulu11-jdk && \
     apt-get -y upgrade
 
-COPY .devcontainer/library-scripts /tmp/library-scripts/
+COPY ./library-scripts /tmp/library-scripts/
 
 # [Option] Install Maven
 ARG INSTALL_MAVEN="true"
@@ -28,14 +28,6 @@ RUN if [ "${INSTALL_MAVEN}" = "true" ]; then wget http://www-us.apache.org/dist/
     mv apache-maven-${MAVEN_VERSION}/ apache-maven/; fi
 
 ENV PATH=/apache-maven/bin:${PATH}
-
-# [Option] Install Node.js
-ARG  INSTALL_NODE="false"
-ARG  NODE_VERSION="none"
-ENV  NVM_DIR=/usr/local/share/nvm
-ENV  NVM_SYMLINK_CURRENT=true \
-     PATH=${NVM_DIR}/current/bin:${PATH}
-RUN  if [ "$INSTALL_NODE" = "true" ]; then bash /tmp/library-scripts/node-debian.sh "${NVM_DIR}" "${NODE_VERSION}" "${USERNAME}"; fi
 
 # [Option] Install Azure CLI
 ARG  INSTALL_AZURE_CLI="true"
