@@ -48,7 +48,7 @@ public class Controller {
       if (Boolean.TRUE.equals(validator.isValidSearchQuery(query.get()))) {
         queryParams.put("q", query.get().trim().toLowerCase().replace("'", "''"));
       } else {
-        logger.error(MessageFormat.format("Invalid Actor Query parameter {0}", query.get()));
+        logger.warn(MessageFormat.format("Invalid Actor Query parameter {0}", query.get()));
         invalidParameters.add(SearchParameter.Q);
       }
     }
@@ -56,7 +56,7 @@ public class Controller {
     Integer pageNo = 0;
     if (pageNumber.isPresent()) {
       if (Boolean.FALSE.equals(validator.isValidPageNumber(pageNumber.get()))) {
-        logger.error(MessageFormat.format("Invalid Actor PageNumber parameter {0}",
+        logger.warn(MessageFormat.format("Invalid Actor PageNumber parameter {0}",
             pageNumber.get()));
         invalidParameters.add(SearchParameter.PAGE_NUMBER);
       } else {
@@ -67,7 +67,7 @@ public class Controller {
     Integer pageSz = Constants.DEFAULT_PAGE_SIZE;
     if (pageSize.isPresent()) {
       if (Boolean.FALSE.equals(validator.isValidPageSize(pageSize.get()))) {
-        logger.error(MessageFormat.format("Invalid Actor PageSize parameter {0}", pageSize.get()));
+        logger.warn(MessageFormat.format("Invalid Actor PageSize parameter {0}", pageSize.get()));
         invalidParameters.add(SearchParameter.PAGE_SIZE);
       } else {
         pageSz = Integer.parseInt(pageSize.get());
@@ -124,7 +124,7 @@ public class Controller {
         q = query.get().trim().toLowerCase().replace("'", "''");
         queryParams.put("q",q);
       } else {
-        logger.error(MessageFormat.format("Invalid Movie Query parameter {0}", query.get()));
+        logger.warn(MessageFormat.format("Invalid Movie Query parameter {0}", query.get()));
         invalidParameters.add(SearchParameter.Q);
       }
     }
@@ -132,7 +132,7 @@ public class Controller {
     Integer pageNo = 0;
     if (pageNumber.isPresent()) {
       if (Boolean.FALSE.equals(validator.isValidPageNumber(pageNumber.get()))) {
-        logger.error(MessageFormat.format("Invalid Movie PageNumber parameter {0}",
+        logger.warn(MessageFormat.format("Invalid Movie PageNumber parameter {0}",
             pageNumber.get()));
         invalidParameters.add(SearchParameter.PAGE_NUMBER);
       } else {
@@ -143,7 +143,7 @@ public class Controller {
     Integer pageSz = Constants.DEFAULT_PAGE_SIZE;
     if (pageSize.isPresent()) {
       if (Boolean.FALSE.equals(validator.isValidPageSize(pageSize.get()))) {
-        logger.error(MessageFormat.format("Invalid Movie PageSize parameter {0}", pageSize.get()));
+        logger.warn(MessageFormat.format("Invalid Movie PageSize parameter {0}", pageSize.get()));
         invalidParameters.add(SearchParameter.PAGE_SIZE);
       } else {
         pageSz = Integer.parseInt(pageSize.get());
@@ -153,7 +153,7 @@ public class Controller {
     String movieGenre = "";
     if (genre.isPresent()) {
       if (Boolean.FALSE.equals(validator.isValidGenre(genre.get()))) {
-        logger.error(MessageFormat.format("Invalid Movie Genre parameter {0}", genre.get()));
+        logger.warn(MessageFormat.format("Invalid Movie Genre parameter {0}", genre.get()));
         invalidParameters.add(SearchParameter.GENRE);
       } else {
         movieGenre = genre.get();
@@ -164,7 +164,7 @@ public class Controller {
     Integer movieYear = 0;
     if (year.isPresent()) {
       if (Boolean.FALSE.equals(validator.isValidYear(year.get()))) {
-        logger.error(MessageFormat.format("Invalid Movie Year parameter {0}", year.get()));
+        logger.warn(MessageFormat.format("Invalid Movie Year parameter {0}", year.get()));
         invalidParameters.add(SearchParameter.YEAR);
       } else {
         movieYear = Integer.parseInt(year.get());
@@ -175,7 +175,7 @@ public class Controller {
     Double movieRating;
     if (rating.isPresent()) {
       if (Boolean.FALSE.equals(validator.isValidRating(rating.get()))) {
-        logger.error(MessageFormat.format("Invalid Movie Rating parameter {0}", rating.get()));
+        logger.warn(MessageFormat.format("Invalid Movie Rating parameter {0}", rating.get()));
         invalidParameters.add(SearchParameter.RATING);
       } else {
         movieRating = Double.parseDouble(rating.get());
@@ -186,7 +186,7 @@ public class Controller {
     String movieActorId = "";
     if (actorId.isPresent()) {
       if (Boolean.FALSE.equals(validator.isValidActorId(actorId.get()))) {
-        logger.error(MessageFormat.format("Invalid Movie ActorID parameter {0}", actorId.get()));
+        logger.warn(MessageFormat.format("Invalid Movie ActorID parameter {0}", actorId.get()));
         invalidParameters.add(SearchParameter.ACTOR_ID);
       } else {
         movieActorId = actorId.get();

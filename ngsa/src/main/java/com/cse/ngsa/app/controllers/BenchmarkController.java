@@ -53,7 +53,7 @@ public class BenchmarkController extends Controller {
 
       String invalidResponse = super.invalidParameterResponses
           .invalidBenchmarkSizeResponse(request.getURI().getPath());
-      logger.error("Benchmark data size parameter should be 0 < size <= 1024*1024");
+      logger.warn("Benchmark data size parameter should be 0 < size <= 1024*1024");
 
       return Mono.just(ResponseEntity.badRequest()
         .contentType(MediaType.APPLICATION_PROBLEM_JSON)

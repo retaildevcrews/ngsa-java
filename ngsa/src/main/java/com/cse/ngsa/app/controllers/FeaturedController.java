@@ -43,7 +43,7 @@ public class FeaturedController {
               });
     } catch (Exception ex) {
 
-      logger.error("Error received in FeaturedController", ex);
+      logger.warn("Error received in FeaturedController", ex);
       return Mono.error(new ResponseStatusException(
         HttpStatus.INTERNAL_SERVER_ERROR, "featured Error"));
     }
