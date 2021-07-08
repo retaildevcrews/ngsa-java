@@ -4,7 +4,8 @@
   "image": "retaildevcrew/ngsa-java-codespaces",
   
   // Build based on local Dockerfile
-  /* "build": {
+  /* 
+  "build": {
      "dockerfile": "Dockerfile",
      "context": "..",
      "args": {
@@ -16,7 +17,8 @@
        "INSTALL_AZURE_CLI": "true",
        "INSTALL_DOCKER": "true"
      }
-   }, */
+   }, 
+   */
 
   "mounts": [
     "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
