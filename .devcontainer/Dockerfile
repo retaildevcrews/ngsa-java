@@ -23,10 +23,7 @@ COPY .devcontainer/library-scripts /tmp/library-scripts/
 # [Option] Install Maven
 ARG INSTALL_MAVEN="true"
 ARG MAVEN_VERSION="3.6.3"
-RUN if [ "${INSTALL_MAVEN}" = "true" ]; then wget http://www-us.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz && \
-    tar -xf apache-maven-${MAVEN_VERSION}-bin.tar.gz && \
-    mv apache-maven-${MAVEN_VERSION}/ apache-maven/; fi
-
+RUN if [ "${INSTALL_MAVEN}" = "true" ]; then bash /tmp/library-scripts/maven-debian.sh; fi
 ENV PATH=/apache-maven/bin:${PATH}
 
 # [Option] Install Azure CLI
