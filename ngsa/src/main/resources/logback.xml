@@ -1,5 +1,4 @@
 <configuration>
-    <include resource="/org/springframework/boot/logging/logback/base.xml"/>
     <logger name="com.azure.data.cosmos" level="error"/>
     <logger name="com.cse.ngsa" level="warn" />
 </configuration>
