@@ -8,7 +8,6 @@ on:
   push:
     branches:
       - main
-      - feature/ci_verbosity
 
     paths:
     - 'Dockerfile'
@@ -85,5 +84,4 @@ jobs:
         docker tag image $DOCKER_REPO:beta
 
         # Push to the repo
-        # TODO: Re enable docker push
-        # docker push -a $DOCKER_REPO
+        docker push -a $DOCKER_REPO
