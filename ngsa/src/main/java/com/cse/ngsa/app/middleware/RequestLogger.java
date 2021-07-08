@@ -27,7 +27,7 @@ public class RequestLogger implements WebFilter {
 
   @Value("${region:dev}") private String ngsaRegion;
   @Value("${zone:dev}") private String ngsaZone;
-  @Value("${request-logger:INFO}") private String ngsaRequestLogger;
+  @Value("${request-log-level:INFO}") private String ngsaRequestLogger;
 
   // Suppressing since its invoked when bean is initialized
   @SuppressWarnings("PMD.UnusedPrivateMethod")
