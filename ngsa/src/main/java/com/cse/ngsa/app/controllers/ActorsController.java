@@ -55,7 +55,7 @@ public class ActorsController extends Controller {
           .switchIfEmpty(Mono.defer(() ->
             Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Actor Not Found"))));
     } else {
-      logger.error(MessageFormat.format("Invalid Actor ID parameter {0}", actorId));
+      logger.warn(MessageFormat.format("Invalid Actor ID parameter {0}", actorId));
 
       String invalidResponse = super.invalidParameterResponses
           .invalidActorDirectReadResponse(request.getURI().getPath());
@@ -86,7 +86,7 @@ public class ActorsController extends Controller {
       String instance = uri.getPath() + "?" + uri.getQuery();
       return super.getAll(query,pageNumber, pageSize, dao, instance);
     } catch (Exception ex) {
-      logger.error(MessageFormat.format("ActorControllerException {0}", ex.getMessage()));
+      logger.warn(MessageFormat.format("ActorControllerException {0}", ex.getMessage()));
       return Flux.error(new ResponseStatusException(
           HttpStatus.INTERNAL_SERVER_ERROR, Constants.ACTOR_CONTROLLER_EXCEPTION));
     }

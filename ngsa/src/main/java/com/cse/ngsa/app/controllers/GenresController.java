@@ -35,7 +35,7 @@ public class GenresController {
       return genresDao.getGenres();
     } catch (Exception ex) {
 
-      logger.error("Error received in GenresController", ex);
+      logger.warn("Error received in GenresController", ex);
       return Mono.error(new ResponseStatusException(
         HttpStatus.INTERNAL_SERVER_ERROR, "genres Error"));
     }

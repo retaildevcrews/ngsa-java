@@ -1,5 +1,6 @@
 package com.cse.ngsa.app.middleware;
 
+import com.cse.ngsa.app.services.configuration.IConfigurationService;
 import com.cse.ngsa.app.utils.CorrelationVectorExtensions;
 import com.cse.ngsa.app.utils.CpuMonitor;
 import com.cse.ngsa.app.utils.QueryUtils;
@@ -10,11 +11,14 @@ import io.micrometer.core.instrument.MeterRegistry;
 import java.net.InetSocketAddress;
 import java.time.Instant;
 import java.util.Arrays;
+import javax.annotation.PostConstruct;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -29,9 +33,23 @@ public class RequestLogger implements WebFilter {
 
   MeterRegistry promRegistry;
   @Autowired CpuMonitor cpuMonitor;
+  @Autowired private IConfigurationService cfgSvc;
+  @Value("${region:dev}") private String ngsaRegion;
+  @Value("${zone:dev}") private String ngsaZone;
+  @Value("${request-log-level:INFO}") private String ngsaRequestLogger;
 
   public RequestLogger(MeterRegistry registry) {
     promRegistry = registry;
+  }
+
+  // Suppressing since its invoked when bean is initialized
+  @SuppressWarnings("PMD.UnusedPrivateMethod")
+  @PostConstruct
+  private void setLoggingLevel() {
+
+    // Setting logger level for this class only
+    Configurator.setLevel(this.getClass().getTypeName(),
+        Level.getLevel(ngsaRequestLogger.toUpperCase()));
   }
 
   /**
@@ -104,8 +122,8 @@ public class RequestLogger implements WebFilter {
           || mode.equals("Upsert")) {
         String[] promTags = {"code", QueryUtils.getPrometheusCode(statusCode),
             "cosmos", "True", // Hardcoding True since we only implemented Cosmos
-            "region", "dev",
-            "zone", "dev",
+            "region", ngsaRegion,
+            "zone", ngsaZone,
             "mode", mode};
         // Using .getProcessCPULoad() direclty makes process_cpu_usage unusable
         // Not sure why
@@ -129,9 +147,9 @@ public class RequestLogger implements WebFilter {
       logData.put("Category", categoryAndMode[0]);
       logData.put("SubCategory", categoryAndMode[1]);
       logData.put("Mode", mode);
-      logData.put("Zone", "dev"); // TODO: Update all props below
-      logData.put("Region", "dev");
-      logData.put("CosmosName", "in-memory");
+      logData.put("Zone", ngsaZone);
+      logData.put("Region", ngsaRegion);
+      logData.put("CosmosName", cfgSvc.getConfigEntries().getCosmosName());
       // log results to console
       logger.info(logData.toString());
     });

@@ -62,7 +62,7 @@ public class MoviesController extends Controller {
                           new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie Not Found"))));
     } else {
 
-      logger.error(MessageFormat.format("Invalid Movie ID parameter {0}", movieId));
+      logger.warn(MessageFormat.format("Invalid Movie ID parameter {0}", movieId));
 
       String invalidResponse = super.invalidParameterResponses
           .invalidMovieDirectReadResponse(request.getURI().getPath());
@@ -90,7 +90,7 @@ public class MoviesController extends Controller {
     if (Boolean.TRUE.equals(validator.isValidMovieId(movieIdOrig) && movieId.startsWith("zz"))) {
       return moviesDao.upsertMovieById(movieIdOrig);
     } else {
-      logger.error(MessageFormat.format("Invalid Movie ID parameter {0}", movieId));
+      logger.warn(MessageFormat.format("Invalid Movie ID parameter {0}", movieId));
       String invalidResponse = super.invalidParameterResponses
               .invalidMovieDeleteResponse(request.getURI().getPath());
       return ResponseEntity.badRequest()
@@ -116,7 +116,7 @@ public class MoviesController extends Controller {
             && movieId.startsWith("zz")) {
       return moviesDao.deleteMovieById(movieId);
     } else {
-      logger.error(MessageFormat.format("Invalid Movie ID parameter {0}", movieId));
+      logger.warn(MessageFormat.format("Invalid Movie ID parameter {0}", movieId));
       String invalidResponse = super.invalidParameterResponses
                   .invalidMovieDeleteResponse(request.getURI().getPath());
       return ResponseEntity.badRequest()
@@ -158,7 +158,7 @@ public class MoviesController extends Controller {
       String instance = uri.getPath() + "?" + uri.getQuery();
       return getAll(query, genre, year, rating, actorId, pageNumber, pageSize, moviesDao, instance);
     } catch (Exception ex) {
-      logger.error(MessageFormat.format("MovieControllerException {0}", ex.getMessage()));
+      logger.warn(MessageFormat.format("MovieControllerException {0}", ex.getMessage()));
       return Flux.error(
           new ResponseStatusException(
               HttpStatus.INTERNAL_SERVER_ERROR, Constants.MOVIE_CONTROLLER_EXCEPTION));
