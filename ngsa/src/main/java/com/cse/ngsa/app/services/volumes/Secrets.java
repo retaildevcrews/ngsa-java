@@ -7,6 +7,15 @@ public class Secrets {
   private String cosmosKey;
   private String cosmosDatabase;
   private String cosmosCollection;
+  private String cosmosName;
+
+  public String getCosmosName() {
+    return cosmosName;
+  }
+
+  public void setCosmosName(String cosmosName) {
+    this.cosmosName = cosmosName;
+  }
 
   public String getVolume() {
     return volume;

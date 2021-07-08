@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class VolumeSecretService implements IVolumeSecretService {
   private static final Logger logger =   LogManager.getLogger(ConfigurationService.class);
+  private static final Pattern cosmosNamePat = 
+      Pattern.compile("^https:\\/\\/(.+)\\.documents\\.azure\\.com.*");
 
   /**
    * Get all the secrets from a given volume.
@@ -27,6 +31,12 @@ public class VolumeSecretService implements IVolumeSecretService {
     sec.setCosmosKey(getSecretFromFile(volume,Constants.COSMOS_KEY_KEYNAME));
     sec.setCosmosUrl(getSecretFromFile(volume,Constants.COSMOS_URL_KEYNAME));
 
+    Matcher m = cosmosNamePat.matcher(sec.getCosmosUrl());
+    if (m.matches() && m.groupCount() > 0) {
+      // group 0 --> total match
+      // group 1 --> first group match, we only have one group
+      sec.setCosmosName(m.group(1));
+    }
     try {
       validateSecrets(volume, sec);
     } catch (Exception ex) {
@@ -85,14 +95,17 @@ public class VolumeSecretService implements IVolumeSecretService {
       logger.error("CosmosUrl cannot be empty");
       System.exit(-1);
     }
-
+    
     String cosmosUrl = secrets.getCosmosUrl().toLowerCase(Locale.ROOT);
-
-    if (!cosmosUrl.startsWith("https://") || !cosmosUrl.contains(".documents.azure.com")) {
+    
+    Matcher m = cosmosNamePat.matcher(secrets.getCosmosUrl());
+    if (!m.matches() || m.groupCount() != 1) {
+      // group 0 --> total match
+      // group 1 --> first group match, we only have one group
       logger.error("Invalid value for CosmosUrl: " + cosmosUrl);
       System.exit(-1);
     }
-
+    
     if (secrets.getCosmosKey().length() < 64) {
       logger.error("Invalid value for CosmosKey");
       System.exit(-1);

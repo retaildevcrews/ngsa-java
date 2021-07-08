@@ -1,5 +1,6 @@
 package com.cse.ngsa.app.middleware;
 
+import com.cse.ngsa.app.services.configuration.IConfigurationService;
 import com.cse.ngsa.app.utils.CorrelationVectorExtensions;
 import com.cse.ngsa.app.utils.QueryUtils;
 import com.microsoft.correlationvector.CorrelationVector;
@@ -12,6 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
@@ -25,6 +27,7 @@ public class RequestLogger implements WebFilter {
 
   private static final Logger logger =   LogManager.getLogger(RequestLogger.class);
 
+  @Autowired private IConfigurationService cfgSvc;
   @Value("${region:dev}") private String ngsaRegion;
   @Value("${zone:dev}") private String ngsaZone;
   @Value("${request-logger:INFO}") private String ngsaRequestLogger;
@@ -104,7 +107,7 @@ public class RequestLogger implements WebFilter {
       logData.put("Zone", ngsaZone);
       logData.put("Region", ngsaRegion);
       // Hardcoding to true, since there are no in-memory
-      logData.put("CosmosName", "True");
+      logData.put("CosmosName", cfgSvc.getConfigEntries().getCosmosName());
       // log results to console
       logger.info(logData.toString());
     });
