@@ -2,40 +2,33 @@ package com.cse.ngsa.app.controllers;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import static org.junit.Assert.*;
-import com.cse.ngsa.app.models.NgsaConfig;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-
-
+@AutoConfigureWebTestClient(timeout = "20000")
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = NgsaConfig.class)
+@PropertySource("classpath:application.properties")
+@SpringBootTest
 public class VersionControllerTest {
 
-  @Mock
-  private VersionController versionController;
+  @Autowired
+  private WebTestClient webClient;
 
   @Test
   public void testVersion() {
-    assertNotNull(versionController);
-    WebTestClient webClient = WebTestClient.bindToController(versionController)
-        .configureClient()
-        .baseUrl("/")
-        .build();
-
     assertNotNull(webClient);
     webClient
         .get()
         .uri("/version")
+        .header(HttpHeaders.ACCEPT, "application/json")
         .exchange()
         .expectStatus()
         .isOk();
   }
-
-
 }
-
-
