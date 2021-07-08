@@ -5,6 +5,7 @@ import com.cse.ngsa.app.config.BuildConfig;
 import com.cse.ngsa.app.services.volumes.IVolumeSecretService;
 import com.cse.ngsa.app.services.volumes.Secrets;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import java.lang.management.ManagementFactory;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import javax.annotation.PostConstruct;
@@ -12,6 +13,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
+import org.springframework.core.env.Environment;
 import org.springframework.core.env.SimpleCommandLinePropertySource;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +25,9 @@ public class CommonUtils {
 
   @Autowired
   BuildConfig buildConfig;
+
+  @Autowired 
+  Environment environment;
 
   private CommonUtils() {
     // disable constructor for utility class
@@ -67,7 +72,6 @@ public class CommonUtils {
       System.out.printf("\r\nApplication Version:\r\n \t%s \n\n", version);
     }
   }
-
 
   private static Level setLogLevel(String logLevel) {
     switch (logLevel) {
@@ -140,9 +144,13 @@ public class CommonUtils {
         + "\tmvn clean spring-boot:run -Dspring-boot.run.arguments=[options] \r\n"
         + "\r\nOptions: \r\n"
         + "\t--help                                    \t\t Show help and usage information\r\n"
-        + "\t--cpu.target.load                         "
+        + "\t--burst-header                             "
+        + "\t\t Enable burst metrics header in healthz and version requests\r\n"
+        + "\t--burst-service                             "
+        + "\t\t Service name for bursting metrics (string) [default: ngsa-java]\r\n"
+        + "\t--burst-target                             "
         + "\t\t Target level for bursting metrics (int) [default: 60]\r\n"
-        + "\t--cpu.max.load                            "
+        + "\t--burst-max                                "
         + "\t\t Max level for bursting metrics (int) [default: 80]\r\n"
         + "\t--dry-run                                 \t\t Validates configuration\r\n"
         + "\t--log-level=<trace|info|warn|error|fatal> \t\t Log Level [default: Error]\r\n"
@@ -154,6 +162,23 @@ public class CommonUtils {
    */
   public static boolean isNullWhiteSpace(final String string) {
     return string == null || string.isEmpty() || string.trim().isEmpty();
+  }
+
+  /**
+   * Prepares burst header values.
+   */
+  public String getBurstHeaderValue() {
+    long cpuLoad = Math.round(ManagementFactory.getPlatformMXBean(
+        com.sun.management.OperatingSystemMXBean.class).getProcessCpuLoad() * 100L);
+
+    String burstHeaderValue = String.format(
+        "service=%s, current-load=%s, target-load=%s, max-load=%s ",
+        environment.getProperty("burst-service"),
+        cpuLoad,
+        environment.getProperty("burst-target"),
+        environment.getProperty("burst-max"));
+    
+    return burstHeaderValue;
   }
 
 }

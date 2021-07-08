@@ -31,7 +31,7 @@ public class BuildConfig {
     String major = context.getBean(BuildProperties.class).getVersion();
 
     DateTimeFormatter formatter = DateTimeFormatter
-        .ofPattern("MMdd.HHmm")
+        .ofPattern("MMdd-HHmm")
         .withZone(ZoneId.of("UTC"));
 
     String formattedDateTime = formatter.format(buildTime);
@@ -39,7 +39,7 @@ public class BuildConfig {
     if (logger.isInfoEnabled()) {
       logger.info(MessageFormat.format("version {0}.{1}", major, formattedDateTime));
     }
-    return major + "+" + formattedDateTime;
+    return major + "-" + formattedDateTime;
 
   }
 }
