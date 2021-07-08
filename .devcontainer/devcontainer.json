@@ -25,8 +25,8 @@
   ],
 
   "settings": {
-    // "terminal.integrated.shell.linux": "/bin/bash",
-    "terminal.integrated.shell.linux": "/bin/zsh",
+    "terminal.integrated.shell.linux": "/bin/bash",
+    // "terminal.integrated.shell.linux": "/bin/zsh",
     "java.home": "/docker-java-home"
   },
 
@@ -34,6 +34,8 @@
 
   // Open port 4120 by default
   "forwardPorts": [4120],
+  // Added for local developement
+  // Without this port forwarding to Windows Network sometime fails
   "appPort": [4120],
 
   // Install extensions

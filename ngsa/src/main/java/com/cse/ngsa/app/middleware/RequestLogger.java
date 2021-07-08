@@ -24,7 +24,7 @@ import reactor.core.publisher.Mono;
 
 @Component
 public class RequestLogger implements WebFilter {
-  
+
   private static final Logger logger =   LogManager.getLogger(RequestLogger.class);
 
   MeterRegistry promRegistry;
@@ -45,19 +45,19 @@ public class RequestLogger implements WebFilter {
     String requestAddress = getRequestAddress(
         serverWebExchange.getRequest().getRemoteAddress());
     String pathQueryString = getPathQueryString(serverWebExchange.getRequest());
-    
+
     // set start time
     long startTime = System.currentTimeMillis();
-      
+
     // process next handler
     return webFilterChain.filter(serverWebExchange).doFinally(signalType -> {
       int statusCode = serverWebExchange.getResponse().getStatusCode().value();
-      
+
       // don't log favicon.ico 404s
       if (pathQueryString.startsWith("/favicon.ico")) {
         return;
       }
-      
+
       // don't log if log level >= warn but response code < 400
       if (logger.getLevel().isMoreSpecificThan(Level.WARN) && statusCode < 400) {
         return;
@@ -93,7 +93,7 @@ public class RequestLogger implements WebFilter {
       }
       logData.put("CVector", cv.getValue());
       logData.put("CVectorBase", cv.getBaseVector());
-      
+
       // Get category and mode from Request
       String[] categoryAndMode = QueryUtils.getCategoryAndMode(serverWebExchange.getRequest());
       String mode = categoryAndMode[2];
@@ -125,6 +125,7 @@ public class RequestLogger implements WebFilter {
             .register(promRegistry) // it won't not register everytime
             .record(duration);
       }
+
       logData.put("Category", categoryAndMode[0]);
       logData.put("SubCategory", categoryAndMode[1]);
       logData.put("Mode", mode);

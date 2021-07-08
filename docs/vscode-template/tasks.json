@@ -9,7 +9,7 @@
       "type": "shell",
       "command": [
         "mvn",
-        "clean",
+        "clean", // coz: often mvn fails to detect changed source
         "compile",
         "-Dpmd.skip=true", // without pmd check
         "-Dcheckstyle.skip=true" // without style check

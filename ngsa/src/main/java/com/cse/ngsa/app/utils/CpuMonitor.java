@@ -28,7 +28,9 @@ public class CpuMonitor {
    */
   public CpuMonitor() {
     if (ManagementFactory.getOperatingSystemMXBean() instanceof OperatingSystemMXBean) {
-      opMxBean = (OperatingSystemMXBean)ManagementFactory.getOperatingSystemMXBean();
+      // Getting it from Platform to avoid casting
+      // Since we checked instance is com.sun.management.OperatingSystemMXBean
+      opMxBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
       new Timer().schedule(new TimerTask() {
         @Override
         public void run() {
