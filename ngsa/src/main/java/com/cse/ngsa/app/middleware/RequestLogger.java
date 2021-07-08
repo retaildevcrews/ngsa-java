@@ -103,7 +103,7 @@ public class RequestLogger implements WebFilter {
       logData.put("Mode", categoryAndMode[2]);
       logData.put("Zone", ngsaZone);
       logData.put("Region", ngsaRegion);
-      // Hardcoding to true, since there are no in-memory
+      // Hardcoding to true, since there is no in-memory
       logData.put("CosmosName", "True");
       // log results to console
       logger.info(logData.toString());
