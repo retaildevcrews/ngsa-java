@@ -8,6 +8,7 @@
      "dockerfile": "Dockerfile",
      "context": "..",
      "args": {
+       "JAVA_VERSION": "11",
        "INSTALL_MAVEN": "true",
        "INSTALL_GRADLE": "false",
        "MAVEN_VERSION": "3.6.3",

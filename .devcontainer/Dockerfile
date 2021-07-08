@@ -4,6 +4,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 ARG USERNAME="vscode"
 
+ARG JAVA_VERSION="11"
 RUN export DEBIAN_FRONTEND=noninteractive && \
     curl https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb --output /tmp/packages-microsoft-prod.deb && \
     dpkg -i /tmp/packages-microsoft-prod.deb && \
@@ -15,7 +16,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     curl -O https://cdn.azul.com/zulu/bin/zulu-repo_1.0.0-2_all.deb && \
     apt-get install ./zulu-repo_1.0.0-2_all.deb && \
     apt-get update && \
-    apt-get -y install zulu11-jdk && \
+    apt-get -y install zulu${JAVA_VERSION}-jdk && \
     apt-get -y upgrade
 
 COPY .devcontainer/library-scripts /tmp/library-scripts/
