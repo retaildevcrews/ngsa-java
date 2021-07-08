@@ -26,7 +26,7 @@
   "settings": {
     "terminal.integrated.shell.linux": "/bin/bash",
     // "terminal.integrated.shell.linux": "/bin/zsh",
-    "java.home": "/docker-java-home"
+    "java.home": "/usr/lib/jvm/zulu11"
   },
 
   "remoteUser": "vscode",
