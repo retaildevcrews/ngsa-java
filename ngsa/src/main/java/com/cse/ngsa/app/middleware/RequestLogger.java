@@ -30,7 +30,7 @@ public class RequestLogger implements WebFilter {
   @Autowired private IConfigurationService cfgSvc;
   @Value("${region:dev}") private String ngsaRegion;
   @Value("${zone:dev}") private String ngsaZone;
-  @Value("${request-logger:INFO}") private String ngsaRequestLogger;
+  @Value("${request-log-level:INFO}") private String ngsaRequestLogger;
 
   // Suppressing since its invoked when bean is initialized
   @SuppressWarnings("PMD.UnusedPrivateMethod")
@@ -106,7 +106,6 @@ public class RequestLogger implements WebFilter {
       logData.put("Mode", categoryAndMode[2]);
       logData.put("Zone", ngsaZone);
       logData.put("Region", ngsaRegion);
-      // Hardcoding to true, since there are no in-memory
       logData.put("CosmosName", cfgSvc.getConfigEntries().getCosmosName());
       // log results to console
       logger.info(logData.toString());
