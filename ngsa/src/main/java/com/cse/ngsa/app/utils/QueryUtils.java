@@ -85,4 +85,22 @@ public class QueryUtils {
 
     return new String[] { category, subCategory, mode };
   }
+
+  /**
+   * Http status code to Prometheus string code.
+   * @param statusCode Http Status Code
+   * @return String Prometheus string code
+   */
+  public static String getPrometheusCode(int statusCode) {
+
+    if (statusCode >= 500) {
+      return "Error";
+    } else if (statusCode == 429) {
+      return "Retry";
+    } else if (statusCode >= 400) {
+      return "Warn";
+    }
+
+    return "OK";
+  }
 }

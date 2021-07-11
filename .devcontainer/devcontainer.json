@@ -33,6 +33,9 @@
 
   // Open port 4120 by default
   "forwardPorts": [4120],
+  // Added for local developement
+  // Without this port forwarding to Windows Network sometime fails
+  "appPort": [4120],
 
   // Install extensions
   "extensions": [
