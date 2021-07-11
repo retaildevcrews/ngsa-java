@@ -33,7 +33,7 @@ jobs:
 
     - name: Docker Build
       run: |
-            docker build . --progress auto -t image
+            docker build . --progress tty -t image
 
     - name: Set Secrets
       run: |

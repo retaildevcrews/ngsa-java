@@ -35,7 +35,7 @@ jobs:
 
     - name: Docker Build
       run: |
-            docker build . --progress plain -t image
+            docker build . --progress tty -t image
 
     - name: Set Secrets
       run: |
