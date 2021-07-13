@@ -13,6 +13,7 @@ public class QueryUtils {
 
   /**
    * Detects category, sub-category and mode from request URI.
+   * 
    * @param request HttpRequest
    * @return String Array with category, subCategory and mode in that order 
    */
@@ -88,6 +89,7 @@ public class QueryUtils {
 
   /**
    * Http status code to Prometheus string code.
+   * 
    * @param statusCode Http Status Code
    * @return String Prometheus string code
    */

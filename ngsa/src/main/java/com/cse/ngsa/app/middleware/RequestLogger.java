@@ -103,7 +103,7 @@ public class RequestLogger implements WebFilter {
       // But a good practice to check for it anyway
       CorrelationVector cv;
       if (serverWebExchange.getAttributes().containsKey(CorrelationVector.HEADER_NAME)) {
-        cv = (CorrelationVector)serverWebExchange.getAttribute(CorrelationVector.HEADER_NAME);
+        cv = (CorrelationVector) serverWebExchange.getAttribute(CorrelationVector.HEADER_NAME);
       } else {
         // This should never happen!
         LogManager.getRootLogger().error("MS-CV Attribute not found. Creating a new one");

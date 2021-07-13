@@ -30,9 +30,9 @@ public class GenresDao extends BaseCosmosDbDao {
   }
 
   /**
-   * getActors.
+   * Get list of Genres.
    *
-   * @return
+   * @return list of Genres.
    */
   public Mono<List<String>> getGenres() {
     if (logger.isInfoEnabled()) {

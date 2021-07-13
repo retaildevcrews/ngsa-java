@@ -67,7 +67,7 @@ public class MoviesDao extends BaseCosmosDbDao implements IDao {
   /** deleteMovieById. */
   public Mono<ResponseEntity<Object>> deleteMovieById(String movieId) {
     return getContainer()
-            .getItem(movieId,Movie.computePartitionKey(movieId))
+            .getItem(movieId, Movie.computePartitionKey(movieId))
             .delete().flatMap(
                 cosmosItemResponse ->
                         Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()))
