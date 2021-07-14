@@ -40,19 +40,13 @@
     <property name="eachLine" value="true"/>
   </module>
 
-  <!-- Disabled for NGSA-JAVA-->
   <module name="LineLength">
-    <property name="severity" value="ignore"/>
     <property name="fileExtensions" value="java"/>
     <property name="max" value="100"/>
     <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
   </module>
 
-  <!-- Enabled for NGSA-JAVA-->
-  <module name="SuppressWarningsFilter"/>
-
   <module name="TreeWalker">
-    <module name="SuppressWarningsHolder"/>
     <module name="OuterTypeFilename"/>
     <module name="IllegalTokenText">
       <property name="tokens" value="STRING_LITERAL, CHAR_LITERAL"/>
@@ -321,10 +315,7 @@
     </module>
     <module name="JavadocParagraph"/>
 
-    <!-- Disabled for NGSA-JAVA-->
-    <module name="RequireEmptyLineBeforeBlockTagGroup">
-      <property name="severity" value="ignore"/>
-    </module>
+    <module name="RequireEmptyLineBeforeBlockTagGroup"/>
 
     <module name="AtclauseOrder">
       <property name="tagOrder" value="@param, @return, @throws, @deprecated"/>
@@ -346,9 +337,7 @@
                                    COMPACT_CTOR_DEF"/>
     </module>
 
-    <!-- Disabled for NGSA-JAVA-->
     <module name="MissingJavadocType">
-      <property name="severity" value="ignore"/>
       <property name="scope" value="protected"/>
       <property name="tokens"
                 value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF,
