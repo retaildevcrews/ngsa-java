@@ -40,6 +40,7 @@
     <property name="eachLine" value="true"/>
   </module>
 
+  <!-- Disabled for NGSA-JAVA-->
   <module name="LineLength">
     <property name="severity" value="ignore"/>
     <property name="fileExtensions" value="java"/>
@@ -47,6 +48,7 @@
     <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
   </module>
 
+  <!-- Enabled for NGSA-JAVA-->
   <module name="SuppressWarningsFilter"/>
 
   <module name="TreeWalker">
@@ -318,9 +320,12 @@
                value="^@return the *|^This method returns |^A [{]@code [a-zA-Z0-9]+[}]( is a )"/>
     </module>
     <module name="JavadocParagraph"/>
+
+    <!-- Disabled for NGSA-JAVA-->
     <module name="RequireEmptyLineBeforeBlockTagGroup">
       <property name="severity" value="ignore"/>
     </module>
+
     <module name="AtclauseOrder">
       <property name="tagOrder" value="@param, @return, @throws, @deprecated"/>
       <property name="target"
@@ -340,6 +345,8 @@
       <property name="tokens" value="METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF,
                                    COMPACT_CTOR_DEF"/>
     </module>
+
+    <!-- Disabled for NGSA-JAVA-->
     <module name="MissingJavadocType">
       <property name="severity" value="ignore"/>
       <property name="scope" value="protected"/>
@@ -348,6 +355,7 @@
                       RECORD_DEF, ANNOTATION_DEF"/>
       <property name="excludeScope" value="nothing"/>
     </module>
+
     <module name="MethodName">
       <property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9_]*$"/>
       <message key="name.invalidPattern"
