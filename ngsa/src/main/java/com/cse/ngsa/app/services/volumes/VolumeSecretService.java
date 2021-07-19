@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class VolumeSecretService implements IVolumeSecretService {
-  private static final Logger logger =   LogManager.getLogger(ConfigurationService.class);
+  private static final Logger logger = LogManager.getLogger(VolumeSecretService.class);
   private static final Pattern cosmosNamePat = 
       Pattern.compile("^https:\\/\\/(.+)\\.documents\\.azure\\.com.*");
 
