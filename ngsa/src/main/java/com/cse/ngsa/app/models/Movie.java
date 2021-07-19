@@ -53,7 +53,7 @@ public class Movie extends MovieBase {
   private List<Role> roles;
 
 
-  public Movie(){
+  public Movie() {
     // default constructor
   }
 

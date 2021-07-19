@@ -16,7 +16,8 @@ public class CpuMonitor {
 
   /**
    * Gets the CPU Usage as Percentage.
-   * @return Double CPU Usage Percentage
+   * 
+   * @return Double CPU Usage Percentage.
    */
   public double getCpuUsagePercent() {
     // Thread synchronization is not required

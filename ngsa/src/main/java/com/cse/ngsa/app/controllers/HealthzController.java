@@ -58,7 +58,7 @@ public class HealthzController {
   /**
    * healthCheck.
    *
-   * @return
+   * @return responseEntity with status information for overall application health.
   */
   @GetMapping(value = "", produces = MediaType.TEXT_PLAIN_VALUE)
   public Mono<ResponseEntity<String>> healthCheck() {
@@ -128,11 +128,11 @@ public class HealthzController {
   Mono<List<Map<String, Object>>> buildHealthCheckChain() {
     timeList.add(System.currentTimeMillis());
     /*  build discrete API calls   */
-    Mono<Map<String,Object>> genreMono = genresDao.getGenres()
+    Mono<Map<String, Object>> genreMono = genresDao.getGenres()
         .map(genre -> buildResultsDictionary("getGenres", 
             getElapsedAndUpdateStart(), 200L));
 
-    Mono<Map<String,Object>> actorByIdMono = actorsDao.getActorById("nm0000173")
+    Mono<Map<String, Object>> actorByIdMono = actorsDao.getActorById("nm0000173")
         .map(actor -> buildResultsDictionary("getActorById", 
             getElapsedAndUpdateStart(), 100L));
 
@@ -150,7 +150,7 @@ public class HealthzController {
 
     Map<String, Object> actorsQueryParams = new HashMap<>();
     actorsQueryParams.put("q", "nicole");
-    Mono<Map<String,Object>> actorsQueryMono =
+    Mono<Map<String, Object>> actorsQueryMono =
         actorsDao.getAll(actorsQueryParams, 1, 100)
         .collectList()
         .map(results -> buildResultsDictionary("searchActors", 
@@ -191,7 +191,7 @@ public class HealthzController {
 
     resultsList.forEach(resultItem -> {
       String keyName = resultItem.get("componentId") + ":responseTime";
-      returnDict.put(keyName,resultItem);
+      returnDict.put(keyName, resultItem);
     });
 
     return returnDict;

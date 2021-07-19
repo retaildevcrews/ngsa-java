@@ -28,8 +28,8 @@ public class VolumeSecretService implements IVolumeSecretService {
     sec.setVolume(volume);
     sec.setCosmosCollection(getSecretFromFile(volume, Constants.COSMOS_COLLECTION_KEYNAME));
     sec.setCosmosDatabase(getSecretFromFile(volume, Constants.COSMOS_DATABASE_KEYNAME));
-    sec.setCosmosKey(getSecretFromFile(volume,Constants.COSMOS_KEY_KEYNAME));
-    sec.setCosmosUrl(getSecretFromFile(volume,Constants.COSMOS_URL_KEYNAME));
+    sec.setCosmosKey(getSecretFromFile(volume, Constants.COSMOS_KEY_KEYNAME));
+    sec.setCosmosUrl(getSecretFromFile(volume, Constants.COSMOS_URL_KEYNAME));
 
     Matcher m = cosmosNamePat.matcher(sec.getCosmosUrl());
     if (m.matches() && m.groupCount() > 0) {

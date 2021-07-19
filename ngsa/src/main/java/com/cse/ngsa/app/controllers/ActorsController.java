@@ -45,7 +45,7 @@ public class ActorsController extends Controller {
       ServerHttpRequest request) {
 
     if (logger.isInfoEnabled()) {
-      logger.info(MessageFormat.format("getActor (actorId={0})",actorId));
+      logger.info(MessageFormat.format("getActor (actorId={0})", actorId));
     }
 
     if (Boolean.TRUE.equals(validator.isValidActorId(actorId))) {
@@ -84,7 +84,7 @@ public class ActorsController extends Controller {
       }
       URI uri = request.getURI();
       String instance = uri.getPath() + "?" + uri.getQuery();
-      return super.getAll(query,pageNumber, pageSize, dao, instance);
+      return super.getAll(query, pageNumber, pageSize, dao, instance);
     } catch (Exception ex) {
       logger.warn(MessageFormat.format("ActorControllerException {0}", ex.getMessage()));
       return Flux.error(new ResponseStatusException(

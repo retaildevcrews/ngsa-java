@@ -40,7 +40,7 @@ public class MoviesController extends Controller {
 
   /** getMovie. */
   @GetMapping(value = "/{id}")
-  // to supress wrapping the logger.error() in a conditional and lambda to function
+  // to suppress wrapping the logger.error() in a conditional and lambda to function
   @SuppressWarnings({"squid:S2629", "squid:S1612"})  
   public Object getMovie(
       @ApiParam(value = "The ID of the movie to look for", example = "tt0000002", required = true)
@@ -75,7 +75,7 @@ public class MoviesController extends Controller {
 
   /** upsertMovie. */
   @PutMapping(value = "/{id}")
-  // to supress wrapping the logger.error() in a conditional and lambda to function
+  // to suppress wrapping the logger.error() in a conditional and lambda to function
   @SuppressWarnings({"squid:S2629", "squid:S1612"})
   public Object upsertMovie(
           @PathVariable("id")
@@ -86,7 +86,7 @@ public class MoviesController extends Controller {
       logger.info(MessageFormat.format("upsertMovie (movieId={0})", movieId));
     }
 
-    String movieIdOrig = movieId.replace("zz","tt");
+    String movieIdOrig = movieId.replace("zz", "tt");
     if (Boolean.TRUE.equals(validator.isValidMovieId(movieIdOrig) && movieId.startsWith("zz"))) {
       return moviesDao.upsertMovieById(movieIdOrig);
     } else {
@@ -102,7 +102,7 @@ public class MoviesController extends Controller {
   /** deleteMovie. */
   @DeleteMapping(value = "/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  // to supress wrapping the logger.error() in a conditional and lambda to function
+  // to suppress wrapping the logger.error() in a conditional and lambda to function
   @SuppressWarnings({"squid:S2629", "squid:S1612"})
   public Object deleteMovie(
           @PathVariable("id")
@@ -112,7 +112,7 @@ public class MoviesController extends Controller {
     if (logger.isInfoEnabled()) {
       logger.info(MessageFormat.format("deleteMovie (movieId={0})", movieId));
     }
-    if (Boolean.TRUE.equals(validator.isValidMovieId(movieId.replace("zz","tt")))
+    if (Boolean.TRUE.equals(validator.isValidMovieId(movieId.replace("zz", "tt")))
             && movieId.startsWith("zz")) {
       return moviesDao.deleteMovieById(movieId);
     } else {

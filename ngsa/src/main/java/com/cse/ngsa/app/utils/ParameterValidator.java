@@ -9,6 +9,7 @@ public class ParameterValidator {
 
   /**
    * This method will return true if input is int and false otherwise.
+   * 
    * @param s input string to test as an int
    * @return boolean
    */
@@ -36,6 +37,7 @@ public class ParameterValidator {
 
   /**
    * Used to check for valid ID input.
+   * 
    * @param id id which is checked not nul 7 <= id <= 11
    * @param prefixToMatch first two characters of id must match
    * @return boolean

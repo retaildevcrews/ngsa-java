@@ -34,7 +34,7 @@ public class ActorBase {
   /**
    * ActorBase.
    */
-  public ActorBase(){
+  public ActorBase() {
     // default constructor
   }
 }

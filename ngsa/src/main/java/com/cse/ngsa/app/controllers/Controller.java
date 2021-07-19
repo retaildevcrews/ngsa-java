@@ -42,7 +42,7 @@ public class Controller {
 
     List<SearchParameter> invalidParameters = new ArrayList<>();
 
-    Map<String,Object> queryParams = new HashMap<>();
+    Map<String, Object> queryParams = new HashMap<>();
 
     if (query.isPresent()) {
       if (Boolean.TRUE.equals(validator.isValidSearchQuery(query.get()))) {
@@ -108,7 +108,7 @@ public class Controller {
       IDao dataObject,
       String contextPath) {
 
-    Map<String,Object> queryParams = new HashMap<>();
+    Map<String, Object> queryParams = new HashMap<>();
     String q = null;
 
     if (logger.isInfoEnabled()) {
@@ -122,7 +122,7 @@ public class Controller {
     if (query.isPresent()) {
       if (Boolean.TRUE.equals(validator.isValidSearchQuery(query.get()))) {
         q = query.get().trim().toLowerCase().replace("'", "''");
-        queryParams.put("q",q);
+        queryParams.put("q", q);
       } else {
         logger.warn(MessageFormat.format("Invalid Movie Query parameter {0}", query.get()));
         invalidParameters.add(SearchParameter.Q);
