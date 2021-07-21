@@ -1,7 +1,6 @@
 package com.cse.ngsa.app.services.volumes;
 
 import com.cse.ngsa.app.Constants;
-import com.cse.ngsa.app.services.configuration.ConfigurationService;
 import com.cse.ngsa.app.utils.CommonUtils;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class VolumeSecretService implements IVolumeSecretService {
-  private static final Logger logger =   LogManager.getLogger(ConfigurationService.class);
+  private static final Logger logger = LogManager.getLogger(VolumeSecretService.class);
   private static final Pattern cosmosNamePat = 
       Pattern.compile("^https:\\/\\/(.+)\\.documents\\.azure\\.com.*");
 
