@@ -1,7 +1,7 @@
 {
   "name": "ngsa-java",
   // Using prebuilt image by default, uncomment build field below to use local Dockerfile instead
-  "image": "retaildevcrew/ngsa-java-codespaces",
+  "image": "ghcr.io/retaildevcrews/ngsa-java-codespaces",
   
   // Build based on local Dockerfile
   /*
