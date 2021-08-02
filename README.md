@@ -97,13 +97,12 @@ docker run --rm --network=host ghcr.io/retaildevcrews/ngsa-lr:beta -s http://loc
 
 Stop ngsa by typing Ctrl-C or the stop button if run via F5
 
-### Run Application Unit Tests
-
-To run unit tests
+#### Run unit tests
 
 ```bash
 
-mvn clean package -Dmaven.test.skip=false
+# run unit tests
+mvn test -Dmaven.test.skip=false
 
 ```
 
