@@ -106,7 +106,7 @@ public class VolumeCosmosConfigService implements IVolumeCosmosConfigService {
     }
     
     if (cosConfigs.getCosmosKey().length() < 64) {
-      cosConfigs.error("Invalid value for CosmosKey");
+      logger.error("Invalid value for CosmosKey");
       System.exit(-1);
     }
 

@@ -10,8 +10,6 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import javax.annotation.PostConstruct;
 import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -30,8 +28,6 @@ public class CommonUtils {
 
   @Autowired 
   Environment environment;
-
-  private static final Logger logger = LogManager.getLogger(CommonUtils.class);
 
   private CommonUtils() {
     // disable constructor for utility class
@@ -116,26 +112,26 @@ public class CommonUtils {
   }
 
   @SuppressFBWarnings({"NP_UNWRITTEN_FIELD", "UWF_UNWRITTEN_FIELD"})
+  @SuppressWarnings ("squid:S106") // System.out needed to print usage
   static void printDryRunParameters(IVolumeCosmosConfigService volumeCosmosConfigService,
                                     BuildConfig buildConfig) {
-                                
-    logger.info(MessageFormat.format("Version                    {0}",
+    System.out.println(MessageFormat.format("Version                    {0}",
         buildConfig.getBuildVersion()));
 
     CosmosConfigs cosConf = volumeCosmosConfigService.getAllCosmosConfigsFromVolume(Constants.COSMOS_CONFIG_VOLUME);
 
-    logger.info(MessageFormat.format("Cosmos Server              {0}",
+    System.out.println(MessageFormat.format("Cosmos Server              {0}",
             cosConf.getCosmosUrl()));
 
     String cosmosKey = cosConf.getCosmosKey();
 
-    logger.info(MessageFormat.format("Cosmos Key                 {0}",
+    System.out.println(MessageFormat.format("Cosmos Key                 {0}",
         cosmosKey == null || cosmosKey.isEmpty() ? "(not set)".length() : cosmosKey.length()));
 
-    logger.info(MessageFormat.format("Cosmos Database            {0}",
+    System.out.println(MessageFormat.format("Cosmos Database            {0}",
             cosConf.getCosmosDatabase()));
 
-    logger.info(MessageFormat.format("Cosmos Collection          {0}",
+    System.out.println(MessageFormat.format("Cosmos Collection          {0}",
             cosConf.getCosmosCollection()));
   }
 

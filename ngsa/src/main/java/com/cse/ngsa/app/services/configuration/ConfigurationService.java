@@ -26,13 +26,13 @@ public class ConfigurationService implements IConfigurationService {
    */
   @SuppressFBWarnings("DM_EXIT")
   @Autowired
-  public ConfigurationService(IVolumeCosmosConfigService vCosConfService) throws Exception {
+  public ConfigurationService(IVolumeCosmosConfigService vcosConfService) throws Exception {
     try {
-      if (vCosConfService == null) {
+      if (vcosConfService == null) {
         logger.error("volumeCosmosConfigService is null");
         System.exit(-1);
       }
-      volumeCosmosConfigService = vCosConfService;
+      volumeCosmosConfigService = vcosConfService;
       configEntries = volumeCosmosConfigService.getAllCosmosConfigsFromVolume(Constants.COSMOS_CONFIG_VOLUME);
 
     } catch (Exception ex) {
