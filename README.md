@@ -74,7 +74,7 @@ mvn clean spring-boot:run
 
 ```
 
-wait for `Netty started on port(s): 4120`
+wait for `Netty started on port(s): 8080`
 
 ### Testing the application
 
@@ -85,10 +85,13 @@ Open a new bash shell
 # test the application
 
 # test using httpie (installed automatically in Codespaces)
-http localhost:4120/version
+http localhost:8080/version
 
 # test using curl
-curl localhost:4120/version
+curl localhost:8080/version
+
+# test using lr
+docker run --rm --network=host ghcr.io/retaildevcrews/ngsa-lr:beta -s http://localhost:8080 --max-errors 1 -f baseline.json
 
 ```
 
