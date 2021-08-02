@@ -9,5 +9,5 @@
     <suppress checks="RequireEmptyLineBeforeBlockTagGroup" files="."/>
     <suppress checks="LineLength" files="."/>
     <suppress checks="AvoidStarImport" files="."/>
-    <suppress checks="AbbreviationAsWordInName" files="IDao.java|IConfigurationService.java|IVolumeSecretService.java"/>
+    <suppress checks="AbbreviationAsWordInName" files="IDao.java|IConfigurationService.java|IVolumeCosmosConfigService.java"/>
 </suppressions>

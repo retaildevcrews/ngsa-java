@@ -1,8 +1,8 @@
 package com.cse.ngsa.app.services.configuration;
 
 import com.cse.ngsa.app.Constants;
-import com.cse.ngsa.app.services.volumes.IVolumeSecretService;
-import com.cse.ngsa.app.services.volumes.Secrets;
+import com.cse.ngsa.app.services.volumes.CosmosConfigs;
+import com.cse.ngsa.app.services.volumes.IVolumeCosmosConfigService;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,11 +13,11 @@ import org.springframework.stereotype.Service;
 public class ConfigurationService implements IConfigurationService {
   private static final Logger logger =   LogManager.getLogger(ConfigurationService.class);
 
-  private IVolumeSecretService volumeSecretService;
+  private IVolumeCosmosConfigService volumeCosmosConfigService;
 
-  Secrets configEntries;
+  CosmosConfigs configEntries;
 
-  public Secrets getConfigEntries() {
+  public CosmosConfigs getConfigEntries() {
     return configEntries;
   }
 
@@ -26,14 +26,14 @@ public class ConfigurationService implements IConfigurationService {
    */
   @SuppressFBWarnings("DM_EXIT")
   @Autowired
-  public ConfigurationService(IVolumeSecretService vsService) throws Exception {
+  public ConfigurationService(IVolumeCosmosConfigService vCosConfService) throws Exception {
     try {
-      if (vsService == null) {
-        logger.error("volumeSecretService is null");
+      if (vCosConfService == null) {
+        logger.error("volumeCosmosConfigService is null");
         System.exit(-1);
       }
-      volumeSecretService = vsService;
-      configEntries = volumeSecretService.getAllSecretsFromVolume(Constants.SECRETS_VOLUME);
+      volumeCosmosConfigService = vCosConfService;
+      configEntries = volumeCosmosConfigService.getAllCosmosConfigsFromVolume(Constants.COSMOS_CONFIG_VOLUME);
 
     } catch (Exception ex) {
       logger.error(ex.getMessage());
