@@ -15,7 +15,7 @@ NGSA Java App is inteneded for platform testing and monitoring in one or many Ku
 
 ## Ngsa-java Usage
 
-```
+```text
 
 Usage:
         mvn clean spring-boot:run -Dspring-boot.run.arguments=[options] 
@@ -93,6 +93,16 @@ curl localhost:4120/version
 ```
 
 Stop ngsa by typing Ctrl-C or the stop button if run via F5
+
+### Run Application Unit Tests
+
+To run unit tests
+
+```bash
+
+mvn clean package -Dmaven.test.skip=false
+
+```
 
 ## Contributing
 
