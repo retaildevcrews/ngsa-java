@@ -13,43 +13,43 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 @Service
-public class VolumeSecretService implements IVolumeSecretService {
-  private static final Logger logger = LogManager.getLogger(VolumeSecretService.class);
+public class VolumeCosmosConfigService implements IVolumeCosmosConfigService {
+  private static final Logger logger = LogManager.getLogger(VolumeCosmosConfigService.class);
   private static final Pattern cosmosNamePat = 
       Pattern.compile("^https:\\/\\/(.+)\\.documents\\.azure\\.com.*");
 
   /**
-   * Get all the secrets from a given volume.
+   * Get all the cosmos configs from a given volume.
    */
-  public Secrets getAllSecretsFromVolume(String volume) {
-    Secrets sec = new Secrets();
+  public CosmosConfigs getAllCosmosConfigsFromVolume(String volume) {
+    CosmosConfigs cosConf = new CosmosConfigs();
 
-    sec.setVolume(volume);
-    sec.setCosmosCollection(getSecretFromFile(volume, Constants.COSMOS_COLLECTION_KEYNAME));
-    sec.setCosmosDatabase(getSecretFromFile(volume, Constants.COSMOS_DATABASE_KEYNAME));
-    sec.setCosmosKey(getSecretFromFile(volume, Constants.COSMOS_KEY_KEYNAME));
-    sec.setCosmosUrl(getSecretFromFile(volume, Constants.COSMOS_URL_KEYNAME));
+    cosConf.setVolume(volume);
+    cosConf.setCosmosCollection(getCosmosConfigFromFile(volume, Constants.COSMOS_COLLECTION_KEYNAME));
+    cosConf.setCosmosDatabase(getCosmosConfigFromFile(volume, Constants.COSMOS_DATABASE_KEYNAME));
+    cosConf.setCosmosKey(getCosmosConfigFromFile(volume, Constants.COSMOS_KEY_KEYNAME));
+    cosConf.setCosmosUrl(getCosmosConfigFromFile(volume, Constants.COSMOS_URL_KEYNAME));
 
-    Matcher m = cosmosNamePat.matcher(sec.getCosmosUrl());
+    Matcher m = cosmosNamePat.matcher(cosConf.getCosmosUrl());
     if (m.matches() && m.groupCount() > 0) {
       // group 0 --> total match
       // group 1 --> first group match, we only have one group
-      sec.setCosmosName(m.group(1));
+      cosConf.setCosmosName(m.group(1));
     }
     try {
-      validateSecrets(volume, sec);
+      validateCosmosConfigs(volume, cosConf);
     } catch (Exception ex) {
       logger.error(ex.getMessage());
     }
 
-    return sec;
+    return cosConf;
 
   }
 
   /**
-   * Get the secret value from a file.
+   * Get the cosmos config value from a file.
    */
-  public String getSecretFromFile(String volume, String key) {
+  public String getCosmosConfigFromFile(String volume, String key) {
     String val = "";
 
     Path filePath = Path.of(volume + "/" + key);
@@ -66,38 +66,38 @@ public class VolumeSecretService implements IVolumeSecretService {
   }
 
   /**
-   * Checks for the secret values to not contain errors.
+   * Checks for the cosmos config values to not contain errors.
    */
-  private void validateSecrets(String volume, Secrets secrets) {
+  private void validateCosmosConfigs(String volume, CosmosConfigs cosConfigs) {
 
-    if (secrets == null) {
-      logger.error("Unable to read secrets from volume: " +  volume);
+    if (cosConfigs == null) {
+      logger.error("Unable to read cosmos configs from volume: " +  volume);
       System.exit(-1);
     }
 
-    if (CommonUtils.isNullWhiteSpace(secrets.getCosmosCollection())) {
+    if (CommonUtils.isNullWhiteSpace(cosConfigs.getCosmosCollection())) {
       logger.error("CosmosCollection cannot be empty");
       System.exit(-1);
     }
 
-    if (CommonUtils.isNullWhiteSpace(secrets.getCosmosDatabase())) {
+    if (CommonUtils.isNullWhiteSpace(cosConfigs.getCosmosDatabase())) {
       logger.error("CosmosDatabase cannot be empty");
       System.exit(-1);
     }
 
-    if (CommonUtils.isNullWhiteSpace(secrets.getCosmosKey())) {
+    if (CommonUtils.isNullWhiteSpace(cosConfigs.getCosmosKey())) {
       logger.error("CosmosKey cannot be empty");
       System.exit(-1);
     }
 
-    if (CommonUtils.isNullWhiteSpace(secrets.getCosmosUrl())) {
+    if (CommonUtils.isNullWhiteSpace(cosConfigs.getCosmosUrl())) {
       logger.error("CosmosUrl cannot be empty");
       System.exit(-1);
     }
     
-    String cosmosUrl = secrets.getCosmosUrl().toLowerCase(Locale.ROOT);
+    String cosmosUrl = cosConfigs.getCosmosUrl().toLowerCase(Locale.ROOT);
     
-    Matcher m = cosmosNamePat.matcher(secrets.getCosmosUrl());
+    Matcher m = cosmosNamePat.matcher(cosConfigs.getCosmosUrl());
     if (!m.matches() || m.groupCount() != 1) {
       // group 0 --> total match
       // group 1 --> first group match, we only have one group
@@ -105,7 +105,7 @@ public class VolumeSecretService implements IVolumeSecretService {
       System.exit(-1);
     }
     
-    if (secrets.getCosmosKey().length() < 64) {
+    if (cosConfigs.getCosmosKey().length() < 64) {
       logger.error("Invalid value for CosmosKey");
       System.exit(-1);
     }

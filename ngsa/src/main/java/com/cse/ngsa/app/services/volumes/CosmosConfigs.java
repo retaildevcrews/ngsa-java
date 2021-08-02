@@ -1,6 +1,6 @@
 package com.cse.ngsa.app.services.volumes;
 
-public class Secrets {
+public class CosmosConfigs {
 
   private String volume;
   private String cosmosUrl;

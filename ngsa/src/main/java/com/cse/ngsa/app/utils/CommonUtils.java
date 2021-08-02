@@ -2,8 +2,8 @@ package com.cse.ngsa.app.utils;
 
 import com.cse.ngsa.app.Constants;
 import com.cse.ngsa.app.config.BuildConfig;
-import com.cse.ngsa.app.services.volumes.IVolumeSecretService;
-import com.cse.ngsa.app.services.volumes.Secrets;
+import com.cse.ngsa.app.services.volumes.CosmosConfigs;
+import com.cse.ngsa.app.services.volumes.IVolumeCosmosConfigService;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.lang.management.ManagementFactory;
 import java.text.MessageFormat;
@@ -97,14 +97,14 @@ public class CommonUtils {
    * validate cli dry run option.
    */
   public static void validateCliDryRunOption(ApplicationArguments applicationArguments,
-                                              IVolumeSecretService volumeSecretService,
+                                              IVolumeCosmosConfigService volumeCosmosConfigService,
                                               BuildConfig buildConfig) {
     if (applicationArguments != null) {
       SimpleCommandLinePropertySource commandLinePropertySource =
           new SimpleCommandLinePropertySource(applicationArguments.getSourceArgs());
       Arrays.stream(commandLinePropertySource.getPropertyNames()).forEach(s -> {
         if (s.equals("dry-run") || s.equals("d")) {
-          printDryRunParameters(volumeSecretService, buildConfig);
+          printDryRunParameters(volumeCosmosConfigService, buildConfig);
           System.exit(0);
         }
       });
@@ -113,26 +113,26 @@ public class CommonUtils {
 
   @SuppressFBWarnings({"NP_UNWRITTEN_FIELD", "UWF_UNWRITTEN_FIELD"})
   @SuppressWarnings ("squid:S106") // System.out needed to print usage
-  static void printDryRunParameters(IVolumeSecretService volumeSecretService,
+  static void printDryRunParameters(IVolumeCosmosConfigService volumeCosmosConfigService,
                                     BuildConfig buildConfig) {
     System.out.println(MessageFormat.format("Version                    {0}",
         buildConfig.getBuildVersion()));
 
-    Secrets sec = volumeSecretService.getAllSecretsFromVolume(Constants.SECRETS_VOLUME);
+    CosmosConfigs cosConf = volumeCosmosConfigService.getAllCosmosConfigsFromVolume(Constants.COSMOS_CONFIG_VOLUME);
 
     System.out.println(MessageFormat.format("Cosmos Server              {0}",
-            sec.getCosmosUrl()));
+            cosConf.getCosmosUrl()));
 
-    String cosmosKey = sec.getCosmosKey();
+    String cosmosKey = cosConf.getCosmosKey();
 
     System.out.println(MessageFormat.format("Cosmos Key                 {0}",
         cosmosKey == null || cosmosKey.isEmpty() ? "(not set)".length() : cosmosKey.length()));
 
     System.out.println(MessageFormat.format("Cosmos Database            {0}",
-            sec.getCosmosDatabase()));
+            cosConf.getCosmosDatabase()));
 
     System.out.println(MessageFormat.format("Cosmos Collection          {0}",
-            sec.getCosmosCollection()));
+            cosConf.getCosmosCollection()));
   }
 
   /**

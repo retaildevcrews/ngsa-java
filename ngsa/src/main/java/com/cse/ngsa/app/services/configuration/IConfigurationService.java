@@ -1,8 +1,8 @@
 package com.cse.ngsa.app.services.configuration;
 
-import com.cse.ngsa.app.services.volumes.Secrets;
+import com.cse.ngsa.app.services.volumes.CosmosConfigs;
 
 public interface IConfigurationService {
 
-  Secrets getConfigEntries();
+  CosmosConfigs getConfigEntries();
 }

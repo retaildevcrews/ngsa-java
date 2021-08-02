@@ -31,11 +31,11 @@
 
   "remoteUser": "vscode",
 
-  // Open port 4120 by default
-  "forwardPorts": [4120],
+  // Open port 8080 by default
+  "forwardPorts": [8080],
   // Added for local developement
   // Without this port forwarding to Windows Network sometime fails
-  "appPort": [4120],
+  "appPort": [8080],
 
   // Install extensions
   "extensions": [
