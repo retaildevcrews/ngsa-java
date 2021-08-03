@@ -10,6 +10,7 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import javax.annotation.PostConstruct;
 import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -49,8 +50,7 @@ public class CommonUtils {
             printCmdLineHelp();
             System.exit(-1);
           }
-          Configurator.setLevel("com.cse.ngsa",
-              level);
+          Configurator.setLevel(LogManager.getRootLogger().getName(), level);
         } else if (s.equals("help") || s.equals("h")) {
           printCmdLineHelp();
           System.exit(0);
