@@ -144,17 +144,20 @@ public class CommonUtils {
         + "\tmvn clean spring-boot:run -Dspring-boot.run.arguments=[options] \r\n"
         + "\r\nOptions: \r\n"
         + "\t--help                                    \t\t Show help and usage information\r\n"
-        + "\t--burst-header                             "
-        + "\t\t Enable burst metrics header in healthz and version requests\r\n"
-        + "\t--burst-service                             "
-        + "\t\t Service name for bursting metrics (string) [default: ngsa-java]\r\n"
-        + "\t--burst-target                             "
-        + "\t\t Target level for bursting metrics (int) [default: 60]\r\n"
-        + "\t--burst-max                                "
-        + "\t\t Max level for bursting metrics (int) [default: 80]\r\n"
+        + "\t--version                                 \t\t Show version information\r\n"
         + "\t--dry-run                                 \t\t Validates configuration\r\n"
         + "\t--log-level=<trace|info|warn|error|fatal> \t\t Log Level [default: Error]\r\n"
-        + "\t--version                                 \t\t Show version information\r\n");
+        + "\r\nEnv vars: \r\n"
+        + "\tBURST_HEADER=<true|false>                 "
+        + "\t\t Enable bursting metrics [env var: ENV_BURST_HEADER; default: false]\r\n"
+        + "\tBURST_SERVICE                             "
+        + "\t\t Service name for bursting metrics (string) [default: ngsa-java]\r\n"
+        + "\tBURST_TARGET                              "
+        + "\t\t Target level for bursting metrics (int) [default: 60]\r\n"
+        + "\tBURST_MAX                                 "
+        + "\t\t Max level for bursting metrics (int) [default: 80]\r\n"
+        + "\tPROMETHEUS=<true|false>                   "
+        + "\t\t Enable prometheus metrics [default: false]\r\n");
   }
 
   /**

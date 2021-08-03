@@ -22,14 +22,17 @@ Usage:
 
 Options: 
         --help                                                   Show help and usage information
-        --burst-header                                           Enable burst metrics header in healthz and version requests
-        --burst-service                                          Service name for bursting metrics (string) [default: ngsa-java]
-        --burst-target                                           Target level for bursting metrics (int) [default: 60]
-        --burst-max                                              Max level for bursting metrics (int) [default: 80]
+        --version                                                Shows version information
         --dry-run                                                Validates configuration
         --log-level=<trace|info|warn|error|fatal>                Log Level [default: Error]
-        --version                                                Shows version information       
+              
 
+Env vars:
+        BURST_HEADER=<true|false>                            Enable burst metrics header in healthz and version requests [default: false]
+        BURST_SERVICE                                        Service name for bursting metrics (string) [default: ngsa-java]
+        BURST_TARGET                                         Target level for bursting metrics (int) [default: 60]
+        BURST_MAX                                            Max level for bursting metrics (int) [default: 80]
+        PROMETHEUS=<true|false>                              Enable prometheus metrics [default: false]
 ```
 
 ## Run the Application
