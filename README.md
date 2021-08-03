@@ -26,7 +26,6 @@ Options:
         --dry-run                                                Validates configuration
         --log-level=<trace|info|warn|error|fatal>                Log Level [default: Error]
               
-
 Env vars:
         BURST_HEADER=<true|false>                            Enable burst metrics header in healthz and version requests [default: false]
         BURST_SERVICE                                        Service name for bursting metrics (string) [default: ngsa-java]
