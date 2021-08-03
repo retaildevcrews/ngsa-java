@@ -142,6 +142,9 @@ public class CommonUtils {
   public static void printCmdLineHelp() {
     System.out.println("\r\nUsage:\r\n"
         + "\tmvn clean spring-boot:run -Dspring-boot.run.arguments=[options] \r\n"
+        + "\r\n"
+        + "\texport [env var]=<value> \r\n"
+        + "\tmvn clean spring-boot:run \r\n"
         + "\r\nOptions: \r\n"
         + "\t--help                                    \t\t Show help and usage information\r\n"
         + "\t--version                                 \t\t Show version information\r\n"

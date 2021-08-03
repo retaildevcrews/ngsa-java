@@ -18,7 +18,10 @@ NGSA Java App is inteneded for platform testing and monitoring in one or many Ku
 ```text
 
 Usage:
-        mvn clean spring-boot:run -Dspring-boot.run.arguments=[options] 
+        mvn clean spring-boot:run -Dspring-boot.run.arguments=[options]
+        
+        export [env var]=<value>
+        mvn clean spring-boot:run
 
 Options: 
         --help                                               Show help and usage information
