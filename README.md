@@ -27,7 +27,7 @@ Options:
         --log-level=<trace|info|warn|error|fatal>            Log Level [default: Error]
               
 Env vars:
-        BURST_HEADER=<true|false>                            Enable burst metrics header in healthz and version requests [default: false]
+        BURST_HEADER=<true|false>                            Enable bursting metrics [default: false]
         BURST_SERVICE                                        Service name for bursting metrics (string) [default: ngsa-java]
         BURST_TARGET                                         Target level for bursting metrics (int) [default: 60]
         BURST_MAX                                            Max level for bursting metrics (int) [default: 80]
