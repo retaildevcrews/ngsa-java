@@ -21,10 +21,10 @@ Usage:
         mvn clean spring-boot:run -Dspring-boot.run.arguments=[options] 
 
 Options: 
-        --help                                                   Show help and usage information
-        --version                                                Shows version information
-        --dry-run                                                Validates configuration
-        --log-level=<trace|info|warn|error|fatal>                Log Level [default: Error]
+        --help                                               Show help and usage information
+        --version                                            Shows version information
+        --dry-run                                            Validates configuration
+        --log-level=<trace|info|warn|error|fatal>            Log Level [default: Error]
               
 Env vars:
         BURST_HEADER=<true|false>                            Enable burst metrics header in healthz and version requests [default: false]
