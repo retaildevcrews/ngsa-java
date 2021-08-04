@@ -21,4 +21,6 @@ RUN bash /tmp/library-scripts/maven-debian.sh
 
 ENV PATH=/apache-maven/bin:${PATH}:~/.dotnet/tools
 
+RUN apt-get update && apt-get upgrade -y
+
 USER $USERNAME
