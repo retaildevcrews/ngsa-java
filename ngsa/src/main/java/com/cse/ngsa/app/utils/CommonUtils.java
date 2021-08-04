@@ -150,17 +150,22 @@ public class CommonUtils {
         + "\t--version                                 \t\t Show version information\r\n"
         + "\t--dry-run                                 \t\t Validates configuration\r\n"
         + "\t--log-level=<trace|info|warn|error|fatal> \t\t Log Level [default: Error]\r\n"
-        + "\r\nEnv vars: \r\n"
-        + "\tBURST_HEADER=<true|false>                 "
+        + "\t--burst-header                            "
         + "\t\t Enable bursting metrics [env var: ENV_BURST_HEADER; default: false]\r\n"
-        + "\tBURST_SERVICE                             "
+        + "\t--burst-service=<true|false>              "
         + "\t\t Service name for bursting metrics (string) [default: ngsa-java]\r\n"
-        + "\tBURST_TARGET                              "
+        + "\t--burst-target                            "
         + "\t\t Target level for bursting metrics (int) [default: 60]\r\n"
-        + "\tBURST_MAX                                 "
+        + "\t--burst-max                               "
         + "\t\t Max level for bursting metrics (int) [default: 80]\r\n"
-        + "\tPROMETHEUS=<true|false>                   "
-        + "\t\t Enable prometheus metrics [default: false]\r\n");
+        + "\t--prometheus=<true|false>                 "
+        + "\t\t Enable prometheus metrics [default: false]\r\n"
+        + "\r\nEnv vars: \r\n"
+        + "\tBURST_HEADER=<true|false> \r\n"
+        + "\tBURST_SERVICE \r\n"
+        + "\tBURST_TARGET \r\n"
+        + "\tBURST_MAX \r\n"
+        + "\tPROMETHEUS=<true|false> \r\n");
   }
 
   /**

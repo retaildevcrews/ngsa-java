@@ -15,6 +15,8 @@ NGSA Java App is inteneded for platform testing and monitoring in one or many Ku
 
 ## Ngsa-java Usage
 
+> NOTE: Command-line arguments take precedence over `application.properties` values and env vars.
+
 ```text
 
 Usage:
@@ -28,13 +30,18 @@ Options:
         --version                                            Shows version information
         --dry-run                                            Validates configuration
         --log-level=<trace|info|warn|error|fatal>            Log Level [default: Error]
+        --burst-header=<true|false>                                      nable bursting metrics [default: false]
+        --burst-service                                      Service name for bursting metrics (string) [default: ngsa-java]
+        --burst-target                                       Target level for bursting metrics (int) [default: 60]
+        --burst-max                                          Max level for bursting metrics (int) [default: 80]
+        --prometheus=<true|false>                            Enable prometheus metrics [default: false]
               
 Env vars:
-        BURST_HEADER=<true|false>                            Enable bursting metrics [default: false]
-        BURST_SERVICE                                        Service name for bursting metrics (string) [default: ngsa-java]
-        BURST_TARGET                                         Target level for bursting metrics (int) [default: 60]
-        BURST_MAX                                            Max level for bursting metrics (int) [default: 80]
-        PROMETHEUS=<true|false>                              Enable prometheus metrics [default: false]
+        BURST_HEADER=<true|false>
+        BURST_SERVICE                                        
+        BURST_TARGET                                         
+        BURST_MAX                                            
+        PROMETHEUS=<true|false>                              
 ```
 
 ## Run the Application
