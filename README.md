@@ -30,7 +30,7 @@ Options:
         --version                                            Shows version information
         --dry-run                                            Validates configuration
         --log-level=<trace|info|warn|error|fatal>            Log Level [default: Error]
-        --burst-header=<true|false>                                      nable bursting metrics [default: false]
+        --burst-header=<true|false>                          Enable bursting metrics [default: false]
         --burst-service                                      Service name for bursting metrics (string) [default: ngsa-java]
         --burst-target                                       Target level for bursting metrics (int) [default: 60]
         --burst-max                                          Max level for bursting metrics (int) [default: 80]
