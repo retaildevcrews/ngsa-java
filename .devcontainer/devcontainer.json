@@ -2,7 +2,7 @@
   "name": "ngsa-java",
   // Using prebuilt image by default, uncomment build field below to use local Dockerfile instead
   //"image": "ghcr.io/retaildevcrews/ngsa-java-codespaces",
-  "build": "Dockerfile",
+  "dockerFile": "Dockerfile",
 
   // Build based on local Dockerfile
   /*
@@ -20,12 +20,12 @@
    */
 
 
-  "mounts": [
-    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
-  ],
+  // "mounts": [
+  //   "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+  // ],
 
   "settings": {
-    "terminal.integrated.shell.linux": "/bin/bash",
+    "terminal.integrated.shell.linux": "/bin/zsh",
     // "terminal.integrated.shell.linux": "/bin/zsh",
     "java.home": "/usr/lib/jvm/zulu11"
   },
