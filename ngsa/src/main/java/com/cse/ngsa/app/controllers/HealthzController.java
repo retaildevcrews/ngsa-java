@@ -67,7 +67,7 @@ public class HealthzController {
     Mono<List<Map<String, Object>>> resultsMono = buildHealthCheckChain();
 
     HttpHeaders headers = new HttpHeaders();
-    if (environment.getProperty(Constants.BURST_HEADER_ARGUMENT) != null) {
+    if (environment.getProperty(Constants.BURST_HEADER_ARGUMENT).equalsIgnoreCase("true")) {
       headers.add(Constants.BURST_HEADER_KEY, commonUtils.getBurstHeaderValue());
     }
 
@@ -111,7 +111,7 @@ public class HealthzController {
     Mono<List<Map<String, Object>>> resultsMono = buildHealthCheckChain();
 
     HttpHeaders headers = new HttpHeaders();
-    if (environment.getProperty(Constants.BURST_HEADER_ARGUMENT) != null) {
+    if (environment.getProperty(Constants.BURST_HEADER_ARGUMENT).equalsIgnoreCase("true")) {
       headers.add(Constants.BURST_HEADER_KEY, commonUtils.getBurstHeaderValue());
     }
 
