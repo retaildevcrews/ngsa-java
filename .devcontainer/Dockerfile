@@ -16,16 +16,17 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     curl -O https://cdn.azul.com/zulu/bin/zulu-repo_1.0.0-2_all.deb && \
     apt-get install ./zulu-repo_1.0.0-2_all.deb && \
     apt-get update && \
-    apt-get -y install zulu${JAVA_VERSION}-jdk && \
-    apt-get -y upgrade
+    apt-get -y install zulu${JAVA_VERSION}-jdk
+    # && \
+    # apt-get -y upgrade
 
 COPY .devcontainer/library-scripts /tmp/library-scripts/
 
 # [Option] Install Maven
 ARG INSTALL_MAVEN="true"
-ARG MAVEN_VERSION="3.6.3"
-RUN if [ "${INSTALL_MAVEN}" = "true" ]; then bash /tmp/library-scripts/maven-debian.sh; fi
-ENV PATH=/apache-maven/bin:${PATH}
+#ARG MAVEN_VERSION="3.6.3"
+#RUN if [ "${INSTALL_MAVEN}" = "true" ]; then bash /tmp/library-scripts/maven-debian.sh; fi
+#ENV PATH=/apache-maven/bin:${PATH}
 
 ENV PATH="~/.dotnet/tools:${PATH}"
 USER $USERNAME
