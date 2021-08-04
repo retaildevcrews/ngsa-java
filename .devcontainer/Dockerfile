@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/vscode/devcontainers/base
+FROM docker pull ghcr.io/retaildevcrews/dind:latest
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -19,23 +19,11 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get -y install zulu${JAVA_VERSION}-jdk && \
     apt-get -y upgrade
 
-COPY .devcontainer/library-scripts /tmp/library-scripts/
-
 # [Option] Install Maven
 ARG INSTALL_MAVEN="true"
 ARG MAVEN_VERSION="3.6.3"
 RUN if [ "${INSTALL_MAVEN}" = "true" ]; then bash /tmp/library-scripts/maven-debian.sh; fi
 ENV PATH=/apache-maven/bin:${PATH}
-
-# [Option] Install Azure CLI
-ARG  INSTALL_AZURE_CLI="true"
-RUN  if [ "$INSTALL_AZURE_CLI" = "true" ]; then bash /tmp/library-scripts/azcli-debian.sh; fi
-
-# [Option] Install Docker CLI
-# To use the Docker CLI inside a container, use the bind mount option to add the docker socket to the container.
-# Example: "docker run -v '/var/run/docker.sock:/var/run/docker.sock' ..."
-ARG  INSTALL_DOCKER="true"
-RUN  if [ "${INSTALL_DOCKER}" = "true" ]; then bash /tmp/library-scripts/docker-debian.sh "${USERNAME}"; fi
 
 ENV PATH="~/.dotnet/tools:${PATH}"
 USER $USERNAME
