@@ -1,8 +1,6 @@
 {
   "name": "ngsa-java",
   "image": "ghcr.io/retaildevcrews/ngsa-java-codespaces",
-  // Using prebuilt image by default, uncomment build field below to use local Dockerfile instead
-  // "dockerFile": "Dockerfile",
 	"runArgs": [
 		"--init",
 		"--privileged"
