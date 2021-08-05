@@ -24,13 +24,13 @@ spec:
         - name: app
           image: {{gitops.imageName}}:{{gitops.imageTag}}
           imagePullPolicy: Always
-
-            args: 
-            - --prometheus
-            - --zone
-            - {{gitops.config.zone}}
-            - --region
-            - {{gitops.config.region}}
+          env:
+          - name: PROMETHEUS
+            value: "true"
+          - name: ZONE
+            value: "{{gitops.config.zone}}"
+          - name: REGION
+            value: "{{gitops.config.region}}"
 
           ports:
             - name: http
