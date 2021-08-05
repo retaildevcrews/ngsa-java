@@ -1,33 +1,17 @@
 {
   "name": "ngsa-java",
-  // Using prebuilt image by default, uncomment build field below to use local Dockerfile instead
   "image": "ghcr.io/retaildevcrews/ngsa-java-codespaces",
-  
-  // Build based on local Dockerfile
-  /*
-  "build": {
-     "dockerfile": "Dockerfile",
-     "context": "..",
-     "args": {
-       "JAVA_VERSION": "11",
-       "INSTALL_MAVEN": "true",
-       "MAVEN_VERSION": "3.6.3",
-       "INSTALL_AZURE_CLI": "true",
-       "INSTALL_DOCKER": "true"
-     }
-   }, 
-   */
+	"runArgs": [
+		"--init",
+		"--privileged"
+	],
+	"overrideCommand": false,
 
-
-  "mounts": [
-    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
-  ],
-
-  "settings": {
-    "terminal.integrated.shell.linux": "/bin/bash",
-    // "terminal.integrated.shell.linux": "/bin/zsh",
+  // Set container specific settings
+	"settings": {
+		"terminal.integrated.defaultProfile.linux": "zsh",
     "java.home": "/usr/lib/jvm/zulu11"
-  },
+	},
 
   "remoteUser": "vscode",
 
@@ -56,5 +40,5 @@
   ],
 
   // Run Bash script in .devcontainer directory
-  "postCreateCommand": "/bin/bash ./.devcontainer/post-install.sh"
+  "onCreateCommand": "/bin/bash ./.devcontainer/on-create.sh"
 }
