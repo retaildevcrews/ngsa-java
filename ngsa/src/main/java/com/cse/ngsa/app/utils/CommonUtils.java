@@ -1,6 +1,6 @@
 package com.cse.ngsa.app.utils;
 
-import com.cse.ngsa.app.Constants;
+// import com.cse.ngsa.app.Constants;
 import com.cse.ngsa.app.config.BuildConfig;
 import com.cse.ngsa.app.services.volumes.CosmosConfigs;
 import com.cse.ngsa.app.services.volumes.IVolumeCosmosConfigService;
@@ -118,7 +118,7 @@ public class CommonUtils {
     System.out.println(MessageFormat.format("Version                    {0}",
         buildConfig.getBuildVersion()));
 
-    CosmosConfigs cosConf = volumeCosmosConfigService.getAllCosmosConfigsFromVolume(Constants.COSMOS_CONFIG_VOLUME);
+    CosmosConfigs cosConf = volumeCosmosConfigService.getAllCosmosConfigsFromVolume("secrets");
 
     System.out.println(MessageFormat.format("Cosmos Server              {0}",
             cosConf.getCosmosUrl()));
@@ -160,12 +160,15 @@ public class CommonUtils {
         + "\t\t Max level for bursting metrics (int) [default: 80]\r\n"
         + "\t--prometheus=<true|false>                 "
         + "\t\t Enable prometheus metrics [default: false]\r\n"
+        + "\t--secrets-volume                          "
+        + "\t\t Secrets Volume Path [default: secrets]\r\n"
         + "\r\nEnv vars: \r\n"
         + "\tBURST_HEADER=<true|false> \r\n"
         + "\tBURST_SERVICE \r\n"
         + "\tBURST_TARGET \r\n"
         + "\tBURST_MAX \r\n"
-        + "\tPROMETHEUS=<true|false> \r\n");
+        + "\tPROMETHEUS=<true|false> \r\n"
+        + "\tSECRETS_VOLUME \r\n");
   }
 
   /**

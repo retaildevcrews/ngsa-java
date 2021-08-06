@@ -22,8 +22,7 @@ public final class Constants {
   public static final String ACTOR_CONTROLLER_EXCEPTION = "ActorControllerException";
   public static final String MOVIE_CONTROLLER_EXCEPTION = "MovieControllerException";
 
-  public static final String COSMOS_CONFIG_VOLUME = "secrets";
-
+  public static final String SECRETS_VOLUME_ARGUMENT = "secrets-volume";
   public static final String BURST_HEADER_ARGUMENT = "burst-header";
   public static final String BURST_HEADER_KEY = "X-Load-Feedback";
 
