@@ -35,13 +35,17 @@ Options:
         --burst-target                                       Target level for bursting metrics (int) [default: 60]
         --burst-max                                          Max level for bursting metrics (int) [default: 80]
         --prometheus=<true|false>                            Enable prometheus metrics [default: false]
+        --zone                                               Zone for log [default: dev]
+        --region                                             Region for log [default: dev]   
               
 Env vars:
         BURST_HEADER=<true|false>
         BURST_SERVICE                                        
         BURST_TARGET                                         
         BURST_MAX                                            
-        PROMETHEUS=<true|false>                              
+        PROMETHEUS=<true|false>
+        ZONE
+        REGION                              
 ```
 
 ## Run the Application
