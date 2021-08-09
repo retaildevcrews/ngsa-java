@@ -36,7 +36,8 @@ Options:
         --burst-max                                          Max level for bursting metrics (int) [default: 80]
         --prometheus=<true|false>                            Enable prometheus metrics [default: false]
         --zone                                               Zone for log [default: dev]
-        --region                                             Region for log [default: dev]   
+        --region                                             Region for log [default: dev]
+        --secrets-volume                                     Secrets Volume Path [default: secrets]   
               
 Env vars:
         BURST_HEADER=<true|false>
@@ -45,7 +46,8 @@ Env vars:
         BURST_MAX                                            
         PROMETHEUS=<true|false>
         ZONE
-        REGION                              
+        REGION
+        SECRETS_VOLUME                              
 ```
 
 ## Run the Application
