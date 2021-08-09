@@ -23,15 +23,15 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CommonUtils {
-
+  
   @Autowired
   BuildConfig buildConfig;
 
-  @Autowired 
-  Environment environment;
+  static Environment environment;
 
-  private CommonUtils() {
+  private CommonUtils(Environment environment) {
     // disable constructor for utility class
+    CommonUtils.environment = environment;
   }
 
   /**
@@ -117,8 +117,8 @@ public class CommonUtils {
                                     BuildConfig buildConfig) {
     System.out.println(MessageFormat.format("Version                    {0}",
         buildConfig.getBuildVersion()));
-
-    CosmosConfigs cosConf = volumeCosmosConfigService.getAllCosmosConfigsFromVolume(Constants.COSMOS_CONFIG_VOLUME);
+    
+    CosmosConfigs cosConf = volumeCosmosConfigService.getAllCosmosConfigsFromVolume(environment.getProperty(Constants.SECRETS_VOLUME_ARGUMENT));
 
     System.out.println(MessageFormat.format("Cosmos Server              {0}",
             cosConf.getCosmosUrl()));
@@ -151,7 +151,7 @@ public class CommonUtils {
         + "\t--dry-run                                 \t\t Validates configuration\r\n"
         + "\t--log-level=<trace|info|warn|error|fatal> \t\t Log Level [default: Error]\r\n"
         + "\t--burst-header                            "
-        + "\t\t Enable bursting metrics [env var: ENV_BURST_HEADER; default: false]\r\n"
+        + "\t\t Enable bursting metrics (string) [default: false]\r\n"
         + "\t--burst-service=<true|false>              "
         + "\t\t Service name for bursting metrics (string) [default: ngsa-java]\r\n"
         + "\t--burst-target                            "
@@ -160,12 +160,21 @@ public class CommonUtils {
         + "\t\t Max level for bursting metrics (int) [default: 80]\r\n"
         + "\t--prometheus=<true|false>                 "
         + "\t\t Enable prometheus metrics [default: false]\r\n"
+        + "\t--zone                                    "
+        + "\t\t Zone for log (string) [default: dev]\r\n"
+        + "\t--region                                  "
+        + "\t\t Region for log (string) [default: dev]\r\n"
+        + "\t--secrets-volume                          "
+        + "\t\t Secrets Volume Path from project root directory (string) [default: secrets]\r\n"
         + "\r\nEnv vars: \r\n"
         + "\tBURST_HEADER=<true|false> \r\n"
         + "\tBURST_SERVICE \r\n"
         + "\tBURST_TARGET \r\n"
         + "\tBURST_MAX \r\n"
-        + "\tPROMETHEUS=<true|false> \r\n");
+        + "\tPROMETHEUS=<true|false> \r\n"
+        + "\tZONE \r\n"
+        + "\tREGION \r\n"
+        + "\tSECRETS_VOLUME \r\n");
   }
 
   /**
