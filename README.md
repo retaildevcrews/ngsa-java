@@ -37,7 +37,7 @@ Options:
         --prometheus=<true|false>                            Enable prometheus metrics [default: false]
         --zone                                               Zone for log [default: dev]
         --region                                             Region for log [default: dev]
-        --secrets-volume                                     Secrets Volume Path [default: secrets]   
+        --secrets-volume                                     Secrets Volume Path from project root directory [default: secrets]   
               
 Env vars:
         BURST_HEADER=<true|false>

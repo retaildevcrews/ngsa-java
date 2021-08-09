@@ -165,7 +165,7 @@ public class CommonUtils {
         + "\t--region                                  "
         + "\t\t Region for log (string) [default: dev]\r\n"
         + "\t--secrets-volume                          "
-        + "\t\t Secrets Volume Path (string) [default: secrets]\r\n"
+        + "\t\t Secrets Volume Path from project root directory (string) [default: secrets]\r\n"
         + "\r\nEnv vars: \r\n"
         + "\tBURST_HEADER=<true|false> \r\n"
         + "\tBURST_SERVICE \r\n"
