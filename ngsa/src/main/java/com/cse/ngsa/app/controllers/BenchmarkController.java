@@ -1,5 +1,6 @@
 package com.cse.ngsa.app.controllers;
 
+import com.cse.ngsa.app.Constants;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import org.apache.logging.log4j.LogManager;
@@ -19,22 +20,17 @@ import reactor.core.publisher.Mono;
 @Api(tags = "Benchmark")
 public class BenchmarkController extends Controller {
   private static final Logger logger = LogManager.getLogger(BenchmarkController.class);
-  private static final int MaxBenchStrSize = 1024 * 1024;
-  /* Java 1.5+
-  private final String repeatedBenchString = 
-          new String(new char[1024 * 1024 / 16]).replace("\0", "0123456789ABCDEF");
-  */
   private final String benchmarkString;
 
   /** BenchmarkController constructor. */
   public BenchmarkController() {
     var initialStr = "0123456789ABCDEF";
-    benchmarkString = initialStr.repeat(MaxBenchStrSize / initialStr.length() + 1);
+    benchmarkString = initialStr.repeat(Constants.MAX_BENCH_STR_SIZE / initialStr.length() + 1);
   }
 
   /** getBenchmark. */
   @GetMapping(value = "/{size}")
-  @SuppressWarnings({"squid:S2629", "squid:S1612"})  
+  @SuppressWarnings({"squid:S2629", "squid:S1612"})
   public Mono<ResponseEntity<String>> getBenchmark(
       @ApiParam(value = "The size of the benchmark data ( 0 < size <= 1MB )",
                 example = "214", required = true)
@@ -43,7 +39,7 @@ public class BenchmarkController extends Controller {
       ServerHttpRequest request
   ) {
 
-    if (Boolean.TRUE == validator.isValidBenchmarkSize(benchmarkSizeStr, MaxBenchStrSize)) {
+    if (Boolean.TRUE == validator.isValidBenchmarkSize(benchmarkSizeStr, Constants.MAX_BENCH_STR_SIZE)) {
 
       int benchmarkSize = Integer.parseInt(benchmarkSizeStr);
       return Mono.justOrEmpty(ResponseEntity.ok(
@@ -53,7 +49,7 @@ public class BenchmarkController extends Controller {
 
       String invalidResponse = super.invalidParameterResponses
           .invalidBenchmarkSizeResponse(request.getURI().getPath());
-      logger.warn("Benchmark data size parameter should be 0 < size <= 1024*1024");
+      logger.warn("Benchmark data size parameter should be 0 < size <= 1MiB (1048576)");
 
       return Mono.just(ResponseEntity.badRequest()
         .contentType(MediaType.APPLICATION_PROBLEM_JSON)
