@@ -146,7 +146,7 @@ public class ParameterValidator {
     if (!StringUtils.isEmpty(benchmarkSizeStr)) {
       try {
         int benchmarkSize = Integer.parseInt(benchmarkSizeStr);
-        if (benchmarkSize < 0 || benchmarkSize > maxBenchStrSize) {
+        if (benchmarkSize < 1 || benchmarkSize > maxBenchStrSize) {
           return false;
         }
       } catch (Exception ex) {
