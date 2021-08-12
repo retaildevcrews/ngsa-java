@@ -68,7 +68,7 @@ jobs:
                 ((wait_time=wait_time+1))
             done
 
-            docker run --rm --network=host ghcr.io/retaildevcrews/ngsa-lr:beta -s http://localhost:8080 --max-errors 1 -f baseline.json
+            docker run --rm --network=host ghcr.io/retaildevcrews/ngsa-lr:beta -s http://localhost:8080 --max-errors 1 -f benchmark.json baseline.json
 
     - name: Delete Secrets
       run: |
