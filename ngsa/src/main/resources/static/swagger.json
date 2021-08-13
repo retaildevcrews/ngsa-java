@@ -279,23 +279,18 @@
               "content": {
                 "application/json": {
                   "example": {
-                    "error":{
-                       "code":"BadArgument",
-                       "message":"Invalid q (search) parameter",
-                       "statusCode":400,
-                       "target":"q",
-                       "innererror":{
-                          "code":"InvalidSearchParameter",
-                          "minLength":"2",
-                          "maxLength":"20",
-                          "characterTypes":[
-                             "lowerCase",
-                             "upperCase",
-                             "number",
-                             "symbol"
-                          ]
-                       }
-                    }
+                    "type": "https://github.com/retaildevcrews/ngsa/blob/main/docs/ParameterValidation.md#movies-api",
+                    "title": "Parameter validation error",
+                    "detail": "One or more invalid parameters were specified.",
+                    "status": 400,
+                    "instance": "/api/movies?q=matrix&genre=action&year=2003&rating=6.5&actorId=321312312&pageNumber=1&pageSize=10",
+                    "validationErrors": [
+                      {
+                        "code": "InvalidValue",
+                        "target": "actorId",
+                        "message": "The parameter 'actorId' should start with 'nm' and be between 7 and 11 characters in total."
+                      }
+                    ]
                   }
                 }
               }
@@ -377,15 +372,18 @@
               "content": {
                 "application/json": {
                   "example": {
-                    "error":{
-                       "code":"BadArgument",
-                       "message":"Invalid Movie ID parameter",
-                       "statusCode":400,
-                       "target":"movieId",
-                       "innererror":{
-                          "code":"InvalidMovieIDParameter"
-                       }
-                    }
+                    "type": "https://github.com/retaildevcrews/ngsa/blob/main/docs/ParameterValidation.md#movies-direct-read",
+                    "title": "Parameter validation error",
+                    "detail": "One or more invalid parameters were specified.",
+                    "status": 400,
+                    "instance": "/api/movies/123",
+                    "validationErrors": [
+                      {
+                        "code": "InvalidValue",
+                        "target": "movieId",
+                        "message": "The parameter 'movieId' should start with 'tt' and be between 7 and 11 characters in total."
+                      }
+                    ]
                   }
                 }
               }
@@ -585,23 +583,18 @@
               "content": {
                 "application/json": {
                   "example": {
-                    "error":{
-                       "code":"BadArgument",
-                       "message":"Invalid q (search) parameter",
-                       "statusCode":400,
-                       "target":"q",
-                       "innererror":{
-                          "code":"InvalidSearchParameter",
-                          "minLength":"2",
-                          "maxLength":"20",
-                          "characterTypes":[
-                             "lowerCase",
-                             "upperCase",
-                             "number",
-                             "symbol"
-                          ]
-                       }
-                    }
+                    "type": "https://github.com/retaildevcrews/ngsa/blob/main/docs/ParameterValidation.md#actors-api",
+                    "title": "Parameter validation error",
+                    "detail": "One or more invalid parameters were specified.",
+                    "status": 400,
+                    "instance": "/api/actors?q=#%&pageNumber=1&pageSize=32033",
+                    "validationErrors": [
+                      {
+                        "code": "InvalidValue",
+                        "target": "pageSize",
+                        "message": "The parameter 'pageSize' should be between 1 and 1000."
+                      }
+                    ]
                   }
                 }
               }
@@ -703,15 +696,18 @@
               "content": {
                 "application/json": {
                   "example": {
-                    "error":{
-                       "code":"BadArgument",
-                       "message":"Invalid Actor ID parameter",
-                       "statusCode":400,
-                       "target":"actorId",
-                       "innererror":{
-                          "code":"InvalidActorIDParameter"
-                       }
-                    }
+                    "type": "https://github.com/retaildevcrews/ngsa/blob/main/docs/ParameterValidation.md#actors-direct-read",
+                    "title": "Parameter validation error",
+                    "detail": "One or more invalid parameters were specified.",
+                    "status": 400,
+                    "instance": "/api/actors/123",
+                    "validationErrors": [
+                      {
+                        "code": "InvalidValue",
+                        "target": "actorId",
+                        "message": "The parameter 'actorId' should start with 'nm' and be between 7 and 11 characters in total."
+                      }
+                    ]
                   }
                 }
               }
@@ -827,6 +823,61 @@
                     "War",
                     "Western"
                   ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/benchmark/{size}": {
+        "get": {
+          "tags": [ "Benchmark" ],
+          "summary": "Get benchmark data",
+          "description": "Returns a text/plain value of benchmark data",
+          "parameters": [
+            {
+              "name": "size",
+              "in": "path",
+              "description": "Size of Beanchmark data.<br><br>`valid: 0 < size <= 1024*1024`<br><br>example: 23",
+              "required": true,
+              "style": "simple",
+              "explode": false,
+              "schema": {
+                "type": "string"
+              },
+              "example": "23"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "`string`",
+              "content": {
+                "text/plain": {
+                  "schema": {
+                    "type": "string"
+                  },
+                  "example": "0123456789ABCDEF0123456"
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid Size",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "type": "https://github.com/retaildevcrews/ngsa/blob/main/docs/ParameterValidation.md",
+                    "title": "Parameter validation error",
+                    "detail": "One or more invalid parameters were specified.",
+                    "status": 400,
+                    "instance": "/api/benchmark/0",
+                    "validationErrors": [
+                      {
+                        "code": "InvalidValue",
+                        "target": "benchmarkSize",
+                        "message": "The parameter 'benchmarkSize' should be a number greater than 0 and less than 1024*1024"
+                      }
+                    ]
+                  }
                 }
               }
             }
