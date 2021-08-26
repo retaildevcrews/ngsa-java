@@ -38,6 +38,7 @@ jobs:
             docker build . --progress tty -t image
 
     - name: Set Secrets
+      if: (github.event_name == 'schedule')      
       run: |
             mkdir -p /tmp/secrets
             echo -n ${{ secrets.NGSA_PRE_COSMOS_RO_KEY}} >| /tmp/secrets/CosmosKey
@@ -46,6 +47,7 @@ jobs:
             echo -n 'imdb' >| /tmp/secrets/CosmosDatabase
 
     - name: Docker Run and Test
+      if: (github.event_name == 'schedule')    
       run: |
             docker run --rm -d --name ngsajava -p 8080:8080 -v /tmp/secrets:/app/secrets:ro image
 
@@ -70,9 +72,10 @@ jobs:
                 ((wait_time=wait_time+1))
             done
 
-            docker run --rm --network=host ghcr.io/retaildevcrews/ngsa-lr:beta -s http://localhost:8080 --max-errors 1 -f baseline.json
+            docker run --rm --network=host ghcr.io/retaildevcrews/ngsa-lr:beta -s http://localhost:8080 --max-errors 1 -f benchmark.json baseline.json
 
     - name: Delete Secrets
+      if: (github.event_name == 'schedule')    
       run: |
             rm -rf /tmp/secrets
 
