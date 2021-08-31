@@ -2,9 +2,7 @@ package com.cse.ngsa.app.controllers;
 
 import com.cse.ngsa.app.Constants;
 import com.cse.ngsa.app.config.BuildConfig;
-import com.cse.ngsa.app.config.SwaggerConfig;
 import com.cse.ngsa.app.utils.CommonUtils;
-import java.util.LinkedHashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
