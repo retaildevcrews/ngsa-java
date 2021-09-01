@@ -37,6 +37,7 @@ public class MoviesController extends Controller {
   @Autowired MoviesDao moviesDao;
 
   private static final Logger logger = LogManager.getLogger(MoviesController.class);
+  private static final String INVALID_MOVIE_MSG = "Invalid Movie ID parameter {0}";
 
   /** getMovie. */
   @GetMapping(value = "/{id}")
@@ -62,7 +63,7 @@ public class MoviesController extends Controller {
                           new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie Not Found"))));
     } else {
 
-      logger.warn(MessageFormat.format("Invalid Movie ID parameter {0}", movieId));
+      logger.warn(MessageFormat.format(INVALID_MOVIE_MSG, movieId));
 
       String invalidResponse = super.invalidParameterResponses
           .invalidMovieDirectReadResponse(request.getURI().getPath());
@@ -90,7 +91,7 @@ public class MoviesController extends Controller {
     if (Boolean.TRUE.equals(validator.isValidMovieId(movieIdOrig) && movieId.startsWith("zz"))) {
       return moviesDao.upsertMovieById(movieIdOrig);
     } else {
-      logger.warn(MessageFormat.format("Invalid Movie ID parameter {0}", movieId));
+      logger.warn(MessageFormat.format(INVALID_MOVIE_MSG, movieId));
       String invalidResponse = super.invalidParameterResponses
               .invalidMovieDeleteResponse(request.getURI().getPath());
       return ResponseEntity.badRequest()
@@ -116,7 +117,7 @@ public class MoviesController extends Controller {
             && movieId.startsWith("zz")) {
       return moviesDao.deleteMovieById(movieId);
     } else {
-      logger.warn(MessageFormat.format("Invalid Movie ID parameter {0}", movieId));
+      logger.warn(MessageFormat.format(INVALID_MOVIE_MSG, movieId));
       String invalidResponse = super.invalidParameterResponses
                   .invalidMovieDeleteResponse(request.getURI().getPath());
       return ResponseEntity.badRequest()

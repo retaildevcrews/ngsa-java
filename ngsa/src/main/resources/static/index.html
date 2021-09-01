@@ -44,7 +44,7 @@
                     <script>
                     window.onload = function() {
                         // begin Swagger UI call region
-                        const ui = SwaggerUIBundle({
+                        window.ui = SwaggerUIBundle({
                             url: '/swagger.json',
                             dom_id: '#swagger-ui',
                             deepLinking: true,
@@ -59,7 +59,6 @@
                         })
                         // end Swagger UI call region
 
-                        window.ui = ui
                     }
                 </script>
                 </body>
