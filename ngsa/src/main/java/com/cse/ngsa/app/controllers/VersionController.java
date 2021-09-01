@@ -2,10 +2,7 @@ package com.cse.ngsa.app.controllers;
 
 import com.cse.ngsa.app.Constants;
 import com.cse.ngsa.app.config.BuildConfig;
-import com.cse.ngsa.app.config.SwaggerConfig;
 import com.cse.ngsa.app.utils.CommonUtils;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,24 +39,16 @@ public class VersionController {
   */
   @GetMapping(name = "Ngsa Version Controller",
       value = "/version",
-      produces = MediaType.APPLICATION_JSON_VALUE)
-  public Mono<Map<String, String>> version(ServerHttpResponse response) {
+      produces = MediaType.TEXT_PLAIN_VALUE)
+  public Mono<String> version(ServerHttpResponse response) {
     try {
-      // build the json result body
-      LinkedHashMap<String, String> versionResult = new LinkedHashMap<>();
-
-      versionResult.put("apiVersion",
-          context.getBean(SwaggerConfig.class).getInfo().get("version"));
-      versionResult.put("appVersion",
-          context.getBean(BuildConfig.class).getBuildVersion());
-      versionResult.put("language", "java");
-
       response.setStatusCode(HttpStatus.OK);
       if (environment.getProperty(Constants.BURST_HEADER_ARGUMENT).equalsIgnoreCase("true")) {
         response.getHeaders().add(Constants.BURST_HEADER_KEY, commonUtils.getBurstHeaderValue());
       }
+      String version = context.getBean(BuildConfig.class).getBuildVersion();
       
-      return Mono.just(versionResult);
+      return Mono.just(version);
     } catch (Exception ex) {
       logger.warn("Error received in VersionController", ex);
       return Mono.error(new ResponseStatusException(
