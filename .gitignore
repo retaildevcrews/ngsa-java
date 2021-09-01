@@ -33,12 +33,10 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
-# https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
+log/
 
 .idea
-.DS_Store
-
 .vscode
 .vscode/*
 !.vscode/settings.json
@@ -60,10 +58,6 @@ buildNumber.properties
  
 # Mac
 .DS_Store
- 
-# Maven
-log/
-target/
 
 run.sh
 t.sh
@@ -80,6 +74,5 @@ drun.sh
 singletest.sh
 run_with_appinsights.sh
 druncli.sh
-.DS_Store
 
 CosmosKey*
