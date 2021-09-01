@@ -122,7 +122,7 @@ public class CorrelationVectorTests {
     @Test
     public void createExtendAndIncrementCorrelationVectorV2() {
         final CorrelationVector cv = new CorrelationVector(CorrelationVectorVersion.V2);
-        Assert.assertEquals(cv.getVersion(), CorrelationVectorVersion.V2);
+        Assert.assertEquals(CorrelationVectorVersion.V2,cv.getVersion());
 
         final String[] splitCv = cv.getValue().split("\\.");
 

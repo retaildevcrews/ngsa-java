@@ -71,7 +71,7 @@ public class MoviesDao extends BaseCosmosDbDao implements IDao {
             .delete().flatMap(
                 cosmosItemResponse ->
                         Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()))
-            .onErrorResume((e) -> {
+            .onErrorResume(e -> {
               if (e.getMessage().contains("Resource Not Found")) {
                 return Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build());
               }
