@@ -19,7 +19,6 @@ import reactor.core.publisher.Mono;
 @Component
 public class UrlPrefixTransformer implements ResourceTransformer {
 
-  // TODO: Validation
   @Value("${url-prefix:}")
   private String urlPrefix;
 
@@ -29,7 +28,7 @@ public class UrlPrefixTransformer implements ResourceTransformer {
   @Override
   public Mono<Resource> transform(ServerWebExchange exchange, Resource resource,
         ResourceTransformerChain transformerChain) {
-    System.out.println(String.format("UrlPrefix: %s, prefix Val: %s", urlPrefix, urlPrefixValue));
+
     String rsrcStr;
     try {
       rsrcStr = StreamUtils.copyToString(resource.getInputStream(), Charset.defaultCharset());
@@ -37,7 +36,6 @@ public class UrlPrefixTransformer implements ResourceTransformer {
     } catch (Exception e) {
       e.printStackTrace();
       // Mostly for IOException
-      // TODO: What to do when this rare exception occurs
       rsrcStr = "";
     }
     return Mono.just(new TransformedResource(resource, rsrcStr.getBytes()));
