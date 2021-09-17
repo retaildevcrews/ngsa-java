@@ -5,7 +5,7 @@
       "version": "1.0"
     },
     "paths": {
-      "/api/movies": {
+      "{{url-prefix}}/api/movies": {
         "get": {
           "tags": [ "Movies" ],
           "summary": "Search Movies",
@@ -298,7 +298,7 @@
           }
         }
       },
-      "/api/movies/{movieId}": {
+      "{{url-prefix}}/api/movies/{movieId}": {
         "get": {
           "tags": [ "Movies" ],
           "summary": "Get Movie by ID",
@@ -402,7 +402,7 @@
           }
         }
       },
-      "/api/actors": {
+      "{{url-prefix}}/api/actors": {
         "get": {
           "tags": [ "Actors" ],
           "summary": "Search Actors",
@@ -602,7 +602,7 @@
           }
         }
       },
-      "/api/actors/{actorId}": {
+      "{{url-prefix}}/api/actors/{actorId}": {
         "get": {
           "tags": [ "Actors" ],
           "summary": "Get Actor by ID",
@@ -726,7 +726,7 @@
           }
         }
       },
-      "/api/featured/movie": {
+      "{{url-prefix}}/api/featured/movie": {
         "get": {
           "tags": [ "Featured" ],
           "summary": "Get a random Movie from the featured list",
@@ -784,7 +784,7 @@
           }
         }
       },
-      "/api/genres": {
+      "{{url-prefix}}/api/genres": {
         "get": {
           "tags": [ "Genres" ],
           "summary": "Array of Genres",
@@ -829,7 +829,7 @@
           }
         }
       },
-      "/api/benchmark/{size}": {
+      "{{url-prefix}}/api/benchmark/{size}": {
         "get": {
           "tags": [ "Benchmark" ],
           "summary": "Get benchmark data",
@@ -884,7 +884,7 @@
           }
         }
       },
-      "/healthz": {
+      "{{url-prefix}}/healthz": {
         "get": {
           "tags": [ "Health Check" ],
           "summary": "Health Check (simple)",
@@ -904,7 +904,7 @@
           }
         }
       },
-      "/healthz/ietf": {
+      "{{url-prefix}}/healthz/ietf": {
         "get": {
           "tags": [ "Health Check" ],
           "summary": "Health Check (IETF)",
