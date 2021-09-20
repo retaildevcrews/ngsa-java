@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.reactive.resource.ResourceTransformer;
 import org.springframework.web.reactive.resource.ResourceTransformerChain;
 import org.springframework.web.reactive.resource.TransformedResource;
@@ -34,9 +35,8 @@ public class UrlPrefixTransformer implements ResourceTransformer {
       rsrcStr = StreamUtils.copyToString(resource.getInputStream(), Charset.defaultCharset());
       rsrcStr = rsrcStr.replace(urlPrefixValue, urlPrefix);
     } catch (Exception e) {
-      e.printStackTrace();
       // Mostly for IOException
-      rsrcStr = "";
+      return Mono.error(new ResourceAccessException("Cannot access resource"));
     }
     return Mono.just(new TransformedResource(resource, rsrcStr.getBytes()));
   }
