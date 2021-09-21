@@ -1,14 +1,16 @@
 package com.cse.ngsa.app.utils;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
-import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.reactive.resource.ResourceTransformer;
 import org.springframework.web.reactive.resource.ResourceTransformerChain;
 import org.springframework.web.reactive.resource.TransformedResource;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -32,11 +34,17 @@ public class UrlPrefixTransformer implements ResourceTransformer {
 
     String rsrcStr;
     try {
+      if (!resource.exists()) {
+        return Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "index.html not found"));
+      }
       rsrcStr = StreamUtils.copyToString(resource.getInputStream(), Charset.defaultCharset());
       rsrcStr = rsrcStr.replace(urlPrefixValue, urlPrefix);
+    } catch (IOException ex) {
+      // IOException - In case of file reading exception
+      return Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "error accessing index.html"));
     } catch (Exception e) {
-      // Mostly for IOException
-      return Mono.error(new ResourceAccessException("Cannot access resource"));
+      // Other Exceptions
+      return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "exception: " + e.getMessage()));
     }
     return Mono.just(new TransformedResource(resource, rsrcStr.getBytes()));
   }
