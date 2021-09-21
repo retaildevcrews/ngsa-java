@@ -35,16 +35,16 @@ public class UrlPrefixTransformer implements ResourceTransformer {
     String rsrcStr;
     try {
       if (!resource.exists()) {
-        return Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "index.html not found"));
+        return Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "error: index.html not found"));
       }
       rsrcStr = StreamUtils.copyToString(resource.getInputStream(), Charset.defaultCharset());
       rsrcStr = rsrcStr.replace(urlPrefixValue, urlPrefix);
     } catch (IOException ex) {
       // IOException - In case of file reading exception
-      return Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "error accessing index.html"));
+      return Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "error: permission denied for index.html"));
     } catch (Exception e) {
       // Other Exceptions
-      return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "exception: " + e.getMessage()));
+      return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "error: " + e.getMessage()));
     }
     return Mono.just(new TransformedResource(resource, rsrcStr.getBytes()));
   }
