@@ -21,9 +21,11 @@ spec:
     spec:
       containers:
         - name: app
-          image: ghcr.io/retaildevcrews/ngsa-java:beta
+          image: {{gitops.imageName}}:{{gitops.imageTag}}
           imagePullPolicy: Always
           env:
+          - name: PROMETHEUS
+            value: "true"  
           - name: ZONE
             value: "{{gitops.config.zone}}"
           - name: REGION
