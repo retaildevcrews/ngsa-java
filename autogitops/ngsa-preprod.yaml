@@ -4,7 +4,7 @@ metadata:
   name: {{gitops.name}}
   namespace: {{gitops.namespace}}
   labels:
-    app.kubernetes.io/name: ngsa-java
+    app.kubernetes.io/name: {{gitops.name}}
 spec:
   replicas: 1
   selector:
