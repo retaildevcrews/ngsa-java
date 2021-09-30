@@ -22,14 +22,14 @@ spec:
       containers:
         - name: app
           image: ghcr.io/retaildevcrews/ngsa-java:beta
-          imagePullPolicy: Always              
+          imagePullPolicy: Always
           env:
-            - name: ZONE
-              value: "{{gitops.config.zone}}"
-            - name: REGION
-              value: "{{gitops.config.region}}"
-            - name: URL_PREFIX
-              value: /java
+          - name: ZONE
+            value: "{{gitops.config.zone}}"
+          - name: REGION
+            value: "{{gitops.config.region}}"
+          - name: URL_PREFIX
+            value: /java
 
           ports:
             - name: http
