@@ -4,7 +4,7 @@ metadata:
   name: {{gitops.name}}
   namespace: {{gitops.namespace}}
   labels:
-    app.kubernetes.io/name: {{gitops.name}}
+    app.kubernetes.io/name: ngsa-java
 spec:
   replicas: 1
   selector:
@@ -14,23 +14,22 @@ spec:
     metadata:
       labels:
         app: {{gitops.name}}
-        version: beta-{{gitops.version}}
-        deploy: {{gitops.deploy}}
+        aadpodidbinding: {{gitops.config.mi.name}}
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: '8080'
     spec:
       containers:
         - name: app
-          image: {{gitops.imageName}}:{{gitops.imageTag}}
-          imagePullPolicy: Always
+          image: ghcr.io/retaildevcrews/ngsa-java:beta
+          imagePullPolicy: Always              
           env:
-          - name: PROMETHEUS
-            value: "true"
-          - name: ZONE
-            value: "{{gitops.config.zone}}"
-          - name: REGION
-            value: "{{gitops.config.region}}"
+            - name: ZONE
+              value: "{{gitops.config.zone}}"
+            - name: REGION
+              value: "{{gitops.config.region}}"
+            - name: URL_PREFIX
+              value: /java
 
           ports:
             - name: http
@@ -45,10 +44,22 @@ spec:
               cpu: 500m
               memory: 512Mi
 
+          volumeMounts:
+            - name: secrets
+              mountPath: "/app/secrets"
+      volumes:
+        - name: secrets
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: ngsa-secrets
+
       nodeSelector:
         agentpool: npuser01
 
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -63,3 +74,33 @@ spec:
       name: http
   selector:
     app: {{gitops.name}}
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{gitops.name}}-ingress
+  namespace: {{gitops.namespace}}
+  annotations:
+    kubernetes.io/ingress.allow-http: "false"
+    kubernetes.io/ingress.class: traefik-internal
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.tls.options: default
+    traefik.ingress.kubernetes.io/router.middlewares: ngsa-stripprefix@file
+spec:
+  tls:
+  - hosts:
+      - {{gitops.config.domain}}
+  rules:
+  - host: {{gitops.config.domain}}
+    http:
+      paths:
+      - path: /java
+        pathType: Prefix
+        backend:
+          service:
+            name: {{gitops.name}}
+            port:
+              number: 8080
