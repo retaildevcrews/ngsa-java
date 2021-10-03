@@ -16,6 +16,7 @@ on:
     - 'pom.xml'    
     - 'CorrelationVector/pom.xml'    
     - '.github/workflows/ngsa.yaml'
+    - 'autogitops/**'
 
 jobs:
 
