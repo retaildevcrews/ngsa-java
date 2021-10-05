@@ -94,4 +94,4 @@ jobs:
 
     - name: GitOps Deploy
       run: |
-        docker run ghcr.io/retaildevcrews/autogitops:beta -u ${{ secrets.GHCR_ID }} -p ${{ secrets.GHCR_PAT }} -r /retaildevcrews/ngsa-asb
+        docker run -v $PWD:/myApp ghcr.io/retaildevcrews/autogitops:beta -u ${{ secrets.GHCR_ID }} -p ${{ secrets.GHCR_PAT }} -r https://github.com/retaildevcrews/ngsa-asb -t /myApp/autogitops

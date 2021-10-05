@@ -1,0 +1,110 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{gitops.name}}-java
+  namespace: {{gitops.namespace}}
+  labels:
+    app.kubernetes.io/name: {{gitops.name}}-java
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{gitops.name}}-java
+  template:
+    metadata:
+      labels:
+        aadpodidbinding: {{gitops.config.mi.name}}
+        app: {{gitops.name}}-java
+        deploy: {{gitops.deploy}}
+        version: beta-{{gitops.version}}
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8080'
+    spec:
+      containers:
+        - name: app
+          image: {{gitops.imageName}}:{{gitops.imageTag}}
+          imagePullPolicy: Always
+          env:
+          - name: PROMETHEUS
+            value: "true"
+          - name: ZONE
+            value: "{{gitops.config.zone}}"
+          - name: REGION
+            value: "{{gitops.config.region}}"
+          - name: URL_PREFIX
+            value: /java
+
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 500m
+              memory: 512Mi
+
+          volumeMounts:
+            - name: secrets
+              mountPath: "/app/secrets"
+      volumes:
+        - name: secrets
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: ngsa-secrets
+
+      nodeSelector:
+        agentpool: npuser01
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{gitops.name}}-java
+  namespace: {{gitops.namespace}}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{gitops.name}}-java
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{gitops.name}}-java-ingress
+  namespace: {{gitops.namespace}}
+  annotations:
+    kubernetes.io/ingress.allow-http: "false"
+    kubernetes.io/ingress.class: traefik-internal
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.tls.options: default
+    traefik.ingress.kubernetes.io/router.middlewares: ngsa-stripprefix@file
+spec:
+  tls:
+  - hosts:
+      - {{gitops.config.domain}}
+  rules:
+  - host: {{gitops.config.domain}}
+    http:
+      paths:
+      - path: /java
+        pathType: Prefix
+        backend:
+          service:
+            name: {{gitops.name}}-java
+            port:
+              number: 8080
