@@ -93,5 +93,6 @@ jobs:
         docker push -a $DOCKER_REPO
 
     - name: GitOps Deploy
-      run: |
-        docker run -v $PWD:/myApp ghcr.io/retaildevcrews/autogitops:beta -u ${{ secrets.GHCR_ID }} -p ${{ secrets.GHCR_PAT }} -r /retaildevcrews/ngsa-asb -t /myApp/autogitops
+      run: |        
+        dotnet tool install -g autogitops
+        ago -u ${{ secrets.GHCR_ID }} -p ${{ secrets.GHCR_PAT }} -r /retaildevcrews/ngsa-asb  
