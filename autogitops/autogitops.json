@@ -1,5 +1,5 @@
 {
-    "name": "ngsa",
+    "name": "ngsa-java",
     "namespace": "ngsa",
     "imageName": "ghcr.io/retaildevcrews/ngsa-java",
     "imageTag": "beta",
