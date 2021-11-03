@@ -1,5 +1,6 @@
 package com.cse.ngsa.app.middleware;
 
+import com.cse.ngsa.app.models.NgsaConfig;
 import com.cse.ngsa.app.services.configuration.IConfigurationService;
 import com.cse.ngsa.app.utils.CorrelationVectorExtensions;
 import com.cse.ngsa.app.utils.CpuMonitor;
@@ -33,6 +34,7 @@ public class RequestLogger implements WebFilter {
 
   MeterRegistry promRegistry;
   @Autowired CpuMonitor cpuMonitor;
+  @Autowired NgsaConfig ngsaConfig;
   @Autowired private IConfigurationService cfgSvc;
   @Value("${region:dev}") private String ngsaRegion;
   @Value("${zone:dev}") private String ngsaZone;
