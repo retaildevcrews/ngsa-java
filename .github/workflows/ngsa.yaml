@@ -94,7 +94,7 @@ jobs:
 
     - name: GitOps Deploy
       run: |        
-        docker run -it \
+        docker run \
         --name ago \
         --rm \
         -v $(pwd)/autogitops:/ago/autogitops \
