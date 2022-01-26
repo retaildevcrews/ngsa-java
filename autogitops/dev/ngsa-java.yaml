@@ -29,8 +29,6 @@ spec:
             value: "{{gitops.config.zone}}"
           - name: REGION
             value: "{{gitops.config.region}}"
-          - name: URL_PREFIX
-            value: /java
 
           ports:
             - name: http
@@ -89,14 +87,7 @@ spec:
   hosts:
   - {{gitops.config.domain}}
   http:
-  - match:
-    - uri:
-        prefix: /java/
-    - uri:
-        exact: /java
-    rewrite:
-      uri: /
-    route:
+  - route:
     - destination:
         port:
           number: 8080
