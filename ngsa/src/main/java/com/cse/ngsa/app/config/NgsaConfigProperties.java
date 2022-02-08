@@ -18,12 +18,10 @@ public class NgsaConfigProperties {
   @Valid
   @NotBlank
   @Getter @Setter
-  @Size(min = 2, max = 14)
   private String region;
 
   @Valid
   @NotBlank
-  @Size(min = 2, max = 14)
   @Getter @Setter
   private String zone;
 
