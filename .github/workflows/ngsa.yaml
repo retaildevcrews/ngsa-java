@@ -14,7 +14,6 @@ on:
     - 'ngsa/src/main/java/**'
     - 'ngsa/src/test/java/**'
     - 'pom.xml'    
-    - 'CorrelationVector/pom.xml'    
     - '.github/workflows/ngsa.yaml'
     - 'autogitops/**'
 

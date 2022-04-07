@@ -10,7 +10,6 @@ on:
       - 'ngsa/src/test/java/**'
       - 'pom.xml'
       - 'ngsa/pom.xml'
-      - 'CorrelationVector/pom.xml'
       - '.github/workflows/ngsa-pr.yaml'
 
 jobs:
