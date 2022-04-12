@@ -31,3 +31,7 @@ deploy-ngsa-java: build-ngsa-java
       --from-file=CosmosUrl=ngsa/secrets/CosmosUrl
 	
 	@kubectl apply -f deploy/ngsa-java.yaml
+
+check:
+	@http http://localhost:30000/version
+	@http http://localhost:30080/version

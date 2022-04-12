@@ -134,6 +134,9 @@ make all
 
 # deploy latest changes locally if cluster already exists
 make deploy-ngsa-java
+
+# check if cluster and application is deployed
+make check
 ```
 
 ### Engineering Docs
