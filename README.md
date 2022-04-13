@@ -60,7 +60,7 @@ Env vars:
 
 2. Create CosmosKey file within the ngsa/secrets folder
 
-3. Input credentials in CosmosUrl and CosmosKey files within ngsa/secrets folder 
+3. Input credentials in CosmosUrl and CosmosKey files within ngsa/secrets folder
 
 4. Run the application
 
@@ -77,7 +77,7 @@ mvn clean spring-boot:run
 
 1. Clone the repo
 
-> git clone https://github.com/retaildevcrews/ngsa-java.git
+> git clone <https://github.com/retaildevcrews/ngsa-java.git>
 
 2. Create CosmosKey file within ngsa/secrets folder
 
@@ -122,6 +122,21 @@ Stop ngsa by typing Ctrl-C or the stop button if run via F5
 # run unit tests
 mvn test -Dmaven.test.skip=false
 
+```
+
+## Deploying With Local Cluster
+
+Ensure to [create secrets](#using-bash-shell) before running the following commands.
+
+```bash
+# delete cluster if exists, create cluster, and build/deploy application
+make all
+
+# deploy latest changes locally if cluster already exists
+make deploy-ngsa-java
+
+# check if cluster and application is deployed
+make check
 ```
 
 ### Engineering Docs
