@@ -6,6 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/name: ngsa-java
 spec:
+  automountServiceAccountToken: false
   replicas: 1
   selector:
     matchLabels:
@@ -19,6 +20,9 @@ spec:
         - name: app
           image: k3d-registry.localhost:5000/ngsa-java:local
           imagePullPolicy: Always
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
           env:
           - name: PROMETHEUS
             value: "true"
