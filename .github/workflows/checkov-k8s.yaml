@@ -2,7 +2,7 @@ name: Checkov k8s Lint
 on:
   push:
     branches:
-      - checkov
+      - main
 jobs:
   build:
     runs-on: ubuntu-latest
