@@ -18,10 +18,22 @@ spec:
         deploy: {{gitops.deploy}}
         version: beta-{{gitops.version}}
     spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: app
           image: {{gitops.imageName}}:{{gitops.imageTag}}
           imagePullPolicy: Always
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
           env:
           - name: PROMETHEUS
             value: "true"
