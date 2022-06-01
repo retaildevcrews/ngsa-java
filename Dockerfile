@@ -15,7 +15,7 @@ ENV PATH=/app/apache-maven/bin:${PATH}
 FROM base AS dependencies
 ADD . /app
 
-RUN mvn clean package -DskipTests --no-transfer-progress && wget https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/tag/v1.12.0/download/opentelemetry-javaagent.jar
+RUN mvn clean package -DskipTests --no-transfer-progress && wget https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.12.0/opentelemetry-javaagent.jar
 
 #
 # ---- Release App ----
