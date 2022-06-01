@@ -15,7 +15,7 @@ ENV PATH=/app/apache-maven/bin:${PATH}
 FROM base AS dependencies
 ADD . /app
 
-RUN mvn clean package -DskipTests --no-transfer-progress
+RUN mvn clean package -DskipTests --no-transfer-progress && wget https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.12.0/opentelemetry-javaagent.jar
 
 #
 # ---- Release App ----
@@ -29,5 +29,6 @@ RUN addgroup -g 4120 ngsa && \
 USER ngsa
 
 COPY --from=dependencies /app/ngsa/target/ngsa.jar app.jar
+COPY --from=dependencies /app/opentelemetry-javaagent.jar opentelemetry-javaagent.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-javaagent:opentelemetry-javaagent.jar", "-Dotel.metrics.exporter=none", "-Dotel.traces.exporter=none", "-Dotel.propagators=b3multi", "-jar", "/app/app.jar"]

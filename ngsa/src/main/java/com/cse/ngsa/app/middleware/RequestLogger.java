@@ -9,6 +9,8 @@ import com.microsoft.correlationvector.CorrelationVector;
 import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.SpanContext;
 import java.net.InetSocketAddress;
 import java.time.Instant;
 import java.util.Arrays;
@@ -113,6 +115,9 @@ public class RequestLogger implements WebFilter {
       }
       logData.put("CVector", cv.getValue());
       logData.put("CVectorBase", cv.getBaseVector());
+      SpanContext spanContext = Span.current().getSpanContext();
+      logData.put("TraceID", spanContext.getTraceId());
+      logData.put("SpanID", spanContext.getSpanId());
 
       // Get category and mode from Request
       String[] categoryAndMode = QueryUtils.getCategoryAndMode(serverWebExchange.getRequest());
