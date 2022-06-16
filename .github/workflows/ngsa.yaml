@@ -52,7 +52,7 @@ jobs:
     - name: Docker Run and Test
       if: (github.event_name == 'schedule')    
       run: |
-            docker run --rm -d --name ngsajava -p 8080:8080 -v /tmp/secrets:/app/secrets:ro image
+            docker run -d --name ngsajava -p 8080:8080 -v /tmp/secrets:/app/secrets:ro image
 
             echo "Waiting for web server to start ..."
         
@@ -62,10 +62,17 @@ jobs:
             # wait up to 30 seconds for web server to start
             while true
             do
-                if curl localhost:8080/version ; then
+                if curl -s localhost:8080/version ; then
                     echo -e "\n web server is running"
                     break
                 fi
+
+                # check if container is still running
+                if [ -z "$(docker ps -q -f name=ngsajava)" ]; then
+                  docker logs ngsajava
+                  exit 1
+                fi
+
                 if [ $wait_time -gt 30 ] ; then
                   echo -e "\n timeout waiting for web server to start"
                   exit 1
