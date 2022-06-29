@@ -28,7 +28,7 @@ RUN addgroup -g 4120 ngsa && \
 
 USER ngsa
 
-COPY --from=dependencies /app/ngsa/target/ngsa.jar app.jar
+COPY --from=dependencies /app/target/ngsa.jar app.jar
 COPY --from=dependencies /app/opentelemetry-javaagent.jar opentelemetry-javaagent.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-javaagent:opentelemetry-javaagent.jar", "-Dotel.metrics.exporter=none", "-Dotel.traces.exporter=none", "-Dotel.propagators=b3multi", "-jar", "/app/app.jar"]
