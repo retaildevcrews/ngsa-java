@@ -6,11 +6,8 @@ on:
 
     paths:
       - 'Dockerfile'
-      - 'src/main/java/**'
-      - 'src/test/java/**'
+      - 'src/**'
       - 'pom.xml'
-      - 'pom.xml'
-      - 'CorrelationVector/pom.xml'
       - '.github/workflows/ngsa-pr.yaml'
 
 jobs:

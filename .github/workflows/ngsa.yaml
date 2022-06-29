@@ -11,10 +11,8 @@ on:
 
     paths:
     - 'Dockerfile'
-    - 'src/main/java/**'
-    - 'src/test/java/**'
+    - 'src/**'
     - 'pom.xml'    
-    - 'CorrelationVector/pom.xml'    
     - '.github/workflows/ngsa.yaml'
     - 'autogitops/**'
 
