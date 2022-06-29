@@ -6,10 +6,10 @@ on:
 
     paths:
       - 'Dockerfile'
-      - 'ngsa/src/main/java/**'
-      - 'ngsa/src/test/java/**'
+      - 'src/main/java/**'
+      - 'src/test/java/**'
       - 'pom.xml'
-      - 'ngsa/pom.xml'
+      - 'pom.xml'
       - 'CorrelationVector/pom.xml'
       - '.github/workflows/ngsa-pr.yaml'
 

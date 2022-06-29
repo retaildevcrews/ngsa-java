@@ -25,10 +25,10 @@ build-ngsa-java:
 
 deploy-ngsa-java: build-ngsa-java
 	@kubectl create secret generic ngsa-secrets -n ngsa \
-      --from-file=CosmosDatabase=ngsa/secrets/CosmosDatabase \
-      --from-file=CosmosCollection=ngsa/secrets/CosmosCollection \
-      --from-file=CosmosKey=ngsa/secrets/CosmosKey \
-      --from-file=CosmosUrl=ngsa/secrets/CosmosUrl
+      --from-file=CosmosDatabase=secrets/CosmosDatabase \
+      --from-file=CosmosCollection=secrets/CosmosCollection \
+      --from-file=CosmosKey=secrets/CosmosKey \
+      --from-file=CosmosUrl=secrets/CosmosUrl
 	
 	@kubectl apply -f deploy/ngsa-java.yaml
 
