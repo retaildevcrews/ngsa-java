@@ -58,9 +58,9 @@ Env vars:
 
 1. Set up Codespaces from the GitHub repo
 
-2. Create CosmosKey file within the ngsa/secrets folder
+2. Create CosmosKey file within the secrets folder
 
-3. Input credentials in CosmosUrl and CosmosKey files within ngsa/secrets folder
+3. Input credentials in CosmosUrl and CosmosKey files within secrets folder
 
 4. Run the application
 
@@ -79,9 +79,9 @@ mvn clean spring-boot:run
 
 > git clone <https://github.com/retaildevcrews/ngsa-java.git>
 
-2. Create CosmosKey file within ngsa/secrets folder
+2. Create CosmosKey file within secrets folder
 
-3. Input credentials in CosmosUrl and CosmosKey files within ngsa/secrets folder
+3. Input credentials in CosmosUrl and CosmosKey files within secrets folder
 
 4. Run the application
 
