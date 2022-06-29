@@ -17,7 +17,6 @@
         <maven.test.skip>true</maven.test.skip>
     </properties>
     <modules>
-        <module>CorrelationVector</module>
         <module>ngsa</module>
     </modules>
     <build>
