@@ -26,7 +26,6 @@ public class VersionControllerTest {
     webClient
         .get()
         .uri("/version")
-        .header(HttpHeaders.ACCEPT, "application/json")
         .exchange()
         .expectStatus()
         .isOk();
