@@ -1,0 +1,16 @@
+name: Check Line Endings (find CRLF)
+
+on: 
+  push:
+    branches: [ main ]
+
+jobs:
+  check_pull_request_job:
+    runs-on: ubuntu-latest
+    name: Check files for CRLF line endings
+    steps:
+    - name: Checkout repository contents
+      uses: actions/checkout@v1
+
+    - name: Use action to check for CRLF endings
+      uses: erclu/check-crlf@v1
