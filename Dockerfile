@@ -13,7 +13,7 @@ ENV PATH=/app/apache-maven/bin:${PATH}
 #
 # ----Build App with Dependencies ----
 FROM base AS dependencies
-ADD . /app
+COPY . /app
 
 RUN mvn clean package -DskipTests --no-transfer-progress && wget https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.12.0/opentelemetry-javaagent.jar
 
@@ -32,3 +32,4 @@ COPY --from=dependencies /app/target/ngsa.jar app.jar
 COPY --from=dependencies /app/opentelemetry-javaagent.jar opentelemetry-javaagent.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-javaagent:opentelemetry-javaagent.jar", "-Dotel.metrics.exporter=none", "-Dotel.traces.exporter=none", "-Dotel.propagators=b3multi", "-jar", "/app/app.jar"]
+#checkov:skip=CKV_DOCKER_2: No healthcheck is needed
