@@ -1,4 +1,5 @@
 # ----- Base Java - Check Dependencies ----
+#checkov:skip=CKV_DOCKER_2: No healthcheck is needed
 FROM azul/zulu-openjdk-alpine:11.0.10 AS base
 WORKDIR /app
 ARG MAVEN_VERSION=3.6.3
@@ -32,4 +33,3 @@ COPY --from=dependencies /app/target/ngsa.jar app.jar
 COPY --from=dependencies /app/opentelemetry-javaagent.jar opentelemetry-javaagent.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-javaagent:opentelemetry-javaagent.jar", "-Dotel.metrics.exporter=none", "-Dotel.traces.exporter=none", "-Dotel.propagators=b3multi", "-jar", "/app/app.jar"]
-#checkov:skip=CKV_DOCKER_2: No healthcheck is needed
