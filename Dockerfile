@@ -1,4 +1,5 @@
 # ----- Base Java - Check Dependencies ----
+#checkov:skip=CKV_DOCKER_2: No healthcheck is needed
 FROM azul/zulu-openjdk-alpine:11.0.10 AS base
 WORKDIR /app
 ARG MAVEN_VERSION=3.6.3
@@ -13,7 +14,7 @@ ENV PATH=/app/apache-maven/bin:${PATH}
 #
 # ----Build App with Dependencies ----
 FROM base AS dependencies
-ADD . /app
+COPY . /app
 
 RUN mvn clean package -DskipTests --no-transfer-progress && wget https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.12.0/opentelemetry-javaagent.jar
 
