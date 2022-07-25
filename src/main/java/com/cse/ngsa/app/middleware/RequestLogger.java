@@ -35,13 +35,15 @@ public class RequestLogger implements WebFilter {
   @Autowired CpuMonitor cpuMonitor;
   @Autowired NgsaConfig ngsaConfig;
   @Autowired private IConfigurationService cfgSvc;
-  @Autowired Tracer tracer;
   @Value("${region:dev}") private String ngsaRegion;
   @Value("${zone:dev}") private String ngsaZone;
   @Value("${request-log-level:INFO}") private String ngsaRequestLogger;
 
-  public RequestLogger(MeterRegistry registry) {
+  private Tracer tracer;
+
+  public RequestLogger(MeterRegistry registry, Tracer tracer) {
     promRegistry = registry;
+    this.tracer = tracer;
   }
 
   // Suppressing since its invoked when bean is initialized
@@ -104,7 +106,7 @@ public class RequestLogger implements WebFilter {
       var traceContext = tracer.currentSpan().context();
       logData.put("TraceID", traceContext.traceIdString());
       logData.put("SpanID", Long.toHexString(traceContext.spanId()));
-      logData.put("ParentSpanID", Long.toHexString(traceContext.parentId()));
+      logData.put("ParentSpanID", Long.toHexString(traceContext.parentIdAsLong()));
 
       // Get category and mode from Request
       String[] categoryAndMode = QueryUtils.getCategoryAndMode(serverWebExchange.getRequest());
