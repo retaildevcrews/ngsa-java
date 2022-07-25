@@ -1,5 +1,6 @@
 package com.cse.ngsa.app.middleware;
 
+import brave.Tracer;
 import com.cse.ngsa.app.models.NgsaConfig;
 import com.cse.ngsa.app.services.configuration.IConfigurationService;
 import com.cse.ngsa.app.utils.CpuMonitor;
@@ -7,8 +8,6 @@ import com.cse.ngsa.app.utils.QueryUtils;
 import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
-import io.opentelemetry.api.trace.Span;
-import io.opentelemetry.api.trace.SpanContext;
 import java.net.InetSocketAddress;
 import java.time.Instant;
 import java.util.Arrays;
@@ -36,6 +35,7 @@ public class RequestLogger implements WebFilter {
   @Autowired CpuMonitor cpuMonitor;
   @Autowired NgsaConfig ngsaConfig;
   @Autowired private IConfigurationService cfgSvc;
+  @Autowired Tracer tracer;
   @Value("${region:dev}") private String ngsaRegion;
   @Value("${zone:dev}") private String ngsaZone;
   @Value("${request-log-level:INFO}") private String ngsaRequestLogger;
@@ -101,9 +101,10 @@ public class RequestLogger implements WebFilter {
       logData.put("ClientIP", requestAddress);
       logData.put("UserAgent", userAgent);
 
-      SpanContext spanContext = Span.current().getSpanContext();
-      logData.put("TraceID", spanContext.getTraceId());
-      logData.put("SpanID", spanContext.getSpanId());
+      var traceContext = tracer.currentSpan().context();
+      logData.put("TraceID", traceContext.traceIdString());
+      logData.put("SpanID", Long.toHexString(traceContext.spanId()));
+      logData.put("ParentSpanID", Long.toHexString(traceContext.parentId()));
 
       // Get category and mode from Request
       String[] categoryAndMode = QueryUtils.getCategoryAndMode(serverWebExchange.getRequest());
