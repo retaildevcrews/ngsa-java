@@ -1,6 +1,6 @@
 # ----- Base Java - Check Dependencies ----
 #checkov:skip=CKV_DOCKER_2: No healthcheck is needed
-FROM azul/zulu-openjdk-alpine:11.0.10 AS base
+FROM azul/zulu-openjdk-alpine:11.0.14.1 AS base
 WORKDIR /app
 ARG MAVEN_VERSION=3.6.3
 
@@ -20,7 +20,7 @@ RUN mvn clean package -DskipTests --no-transfer-progress && wget https://github.
 
 #
 # ---- Release App ----
-FROM  azul/zulu-openjdk-alpine:11.0.10-jre AS release
+FROM  azul/zulu-openjdk-alpine:11.0.14.1-jre AS release
 WORKDIR /app
 
 # Create the ngsa user so we can run the app as non-root under ngsa
