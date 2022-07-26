@@ -39,7 +39,7 @@ jobs:
         image: "image"
         severity-cutoff: critical
         acs-report-enable: true
-        fail-build: true
+        fail-build: false
 
     - name: Upload Grype Vulnerability SARIF report
       if: always()
