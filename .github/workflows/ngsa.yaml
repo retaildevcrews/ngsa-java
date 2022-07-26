@@ -44,11 +44,11 @@ jobs:
       with:
         image: "image"
         severity-cutoff: critical
-        acs-report-enable: true
+        acs-report-enable: false
         fail-build: false
 
     - name: Upload Grype Vulnerability SARIF report
-      if: always()
+      if: false
       uses: github/codeql-action/upload-sarif@v2
       with:
         sarif_file: ${{ steps.grype.outputs.sarif }}
