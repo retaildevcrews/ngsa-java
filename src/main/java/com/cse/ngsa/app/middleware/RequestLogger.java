@@ -1,6 +1,8 @@
 package com.cse.ngsa.app.middleware;
 
+import brave.Span;
 import brave.Tracer;
+import brave.propagation.TraceContext;
 import com.cse.ngsa.app.models.NgsaConfig;
 import com.cse.ngsa.app.services.configuration.IConfigurationService;
 import com.cse.ngsa.app.utils.CpuMonitor;
@@ -11,6 +13,7 @@ import io.micrometer.core.instrument.MeterRegistry;
 import java.net.InetSocketAddress;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Set;
 import javax.annotation.PostConstruct;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -35,15 +38,13 @@ public class RequestLogger implements WebFilter {
   @Autowired CpuMonitor cpuMonitor;
   @Autowired NgsaConfig ngsaConfig;
   @Autowired private IConfigurationService cfgSvc;
+  @Autowired Tracer tracer;
   @Value("${region:dev}") private String ngsaRegion;
   @Value("${zone:dev}") private String ngsaZone;
   @Value("${request-log-level:INFO}") private String ngsaRequestLogger;
 
-  private Tracer tracer;
-
-  public RequestLogger(MeterRegistry registry, Tracer tracer) {
+  public RequestLogger(MeterRegistry registry) {
     promRegistry = registry;
-    this.tracer = tracer;
   }
 
   // Suppressing since its invoked when bean is initialized
@@ -103,10 +104,21 @@ public class RequestLogger implements WebFilter {
       logData.put("ClientIP", requestAddress);
       logData.put("UserAgent", userAgent);
 
-      var traceContext = tracer.currentSpan().context();
+      // Get Tracing Information
+      Set<String> headerKeys = serverWebExchange.getRequest().getHeaders().keySet();
+      boolean tracingPresentInHeaders = headerKeys.contains("x-b3-traceid") || headerKeys.contains("b3");
+      Span currentSpan;
+      if (tracingPresentInHeaders) {
+        currentSpan = tracer.nextSpan().start();
+      } else {
+        currentSpan = tracer.currentSpan();
+      }
+      TraceContext traceContext = currentSpan.context();
       logData.put("TraceID", traceContext.traceIdString());
       logData.put("SpanID", Long.toHexString(traceContext.spanId()));
-      logData.put("ParentSpanID", Long.toHexString(traceContext.parentIdAsLong()));
+      if (traceContext.parentId() != null) {
+        logData.put("ParentSpanID", Long.toHexString(traceContext.parentIdAsLong()));
+      }
 
       // Get category and mode from Request
       String[] categoryAndMode = QueryUtils.getCategoryAndMode(serverWebExchange.getRequest());
