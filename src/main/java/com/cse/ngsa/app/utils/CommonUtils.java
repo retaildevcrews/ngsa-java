@@ -5,7 +5,6 @@ import com.cse.ngsa.app.config.BuildConfig;
 import com.cse.ngsa.app.services.volumes.CosmosConfigs;
 import com.cse.ngsa.app.services.volumes.IVolumeCosmosConfigService;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import java.lang.management.ManagementFactory;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import javax.annotation.PostConstruct;
