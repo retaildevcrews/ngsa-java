@@ -30,20 +30,12 @@ Options:
         --version                                            Shows version information
         --dry-run                                            Validates configuration
         --log-level=<trace|info|warn|error|fatal>            Log Level [default: Error]
-        --burst-header=<true|false>                          Enable bursting metrics [default: false]
-        --burst-service                                      Service name for bursting metrics (string) [default: ngsa-java]
-        --burst-target                                       Target level for bursting metrics (int) [default: 60]
-        --burst-max                                          Max level for bursting metrics (int) [default: 80]
         --prometheus=<true|false>                            Enable prometheus metrics [default: false]
         --zone                                               Zone for log [default: dev]
         --region                                             Region for log [default: dev]
         --secrets-volume                                     Secrets Volume Path from project root directory [default: secrets]   
               
-Env vars:
-        BURST_HEADER=<true|false>
-        BURST_SERVICE                                        
-        BURST_TARGET                                         
-        BURST_MAX                                            
+Env vars:                           
         PROMETHEUS=<true|false>
         ZONE
         REGION

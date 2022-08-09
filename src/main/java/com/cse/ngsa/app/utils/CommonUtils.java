@@ -150,14 +150,6 @@ public class CommonUtils {
         + "\t--version                                 \t\t Show version information\r\n"
         + "\t--dry-run                                 \t\t Validates configuration\r\n"
         + "\t--log-level=<trace|info|warn|error|fatal> \t\t Log Level [default: Error]\r\n"
-        + "\t--burst-header                            "
-        + "\t\t Enable bursting metrics (string) [default: false]\r\n"
-        + "\t--burst-service=<true|false>              "
-        + "\t\t Service name for bursting metrics (string) [default: ngsa-java]\r\n"
-        + "\t--burst-target                            "
-        + "\t\t Target level for bursting metrics (int) [default: 60]\r\n"
-        + "\t--burst-max                               "
-        + "\t\t Max level for bursting metrics (int) [default: 80]\r\n"
         + "\t--prometheus=<true|false>                 "
         + "\t\t Enable prometheus metrics [default: false]\r\n"
         + "\t--zone                                    "
@@ -167,10 +159,6 @@ public class CommonUtils {
         + "\t--secrets-volume                          "
         + "\t\t Secrets Volume Path from project root directory (string) [default: secrets]\r\n"
         + "\r\nEnv vars: \r\n"
-        + "\tBURST_HEADER=<true|false> \r\n"
-        + "\tBURST_SERVICE \r\n"
-        + "\tBURST_TARGET \r\n"
-        + "\tBURST_MAX \r\n"
         + "\tPROMETHEUS=<true|false> \r\n"
         + "\tZONE \r\n"
         + "\tREGION \r\n"
@@ -182,23 +170,6 @@ public class CommonUtils {
    */
   public static boolean isNullWhiteSpace(final String string) {
     return string == null || string.isEmpty() || string.trim().isEmpty();
-  }
-
-  /**
-   * Prepares burst header values.
-   */
-  public String getBurstHeaderValue() {
-    long cpuLoad = Math.round(ManagementFactory.getPlatformMXBean(
-        com.sun.management.OperatingSystemMXBean.class).getProcessCpuLoad() * 100L);
-
-    String burstHeaderValue = String.format(
-        "service=%s, current-load=%s, target-load=%s, max-load=%s ",
-        environment.getProperty("burst-service"),
-        cpuLoad,
-        environment.getProperty("burst-target"),
-        environment.getProperty("burst-max"));
-    
-    return burstHeaderValue;
   }
 
 }
