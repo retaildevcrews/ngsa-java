@@ -1,11 +1,8 @@
 package com.cse.ngsa.app.config;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -35,28 +32,6 @@ public class NgsaConfigProperties {
 
   @Valid
   @NotBlank
-  @Size(min = 2, max = 14)
-  @Getter @Setter
-  private String burstService;
-
-  @Min(5)
-  @Max(100)
-  @Getter @Setter
-  @Valid
-  private int burstTarget;
-
-  @Min(10)
-  @Max(100)
-  @Getter @Setter
-  @Valid
-  private int burstMax;
-
-  @Valid
-  @Getter @Setter
-  private Boolean burstHeader;
-
-  @Valid
-  @NotBlank
   @Getter @Setter
   private String secretsVolume;
 
@@ -70,6 +45,6 @@ public class NgsaConfigProperties {
   // standard getters and setters
   @Override
   public String toString() {
-    return String.format("Region: %s, Zone: %s, BurstTarget: %s, BurstService: %s", this.region, this.zone, this.burstTarget, this.burstService);
+    return String.format("Region: %s, Zone: %s", this.region, this.zone);
   }
 }

@@ -6,7 +6,6 @@ import com.cse.ngsa.app.dao.ActorsDao;
 import com.cse.ngsa.app.dao.GenresDao;
 import com.cse.ngsa.app.dao.MoviesDao;
 import com.cse.ngsa.app.health.ietf.IeTfStatus;
-import com.cse.ngsa.app.utils.CommonUtils;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,9 +35,6 @@ public class HealthzController {
 
   @Autowired private BuildConfig buildConfig;
 
-  @Autowired
-  CommonUtils commonUtils;
-
   @Autowired 
   Environment environment;
 
@@ -67,9 +63,6 @@ public class HealthzController {
     Mono<List<Map<String, Object>>> resultsMono = buildHealthCheckChain();
 
     HttpHeaders headers = new HttpHeaders();
-    if (environment.getProperty(Constants.BURST_HEADER_ARGUMENT).equalsIgnoreCase("true")) {
-      headers.add(Constants.BURST_HEADER_KEY, commonUtils.getBurstHeaderValue());
-    }
 
     return resultsMono.map(data -> {
       String healthStatus = getOverallHealthStatus(data);
@@ -110,18 +103,13 @@ public class HealthzController {
 
     Mono<List<Map<String, Object>>> resultsMono = buildHealthCheckChain();
 
-    HttpHeaders headers = new HttpHeaders();
-    if (environment.getProperty(Constants.BURST_HEADER_ARGUMENT).equalsIgnoreCase("true")) {
-      headers.add(Constants.BURST_HEADER_KEY, commonUtils.getBurstHeaderValue());
-    }
-
     return resultsMono.map(data -> {
       ieTfResult.put(STATUS_TEXT, getOverallHealthStatus(data));
       Map<String, Object> resultsDictionary = convertResultsListToDictionary(data);
 
       ieTfResult.put("checks", resultsDictionary);
       return ieTfResult;
-    }).map(result -> ResponseEntity.ok().headers(headers).body(result));
+    }).map(result -> ResponseEntity.ok().body(result));
   }
 
   /** buildHelthCheckChain build the chain of calls using concatWith. */
