@@ -1,16 +1,18 @@
 package com.cse.ngsa.app.dao;
 
-import com.azure.data.cosmos.CosmosClient;
-import com.azure.data.cosmos.CosmosContainer;
-import com.azure.data.cosmos.CosmosItemProperties;
-import com.azure.data.cosmos.FeedOptions;
-import com.azure.data.cosmos.FeedResponse;
-import com.azure.data.cosmos.SqlQuerySpec;
+import com.azure.cosmos.CosmosAsyncClient;
+import com.azure.cosmos.CosmosAsyncContainer;
+import com.azure.cosmos.implementation.InternalObjectNode;
+import com.azure.cosmos.models.CosmosQueryRequestOptions;
+import com.azure.cosmos.models.FeedResponse;
+import com.azure.cosmos.models.SqlQuerySpec;
+import com.azure.spring.data.cosmos.core.ResponseDiagnostics;
+import com.azure.spring.data.cosmos.core.ResponseDiagnosticsProcessor;
+import com.azure.spring.data.cosmos.core.convert.ObjectMapperFactory;
 import com.cse.ngsa.app.Constants;
 import com.cse.ngsa.app.services.configuration.IConfigurationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.microsoft.azure.spring.data.cosmosdb.core.convert.ObjectMapperFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,8 @@ public class BaseCosmosDbDao {
   protected IConfigurationService configurationService;
   protected String cosmosContainer = "";
   protected String cosmosDatabase = "";
-  protected final FeedOptions feedOptions = new FeedOptions();
+  protected final CosmosQueryRequestOptions requestOptions = new CosmosQueryRequestOptions();
+  protected ResponseDiagnosticsProcessor responseDiagnosticsProcessor = new ResponseDiagnosticsProcessorImpl();
 
   /** BaseCosmosDbDao. */
   @Autowired
@@ -36,14 +39,13 @@ public class BaseCosmosDbDao {
         configurationService.getConfigEntries().getCosmosCollection();
     cosmosDatabase = configurationService.getConfigEntries().getCosmosDatabase();
 
-    feedOptions.enableCrossPartitionQuery(true);
-    feedOptions.maxDegreeOfParallelism(Constants.MAX_DEGREE_PARALLELISM);
+    requestOptions.setMaxDegreeOfParallelism(Constants.MAX_DEGREE_PARALLELISM);
   }
 
   /** getContainer. */
-  public CosmosContainer getContainer() {
+  public CosmosAsyncContainer getContainer() {
     return context
-            .getBean(CosmosClient.class)
+            .getBean(CosmosAsyncClient.class)
             .getDatabase(this.cosmosDatabase)
             .getContainer(this.cosmosContainer);
   }
@@ -59,21 +61,28 @@ public class BaseCosmosDbDao {
    */
   public <T> Flux<T> getAll(Class<T> classType, SqlQuerySpec sqlQuerySpec) {
     ObjectMapper objMapper = ObjectMapperFactory.getObjectMapper();
-    Flux<FeedResponse<CosmosItemProperties>> feedResponse =
-        getContainer().queryItems(sqlQuerySpec, this.feedOptions);
+    Flux<FeedResponse<InternalObjectNode>> feedResponse =
+        getContainer().queryItems(sqlQuerySpec, this.requestOptions, InternalObjectNode.class).byPage();
 
     return feedResponse
                 .flatMap(
-                    flatFeedResponse -> Flux.fromIterable(flatFeedResponse.results()))
+                    flatFeedResponse -> Flux.fromIterable(flatFeedResponse.getResults()))
                 .flatMap(
-                    cosmosItemProperties -> {
+                    internalObjectNode -> {
                       try {
                         return Flux.just(
-                            objMapper.readValue(cosmosItemProperties.toJson(), classType));
+                            objMapper.readValue(internalObjectNode.toJson(), classType));
                       } catch (JsonProcessingException e) {
                         logger.error(e);
                       } 
                       return Flux.empty();
                     });
+  }
+
+  private static class ResponseDiagnosticsProcessorImpl implements ResponseDiagnosticsProcessor {
+    @Override
+    public void processResponseDiagnostics(ResponseDiagnostics responseDiagnostics) {
+      logger.info("Response Diagnostics: {}", responseDiagnostics);
+    }
   }
 }

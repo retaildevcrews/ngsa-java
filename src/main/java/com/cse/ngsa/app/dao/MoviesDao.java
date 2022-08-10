@@ -1,14 +1,15 @@
 package com.cse.ngsa.app.dao;
 
-import static com.microsoft.azure.spring.data.cosmosdb.exception.CosmosDBExceptionUtils.findAPIExceptionHandler;
+import static com.azure.spring.data.cosmos.exception.CosmosExceptionUtils.findAPIExceptionHandler;
 
-import com.azure.data.cosmos.SqlParameter;
-import com.azure.data.cosmos.SqlParameterList;
-import com.azure.data.cosmos.SqlQuerySpec;
+import com.azure.cosmos.models.SqlParameter;
+import com.azure.cosmos.models.SqlQuerySpec;
 import com.cse.ngsa.app.Constants;
 import com.cse.ngsa.app.models.Movie;
 import com.cse.ngsa.app.services.configuration.IConfigurationService;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,12 +41,12 @@ public class MoviesDao extends BaseCosmosDbDao implements IDao {
   /** getMovieByIdSingleRead. */
   public Mono<Movie> getMovieById(String movieId) {
     return getContainer()
-            .getItem(movieId, Movie.computePartitionKey(movieId))
-            .read()
+            .readItem(movieId, Movie.computePartitionKey(movieId), Movie.class)
             .flatMap(
                 cosmosItemResponse ->
-                    Mono.justOrEmpty(cosmosItemResponse.properties().toObject(Movie.class)))
-            .onErrorResume(throwable -> findAPIExceptionHandler("Failed to find item", throwable));
+                    Mono.justOrEmpty(cosmosItemResponse.getItem()))
+            .onErrorResume(throwable -> findAPIExceptionHandler("Failed to find item", throwable,
+                                          this.responseDiagnosticsProcessor));
   }
 
   /** upsertMovieById. */
@@ -58,19 +59,20 @@ public class MoviesDao extends BaseCosmosDbDao implements IDao {
       movie.setType("Movie-Dupe");
       return getContainer().upsertItem(movie).flatMap(
           cosmosItemResponse ->
-                      Mono.just(cosmosItemResponse.properties().toObject(Movie.class)))
+                      Mono.just(cosmosItemResponse.getItem()))
               .onErrorResume(throwable ->
-                      findAPIExceptionHandler("Failed to upsert item", throwable));
+                      findAPIExceptionHandler("Failed to upsert item", throwable, 
+                        this.responseDiagnosticsProcessor));
     });
   }
 
   /** deleteMovieById. */
   public Mono<ResponseEntity<Object>> deleteMovieById(String movieId) {
     return getContainer()
-            .getItem(movieId, Movie.computePartitionKey(movieId))
-            .delete().flatMap(
-                cosmosItemResponse ->
-                        Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()))
+            .deleteItem(movieId, Movie.computePartitionKey(movieId))
+            .flatMap(
+              cosmosItemResponse ->
+                      Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build()))
             .onErrorResume(e -> {
               if (e.getMessage().contains("Resource Not Found")) {
                 return Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).build());
@@ -96,22 +98,22 @@ public class MoviesDao extends BaseCosmosDbDao implements IDao {
 
     final SqlQuerySpec movieQuerySpec = new SqlQuerySpec();
 
-    SqlParameterList parameterList = new SqlParameterList();
-    parameterList.add(new SqlParameter("@type", Constants.MOVIE_DOCUMENT_TYPE));
-    parameterList.add(new SqlParameter("@offset", pageNumber));
-    parameterList.add(new SqlParameter("@limit", pageSize));
+    List<SqlParameter> sqlParameterList = new ArrayList<>();
+    sqlParameterList.add(new SqlParameter("@type", Constants.MOVIE_DOCUMENT_TYPE));
+    sqlParameterList.add(new SqlParameter("@offset", pageNumber));
+    sqlParameterList.add(new SqlParameter("@limit", pageSize));
 
     if (queryParams.containsKey("q")) {
       String query = queryParams.get("q").toString();
       formedQuery.append(movieContains);
-      parameterList.add(new SqlParameter("@query", query));
+      sqlParameterList.add(new SqlParameter("@query", query));
     }
 
     if (queryParams.containsKey("year")) {
       Integer year = (Integer) queryParams.get("year");
       if (year > 0) {
         formedQuery.append(" and m.year = @year");
-        parameterList.add(new SqlParameter("@year", year));
+        sqlParameterList.add(new SqlParameter("@year", year));
       }
     }
 
@@ -119,7 +121,7 @@ public class MoviesDao extends BaseCosmosDbDao implements IDao {
       Double rating = (Double) queryParams.get("ratingSelect");
       if (rating > 0.0) {
         formedQuery.append(" and m.rating >= @rating");
-        parameterList.add(new SqlParameter("@rating", rating));
+        sqlParameterList.add(new SqlParameter("@rating", rating));
       }
     }
 
@@ -127,7 +129,7 @@ public class MoviesDao extends BaseCosmosDbDao implements IDao {
       String actorId = queryParams.get("actorSelect").toString();
       if (!StringUtils.isEmpty(actorId)) {
         formedQuery.append(" and array_contains(m.roles, { actorId: @actorId }, true) ");
-        parameterList.add(new SqlParameter("@actorId", actorId));
+        sqlParameterList.add(new SqlParameter("@actorId", actorId));
       }
     }
 
@@ -135,35 +137,35 @@ public class MoviesDao extends BaseCosmosDbDao implements IDao {
     if (queryParams.containsKey("genre")) {
       String genre = queryParams.get("genre").toString();
       if (!StringUtils.isEmpty(genre)) {
-        return filterByGenre(genre, formedQuery, parameterList);
+        return filterByGenre(genre, formedQuery, sqlParameterList);
       }
     }
 
     formedQuery.append(movieOrderBy).append(movieOffset);
 
-    movieQuerySpec.queryText(formedQuery.toString());
-    movieQuerySpec.parameters(parameterList);
+    movieQuerySpec.setQueryText(formedQuery.toString());
+    movieQuerySpec.setParameters(sqlParameterList);
 
     return super.getAll(Movie.class, movieQuerySpec);
   }
 
   /** filterByGenre. */
   public Flux<Movie> filterByGenre(
-      String genreKey, StringBuilder formedQuery, SqlParameterList parameterList) {
+      String genreKey, StringBuilder formedQuery, List<SqlParameter> sqlParameterList) {
     return genresDao
         .getGenreByKey(genreKey)
         .collectList()
         .flatMapMany(
             selectedGenre -> {
               formedQuery.append(" and contains(m.genreSearch, @selectedGenre) ");
-              parameterList.add(new SqlParameter("@selectedGenre",
+              sqlParameterList.add(new SqlParameter("@selectedGenre",
                   MessageFormat.format("|{0}|", selectedGenre.get(0))));
               formedQuery.append(movieOrderBy).append(movieOffset);
 
               final SqlQuerySpec genreQuerySpec = new SqlQuerySpec();
 
-              genreQuerySpec.queryText(formedQuery.toString());
-              genreQuerySpec.parameters(parameterList);
+              genreQuerySpec.setQueryText(formedQuery.toString());
+              genreQuerySpec.setParameters(sqlParameterList);
 
               return super.getAll(Movie.class, genreQuerySpec);
             });

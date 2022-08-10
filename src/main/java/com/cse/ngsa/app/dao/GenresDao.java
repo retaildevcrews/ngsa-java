@@ -1,13 +1,13 @@
 package com.cse.ngsa.app.dao;
 
-import com.azure.data.cosmos.CosmosClient;
-import com.azure.data.cosmos.SqlParameter;
-import com.azure.data.cosmos.SqlParameterList;
-import com.azure.data.cosmos.SqlQuerySpec;
+import com.azure.cosmos.CosmosAsyncClient;
+import com.azure.cosmos.models.SqlParameter;
+import com.azure.cosmos.models.SqlQuerySpec;
 import com.cse.ngsa.app.Constants;
 import com.cse.ngsa.app.models.Genre;
 import com.cse.ngsa.app.services.configuration.IConfigurationService;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,31 +42,31 @@ public class GenresDao extends BaseCosmosDbDao {
     SqlQuerySpec sqsGenreQuery = new SqlQuerySpec(genreQuery);
 
     return this.context
-            .getBean(CosmosClient.class)
+            .getBean(CosmosAsyncClient.class)
             .getDatabase(this.cosmosDatabase)
             .getContainer(this.cosmosContainer)
-            .queryItems(sqsGenreQuery, this.feedOptions)
+            .queryItems(sqsGenreQuery, this.requestOptions, Genre.class)
+            .byPage()
             .flatMap(
-                flatFeedResponse -> Flux.fromIterable(flatFeedResponse.results()))
-            .map(cosmosItemProperties -> cosmosItemProperties.toObject(Genre.class).getGenre())
+                flatFeedResponse -> Flux.fromIterable(flatFeedResponse.getResults()))
+            .map(internalObjectNode -> internalObjectNode.getGenre())
             .collectList();
   }
 
   /** getGenreByKey. */
   @SuppressWarnings ("squid:S1612")  // suppress warning to move lambda to function
   public Flux<String> getGenreByKey(String genreKey) {
-    SqlQuerySpec sqsGenreQueryById =
-        new SqlQuerySpec(
-            genreQueryById,
-            new SqlParameterList(
-                new SqlParameter("@id", Constants.GENRE_DOCUMENT_TYPE),
-                new SqlParameter("@type", genreKey.toLowerCase())));
+    List<SqlParameter> sqlParameterList = new ArrayList<>();
+    sqlParameterList.add(new SqlParameter("@id", Constants.GENRE_DOCUMENT_TYPE));
+    sqlParameterList.add(new SqlParameter("@type", genreKey.toLowerCase()));
+
+    SqlQuerySpec sqsGenreQueryById = new SqlQuerySpec(genreQueryById, sqlParameterList);
 
     return getContainer()
-            .queryItems(sqsGenreQueryById, this.feedOptions)
+            .queryItems(sqsGenreQueryById, this.requestOptions, Genre.class)
+            .byPage()
             .flatMap(
-                cosmosItemResponse -> Flux.fromIterable(cosmosItemResponse.results()))
-            .map(cosmosItemProperties -> cosmosItemProperties.toObject(Genre.class))
+                cosmosItemResponse -> Flux.fromIterable(cosmosItemResponse.getResults()))
             .map(selectedGenre -> selectedGenre.getGenre());
   }
 }
