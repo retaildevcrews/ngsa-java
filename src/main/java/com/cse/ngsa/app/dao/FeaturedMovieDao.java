@@ -1,6 +1,6 @@
 package com.cse.ngsa.app.dao;
 
-import com.azure.data.cosmos.CosmosClient;
+import com.azure.cosmos.CosmosAsyncClient;
 import com.cse.ngsa.app.models.FeaturedMovie;
 import com.cse.ngsa.app.services.configuration.IConfigurationService;
 import java.util.Comparator;
@@ -27,13 +27,13 @@ public class FeaturedMovieDao extends BaseCosmosDbDao {
   public Flux<String> getFeaturedMovie() {
 
     return this.context
-            .getBean(CosmosClient.class)
+            .getBean(CosmosAsyncClient.class)
             .getDatabase(this.cosmosDatabase)
             .getContainer(this.cosmosContainer)
-            .queryItems(featuredMovieQuery, this.feedOptions)
+            .queryItems(featuredMovieQuery, this.requestOptions, FeaturedMovie.class)
+            .byPage()
             .flatMap(
-                flatFeedResponse -> Flux.fromIterable(flatFeedResponse.results()))
-            .map(cosmosItemProperties -> cosmosItemProperties.toObject(FeaturedMovie.class))
+                flatFeedResponse -> Flux.fromIterable(flatFeedResponse.getResults()))
             .sort(Comparator.comparing(FeaturedMovie::getWeight))
             .map(featuredMovie -> featuredMovie.getMovieId());
   }

@@ -1,4 +1,4 @@
 <configuration>
-    <logger name="com.azure.data.cosmos" level="error"/>
+    <logger name="com.azure.cosmos" level="error"/>
     <logger name="com.cse.ngsa" level="warn" />
 </configuration>

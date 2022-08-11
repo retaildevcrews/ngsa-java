@@ -1,7 +1,7 @@
 package com.cse.ngsa.app.error;
 
 import java.util.Map;
-import org.springframework.boot.autoconfigure.web.ResourceProperties;
+import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.error.ErrorAttributeOptions.Include;
@@ -25,10 +25,10 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
 
   public GlobalErrorWebExceptionHandler(
       ErrorAttributes errorAttributes,
-      ResourceProperties resourceProperties,
+      WebProperties webproperties,
       ApplicationContext applicationContext,
       ServerCodecConfigurer configurer) {
-    super(errorAttributes, resourceProperties, applicationContext);
+    super(errorAttributes, webproperties.getResources(), applicationContext);
     this.setMessageWriters(configurer.getWriters());
   }
 

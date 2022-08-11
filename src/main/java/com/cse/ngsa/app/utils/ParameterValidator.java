@@ -61,7 +61,7 @@ public class ParameterValidator {
   /** isValidSearchQuery. */
   @SuppressWarnings("squid:S1126") // suppressing conditional check is required
   public Boolean isValidSearchQuery(String query) {
-    if (!StringUtils.isEmpty(query) && (query.length() < 2 || query.length() > 20)) {
+    if (StringUtils.hasLength(query) && (query.length() < 2 || query.length() > 20)) {
       return false;
     }
     return true;
@@ -69,7 +69,7 @@ public class ParameterValidator {
 
   /** isValidPageNumber. */
   public Boolean isValidPageNumber(String pageNumber) {
-    if (!StringUtils.isEmpty(pageNumber)) {
+    if (StringUtils.hasLength(pageNumber)) {
       try {
         Integer pageNo = Integer.parseInt(pageNumber);
         if (pageNo < 1 || pageNo > 10000) {
@@ -84,7 +84,7 @@ public class ParameterValidator {
 
   /** isValidPageSize. */
   public Boolean isValidPageSize(String pageSize) {
-    if (!StringUtils.isEmpty(pageSize)) {
+    if (StringUtils.hasLength(pageSize)) {
       try {
         Integer pageSz = Integer.parseInt(pageSize);
         if (pageSz < 1 || pageSz > 1000) {
@@ -99,7 +99,7 @@ public class ParameterValidator {
 
   /** isValidGenre. */
   public Boolean isValidGenre(String genre) {
-    if (!StringUtils.isEmpty(genre)) {
+    if (StringUtils.hasLength(genre)) {
       try {
         if (genre.length() < 3 || genre.length() > 20) {
           return false;
@@ -113,7 +113,7 @@ public class ParameterValidator {
 
   /** isValidYear. */
   public Boolean isValidYear(String year) {
-    if (!StringUtils.isEmpty(year)) {
+    if (StringUtils.hasLength(year)) {
       try {
         Integer movieYear = Integer.parseInt(year);
         if (movieYear < 1874 || movieYear > 2025) {
@@ -128,7 +128,7 @@ public class ParameterValidator {
 
   /** isValidRating. */
   public Boolean isValidRating(String rating) {
-    if (!StringUtils.isEmpty(rating)) {
+    if (StringUtils.hasLength(rating)) {
       try {
         Double movieRating = Double.parseDouble(rating);
         if (movieRating < 0 || movieRating > 10) {
@@ -143,7 +143,7 @@ public class ParameterValidator {
 
   /** isValidRating. */
   public Boolean isValidBenchmarkSize(String benchmarkSizeStr, int maxBenchStrSize) {
-    if (!StringUtils.isEmpty(benchmarkSizeStr)) {
+    if (StringUtils.hasLength(benchmarkSizeStr)) {
       try {
         int benchmarkSize = Integer.parseInt(benchmarkSizeStr);
         if (benchmarkSize < 1 || benchmarkSize > maxBenchStrSize) {

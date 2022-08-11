@@ -1,14 +1,15 @@
 package com.cse.ngsa.app.dao;
 
-import static com.microsoft.azure.spring.data.cosmosdb.exception.CosmosDBExceptionUtils.findAPIExceptionHandler;
+import static com.azure.spring.data.cosmos.exception.CosmosExceptionUtils.findAPIExceptionHandler;
 
-import com.azure.data.cosmos.SqlParameter;
-import com.azure.data.cosmos.SqlParameterList;
-import com.azure.data.cosmos.SqlQuerySpec;
+import com.azure.cosmos.models.SqlParameter;
+import com.azure.cosmos.models.SqlQuerySpec;
 import com.cse.ngsa.app.Constants;
 import com.cse.ngsa.app.models.Actor;
 import com.cse.ngsa.app.services.configuration.IConfigurationService;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,12 +42,12 @@ public class ActorsDao extends BaseCosmosDbDao implements IDao {
     }
     
     return getContainer()
-            .getItem(actorId, Actor.computePartitionKey(actorId))
-            .read()
+            .readItem(actorId, Actor.computePartitionKey(actorId), Actor.class)
             .flatMap(
                 cosmosItemResponse -> 
-                    Mono.justOrEmpty(cosmosItemResponse.properties().toObject(Actor.class)))
-            .onErrorResume(throwable -> findAPIExceptionHandler("Failed to find item", throwable));
+                    Mono.justOrEmpty(cosmosItemResponse.getItem()))
+            .onErrorResume(throwable -> findAPIExceptionHandler("Failed to find item", throwable,
+                                          this.responseDiagnosticsProcessor));
   }
 
   /**
@@ -66,20 +67,20 @@ public class ActorsDao extends BaseCosmosDbDao implements IDao {
     }
 
     final SqlQuerySpec actorQuerySpec = new SqlQuerySpec();
-    SqlParameterList parameterList = new SqlParameterList();
-    parameterList.add(new SqlParameter("@type", Constants.ACTOR_DOCUMENT_TYPE));
-    parameterList.add(new SqlParameter("@offset", pageNumber));
-    parameterList.add(new SqlParameter("@limit", pageSize));
+    List<SqlParameter> sqlParameterList = new ArrayList<>();
+    sqlParameterList.add(new SqlParameter("@type", Constants.ACTOR_DOCUMENT_TYPE));
+    sqlParameterList.add(new SqlParameter("@offset", pageNumber));
+    sqlParameterList.add(new SqlParameter("@limit", pageSize));
 
     StringBuilder queryBuilder = new StringBuilder(actorSelect);
     if (query != null) {
       queryBuilder.append(actorContains);
-      parameterList.add(new SqlParameter("@query", query));
+      sqlParameterList.add(new SqlParameter("@query", query));
     }
     queryBuilder.append(actorOrderBy).append(actorOffset);
 
-    actorQuerySpec.queryText(queryBuilder.toString());
-    actorQuerySpec.parameters(parameterList);
+    actorQuerySpec.setQueryText(queryBuilder.toString());
+    actorQuerySpec.setParameters(sqlParameterList);
 
     return super.getAll(Actor.class, actorQuerySpec);
   }

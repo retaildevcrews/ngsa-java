@@ -1,5 +1,6 @@
 package com.cse.ngsa.app.models;
 
+import com.azure.cosmos.models.PartitionKey;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -55,12 +56,12 @@ public class Actor extends ActorBase {
   /**
    * ComputePartitionKey.
    */
-  public static String computePartitionKey(String id) {
+  public static PartitionKey computePartitionKey(String id) {
     // validate id
-    if (!StringUtils.isEmpty(id) && id.length() > 5
+    if (StringUtils.hasLength(id) && id.length() > 5
         && StringUtils.startsWithIgnoreCase(id, "nm")) {
       int idInt = Integer.parseInt(id.substring(2));
-      return String.valueOf(idInt % 10);
+      return new PartitionKey(String.valueOf(idInt % 10));
     }
     throw new IllegalArgumentException("Invalid Partition Key");
   }
