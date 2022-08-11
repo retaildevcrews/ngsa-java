@@ -20,5 +20,3 @@ ignore:
   - package:
       name: json-smart
       type: java-archive
-
-    
