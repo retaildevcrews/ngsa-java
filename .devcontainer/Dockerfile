@@ -8,5 +8,9 @@
 
 FROM ghcr.io/cse-labs/k3d:latest
 
+# use scripts from: https://github.com/microsoft/vscode-dev-containers/tree/main/script-library
+RUN /bin/bash /scripts/java-debian.sh
+RUN /bin/bash /scripts/maven-debian.sh
+
 # some images require specific values
 ARG USERNAME=vscode
