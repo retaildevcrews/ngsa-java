@@ -1,6 +1,6 @@
 {
   "name": "ngsa-java",
-  "image": "ghcr.io/retaildevcrews/ngsa-java-codespaces",
+  "build": { "dockerfile": "Dockerfile" },
 	"runArgs": [
 		"--init",
 		"--privileged"
