@@ -63,10 +63,10 @@ spec:
               port: 8080              
           resources:
             limits:
-              cpu: 500m
-              memory: 512Mi
+              cpu: 384m
+              memory: 1356Mi
             requests:
-              cpu: 500m
+              cpu: 50m
               memory: 512Mi
           volumeMounts:
             - name: secrets
