@@ -30,6 +30,15 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
+        - name: istio-proxy
+          image: auto
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 1536Mi
+            requests:
+              cpu: 50m
+              memory: 384Mi
         - name: app
           image: {{gitops.imageName}}:{{gitops.imageTag}}
           imagePullPolicy: Always
