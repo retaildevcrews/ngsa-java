@@ -10,13 +10,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class VolumeCosmosConfigService implements IVolumeCosmosConfigService {
   private static final Logger logger = LogManager.getLogger(VolumeCosmosConfigService.class);
-  private static final Pattern cosmosNamePat = 
-      Pattern.compile("^https:\\/\\/(.+)\\.documents\\.azure\\.com.*");
+  @Value("${cosmos-auth-type}")
+  private String cosmosAuthType;
+  private static final Pattern cosmosNamePat = Pattern.compile("^https:\\/\\/(.+)\\.documents\\.azure\\.com.*");
 
   /**
    * Get all the cosmos configs from a given volume.
@@ -27,7 +29,9 @@ public class VolumeCosmosConfigService implements IVolumeCosmosConfigService {
     cosConf.setVolume(volume);
     cosConf.setCosmosCollection(getCosmosConfigFromFile(volume, Constants.COSMOS_COLLECTION_KEYNAME));
     cosConf.setCosmosDatabase(getCosmosConfigFromFile(volume, Constants.COSMOS_DATABASE_KEYNAME));
-    cosConf.setCosmosKey(getCosmosConfigFromFile(volume, Constants.COSMOS_KEY_KEYNAME));
+    if (cosmosAuthType.equals(Constants.COSMOS_AUTH_TYPE_SECRETS)) {
+      cosConf.setCosmosKey(getCosmosConfigFromFile(volume, Constants.COSMOS_KEY_KEYNAME));
+    }
     cosConf.setCosmosUrl(getCosmosConfigFromFile(volume, Constants.COSMOS_URL_KEYNAME));
 
     Matcher m = cosmosNamePat.matcher(cosConf.getCosmosUrl());
@@ -85,7 +89,8 @@ public class VolumeCosmosConfigService implements IVolumeCosmosConfigService {
       System.exit(-1);
     }
 
-    if (CommonUtils.isNullWhiteSpace(cosConfigs.getCosmosKey())) {
+    if (cosmosAuthType.equals(Constants.COSMOS_AUTH_TYPE_SECRETS)
+        && CommonUtils.isNullWhiteSpace(cosConfigs.getCosmosKey())) {
       logger.error("CosmosKey cannot be empty");
       System.exit(-1);
     }
@@ -94,9 +99,9 @@ public class VolumeCosmosConfigService implements IVolumeCosmosConfigService {
       logger.error("CosmosUrl cannot be empty");
       System.exit(-1);
     }
-    
+
     String cosmosUrl = cosConfigs.getCosmosUrl().toLowerCase(Locale.ROOT);
-    
+
     Matcher m = cosmosNamePat.matcher(cosConfigs.getCosmosUrl());
     if (!m.matches() || m.groupCount() != 1) {
       // group 0 --> total match
@@ -104,8 +109,8 @@ public class VolumeCosmosConfigService implements IVolumeCosmosConfigService {
       logger.error("Invalid value for CosmosUrl: " + cosmosUrl);
       System.exit(-1);
     }
-    
-    if (cosConfigs.getCosmosKey().length() < 64) {
+
+    if (cosmosAuthType.equals(Constants.COSMOS_AUTH_TYPE_SECRETS) && cosConfigs.getCosmosKey().length() < 64) {
       logger.error("Invalid value for CosmosKey");
       System.exit(-1);
     }

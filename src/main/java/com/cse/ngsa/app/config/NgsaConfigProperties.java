@@ -1,5 +1,6 @@
 package com.cse.ngsa.app.config;
 
+import com.cse.ngsa.app.Constants;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -7,7 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
-
 
 @ConfigurationProperties(prefix = "")
 @Validated
@@ -37,8 +37,14 @@ public class NgsaConfigProperties {
 
   @Valid
   @NotBlank
-  @Pattern(regexp = "^TRACE$|^trace$|^DEBUG$|^debug$|^INFO$|^info$|^WARN$|^warn$|^ERROR$|^error$|^FATAL$|^fatal$|^OFF$|^off$",
-          message = "Log levels must be any one of: TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF")
+  @Pattern(regexp = "^ManagedIdentity$|^SecretKey$", message = "CosmosAuthType should be '"
+      + Constants.COSMOS_AUTH_TYPE_MI + "'' or '" + Constants.COSMOS_AUTH_TYPE_SECRETS + "'")
+  @Getter @Setter
+  private String cosmosAuthType;
+
+  @Valid
+  @NotBlank
+  @Pattern(regexp = "^TRACE$|^trace$|^DEBUG$|^debug$|^INFO$|^info$|^WARN$|^warn$|^ERROR$|^error$|^FATAL$|^fatal$|^OFF$|^off$", message = "Log levels must be any one of: TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF")
   @Getter @Setter
   private String requestLogLevel;
 
