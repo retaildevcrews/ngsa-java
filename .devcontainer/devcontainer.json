@@ -10,7 +10,21 @@
   // Set container specific settings
 	"settings": {
 		"terminal.integrated.defaultProfile.linux": "zsh",
-    "java.home": "/usr/lib/jvm/zulu11"
+    "java.home": "/usr/local/sdkman/candidates/java/current/",
+    "java.jdt.ls.java.home": "/usr/local/sdkman/candidates/java/current/",
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.completion.importOrder": [
+        "",
+        "javax",
+        "java",
+        "#"
+      ],
+    "files.exclude": {
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
+    }
 	},
 
   "remoteUser": "vscode",
