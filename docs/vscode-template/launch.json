@@ -10,7 +10,7 @@
             "request": "launch",
             "mainClass": "com.cse.ngsa.app.NgsaJavaApplication",
             "projectName": "ngsa",
-            "cwd": "${workspaceFolder}/ngsa",
+            "cwd": "${workspaceFolder}",
             "preLaunchTask": "debug-compile (maven)",
             "args": ["--prometheus=true"]
         }
