@@ -2,8 +2,19 @@
   // See https://go.microsoft.com/fwlink/?LinkId=733558
   // for the documentation about the tasks.json format
   "version": "2.0.0",
-  "options": {"shell": {"executable": "bash", "args": ["-lic"]}},
+  "options": {"shell": {"executable": "bash", "args": ["-ic"]}},
   "tasks": [
+    {
+      "label": "SubTask-Run Checkov image",
+      "type": "shell",
+      "command": "docker run -it -v /workspaces/ngsa-java:/ngsa-java --rm bridgecrew/checkov --quiet --compact -d /ngsa-java --output-file-path /ngsa-java --framework 'kubernetes' 'dockerfile' ; returncode=$?; mv results_cli.txt checkov_scan_results.txt; echo ' ';echo '-------------------------- Checkov Results Summary --------------------------';echo ' ';sed -n '/results:/{p;n;n;N;p;n;n;}' checkov_scan_results.txt;echo ' ';echo '-------------------------- Checkov Results Summary --------------------------';echo ' '; code -r ${workspaceFolder}/checkov_scan_results.txt;echo Scan Complete - Please review 'checkov_scan_results.txt' for details.; exit $returncode"
+    },
+    {
+        "label": "Run Checkov Scan",
+        "dependsOrder": "sequence",
+        "dependsOn": ["SubTask-Run Checkov image"],
+        "problemMatcher": []
+    },
     {
       "label": "debug-compile (maven)",
       "type": "shell",
@@ -11,8 +22,8 @@
         "mvn",
         "clean", // coz: often mvn fails to detect changed source
         "compile",
-        "-Dpmd.skip=true", // without pmd check
-        "-Dcheckstyle.skip=true" // without style check
+        "-Dpmd.skip=true" // without pmd check
+        // "-Dcheckstyle.skip=true" // without style check
       ],
       "group": {
         "kind": "build",
