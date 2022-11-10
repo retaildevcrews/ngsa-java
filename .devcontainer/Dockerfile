@@ -12,5 +12,8 @@ FROM ghcr.io/cse-labs/k3d:latest
 RUN /bin/bash /scripts/java-debian.sh
 RUN /bin/bash /scripts/maven-debian.sh
 
+RUN sdk install java 11.0.16.1-zulu && sdk flush archives && sdk flush tem
+RUN sdk default java 11.0.16.1-zulu
+
 # some images require specific values
 ARG USERNAME=vscode
