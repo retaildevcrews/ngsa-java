@@ -39,4 +39,7 @@ k3d registry create registry.localhost --port 5000
 # Connect to local registry
 docker network connect k3d k3d-registry.localhost
 
+# Set JDK to use Zulu
+
+
 echo "on-create completed" > $HOME/status
