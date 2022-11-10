@@ -9,8 +9,7 @@
 
   // Set container specific settings
 	"settings": {
-		"terminal.integrated.defaultProfile.linux": "zsh",
-    "java.home": "/usr/lib/jvm/zulu11"
+		"terminal.integrated.defaultProfile.linux": "zsh"
 	},
 
   "remoteUser": "vscode",
