@@ -8,6 +8,7 @@ import com.azure.spring.data.cosmos.config.AbstractCosmosConfiguration;
 import com.azure.spring.data.cosmos.config.CosmosConfig;
 import com.azure.spring.data.cosmos.repository.config.EnableCosmosRepositories;
 import com.cse.ngsa.app.Constants;
+import com.cse.ngsa.app.models.NgsaConfig;
 import com.cse.ngsa.app.services.configuration.IConfigurationService;
 import java.text.MessageFormat;
 import java.time.Duration;
@@ -15,7 +16,6 @@ import kotlin.NotImplementedError;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -27,8 +27,6 @@ public class CosmosDbConfig extends AbstractCosmosConfiguration {
   private static final Logger logger = LogManager.getLogger(CosmosConfig.class);
 
   protected IConfigurationService configurationService;
-  @Value("${cosmos-auth-type}")
-  private String cosmosAuthType;
 
   /**
    * CosmosDBConfig.
@@ -43,7 +41,7 @@ public class CosmosDbConfig extends AbstractCosmosConfiguration {
    */
   @Bean
   @Primary
-  public CosmosClientBuilder buildCosmosDbConfig() {
+  public CosmosClientBuilder buildCosmosDbConfig(NgsaConfig ngsaConfig) {
     try {
 
       String uri = configurationService.getConfigEntries().getCosmosUrl();
@@ -52,6 +50,7 @@ public class CosmosDbConfig extends AbstractCosmosConfiguration {
       throttlingRetryOptions.setMaxRetryWaitTime(Duration.ofSeconds(60));
 
       CosmosClientBuilder builder = new CosmosClientBuilder().endpoint(uri);
+      String cosmosAuthType = ngsaConfig.ngsaConfigProperties().getCosmosAuthType();
       if (cosmosAuthType.equals(Constants.COSMOS_AUTH_TYPE_MI)) {
         builder = builder.credential(new DefaultAzureCredentialBuilder().build());
       } else if (cosmosAuthType.equals(Constants.COSMOS_AUTH_TYPE_SECRETS)) {

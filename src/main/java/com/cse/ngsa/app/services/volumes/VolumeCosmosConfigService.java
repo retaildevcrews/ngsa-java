@@ -1,6 +1,7 @@
 package com.cse.ngsa.app.services.volumes;
 
 import com.cse.ngsa.app.Constants;
+import com.cse.ngsa.app.models.NgsaConfig;
 import com.cse.ngsa.app.utils.CommonUtils;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,14 +11,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class VolumeCosmosConfigService implements IVolumeCosmosConfigService {
   private static final Logger logger = LogManager.getLogger(VolumeCosmosConfigService.class);
-  @Value("${cosmos-auth-type}")
-  private String cosmosAuthType;
+  @Autowired private NgsaConfig ngsaConfig;
   private static final Pattern cosmosNamePat = Pattern.compile("^https:\\/\\/(.+)\\.documents\\.azure\\.com.*");
 
   /**
@@ -29,6 +29,7 @@ public class VolumeCosmosConfigService implements IVolumeCosmosConfigService {
     cosConf.setVolume(volume);
     cosConf.setCosmosCollection(getCosmosConfigFromFile(volume, Constants.COSMOS_COLLECTION_KEYNAME));
     cosConf.setCosmosDatabase(getCosmosConfigFromFile(volume, Constants.COSMOS_DATABASE_KEYNAME));
+    var cosmosAuthType = ngsaConfig.ngsaConfigProperties().getCosmosAuthType();
     if (cosmosAuthType.equals(Constants.COSMOS_AUTH_TYPE_SECRETS)) {
       cosConf.setCosmosKey(getCosmosConfigFromFile(volume, Constants.COSMOS_KEY_KEYNAME));
     }
@@ -78,7 +79,7 @@ public class VolumeCosmosConfigService implements IVolumeCosmosConfigService {
       logger.error("Unable to read cosmos configs from volume: " +  volume);
       System.exit(-1);
     }
-
+    
     if (CommonUtils.isNullWhiteSpace(cosConfigs.getCosmosCollection())) {
       logger.error("CosmosCollection cannot be empty");
       System.exit(-1);
@@ -88,7 +89,8 @@ public class VolumeCosmosConfigService implements IVolumeCosmosConfigService {
       logger.error("CosmosDatabase cannot be empty");
       System.exit(-1);
     }
-
+    
+    String cosmosAuthType = ngsaConfig.ngsaConfigProperties().getCosmosAuthType();
     if (cosmosAuthType.equals(Constants.COSMOS_AUTH_TYPE_SECRETS)
         && CommonUtils.isNullWhiteSpace(cosConfigs.getCosmosKey())) {
       logger.error("CosmosKey cannot be empty");
