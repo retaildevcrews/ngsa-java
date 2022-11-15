@@ -18,7 +18,8 @@ import org.springframework.stereotype.Service;
 public class VolumeCosmosConfigService implements IVolumeCosmosConfigService {
   private static final Logger logger = LogManager.getLogger(VolumeCosmosConfigService.class);
   @Autowired private NgsaConfig ngsaConfig;
-  private static final Pattern cosmosNamePat = Pattern.compile("^https:\\/\\/(.+)\\.documents\\.azure\\.com.*");
+  private static final Pattern cosmosNamePat = 
+      Pattern.compile("^https:\\/\\/(.+)\\.documents\\.azure\\.com.*");
 
   /**
    * Get all the cosmos configs from a given volume.
@@ -79,7 +80,7 @@ public class VolumeCosmosConfigService implements IVolumeCosmosConfigService {
       logger.error("Unable to read cosmos configs from volume: " +  volume);
       System.exit(-1);
     }
-    
+
     if (CommonUtils.isNullWhiteSpace(cosConfigs.getCosmosCollection())) {
       logger.error("CosmosCollection cannot be empty");
       System.exit(-1);
@@ -103,7 +104,7 @@ public class VolumeCosmosConfigService implements IVolumeCosmosConfigService {
     }
 
     String cosmosUrl = cosConfigs.getCosmosUrl().toLowerCase(Locale.ROOT);
-
+    
     Matcher m = cosmosNamePat.matcher(cosConfigs.getCosmosUrl());
     if (!m.matches() || m.groupCount() != 1) {
       // group 0 --> total match
