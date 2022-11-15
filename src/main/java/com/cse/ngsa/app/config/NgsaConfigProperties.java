@@ -37,8 +37,9 @@ public class NgsaConfigProperties {
 
   @Valid
   @NotBlank
-  @Pattern(regexp = "^ManagedIdentity$|^SecretKey$", message = "CosmosAuthType should be '"
-      + Constants.COSMOS_AUTH_TYPE_MI + "'' or '" + Constants.COSMOS_AUTH_TYPE_SECRETS + "'")
+  @Pattern(regexp = "^" + Constants.COSMOS_AUTH_TYPE_MI + "$|^" + Constants.COSMOS_AUTH_TYPE_SECRETS
+      + "$", message = "CosmosAuthType should be '"
+          + Constants.COSMOS_AUTH_TYPE_MI + "'' or '" + Constants.COSMOS_AUTH_TYPE_SECRETS + "'")
   @Getter @Setter
   private String cosmosAuthType;
 
