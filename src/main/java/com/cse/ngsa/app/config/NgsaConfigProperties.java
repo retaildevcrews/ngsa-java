@@ -45,7 +45,8 @@ public class NgsaConfigProperties {
 
   @Valid
   @NotBlank
-  @Pattern(regexp = "^TRACE$|^trace$|^DEBUG$|^debug$|^INFO$|^info$|^WARN$|^warn$|^ERROR$|^error$|^FATAL$|^fatal$|^OFF$|^off$", message = "Log levels must be any one of: TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF")
+  @Pattern(regexp = "^TRACE$|^trace$|^DEBUG$|^debug$|^INFO$|^info$|^WARN$|^warn$|^ERROR$|^error$|^FATAL$|^fatal$|^OFF$|^off$",
+          message = "Log levels must be any one of: TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF")
   @Getter @Setter
   private String requestLogLevel;
 
