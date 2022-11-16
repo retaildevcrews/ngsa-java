@@ -5,11 +5,11 @@ ignore:
   # Packages are updated to the latest version as of 08/11/22
   - package:
       name: reactor-netty-core
-      version: 1.0.22
+      version: 1.0.24
       type: java-archive
   - package:
       name: reactor-netty-http
-      version: 1.0.22
+      version: 1.0.24
       type: java-archive
   - package:
       name: spring-core
