@@ -50,6 +50,7 @@
     "gabrielbb.vscode-lombok",
     "sonarsource.sonarlint-vscode",
     "visualstudioexptteam.vscodeintellicode",
+    "ms-vscode.azure-account",
     "vscjava.vscode-maven"
   ],
 
