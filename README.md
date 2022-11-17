@@ -54,17 +54,10 @@ Env vars:
 
 2. Write CosmosDB URL in [secrets/CosmosUrl](./secrets/CosmosUrl)
 
-3. Either use a SecretKey or Azure CLI for CosmosDB access
-    - Using __SecretKey__ (recommended for local deployment)
-       - Create `CosmosKey` file in [./secrets](./secrets) folder and write the primary key
-    - Using __Azure CLI__
-       - In terminal run `az login` and login to Azure
-       - Select proper subscription/tenant using `az account set -s 'SUBSCRIPTION-NAME'`
-         > You might need to signin again after changing subscription/tenant
-         >
-         > Make sure you select the tenant where your CosmosDB resides (selected in step 2 ComsosUrl)
-       - Goto [src/main/resources/application.properties](./src/main/resources/application.properties)
-         and use `cosmos-auth-type=ManagedIdentity`
+3. Create `CosmosKey` file in [./secrets](./secrets) folder and write the primary key
+
+   > [Optional]: You can also use Azure CLI to authenticate to CosmosDB. See [this section](#alternative-to-secret-key-cosmosdb-access-using-azure-cli)
+
 4. Run the application
     - From terminal:
 
@@ -76,6 +69,36 @@ Env vars:
     - Codespace/VSCode IDE
        - Press F5 or select `Run/Start Debugging`
     > wait for `Netty started on port(s): 8080`
+
+### [Alternative to secret key] CosmosDB access using Azure CLI
+
+We can use Azure CLI to authenticate ourselves to use CosmosDB without using Secret Key for Local Development.
+
+Follow the steps below:
+
+1. Add your AAD user to CosmosDB (in terminal):
+
+    ```bash
+    # Login to azure
+    az login
+    # Select proper subscription/tenant using 
+    az account set -s 'SUBSCRIPTION-NAME'
+    
+    # Get your own Principal ID (replace the email with yours)
+    export PRINCIPAL=$(az ad user show --id YOUR-MSFT-ID@microsoft.com --query 'id' -o tsv)
+    export COSMOS_RG=rg-ngsa-asb-dev-cosmos
+    export COSMOS_NAME=ngsa-asb-dev-cosmos
+    export COSMOS_SCOPE=$(az cosmosdb show -g $COSMOS_RG -n $COSMOS_NAME --query id -o tsv)
+    
+    # Add yourself to CosmosDB SQL Access
+    az cosmosdb sql role assignment create -g $COSMOS_RG --account-name $COSMOS_NAME --role-definition-id 00000000-0000-0000-0000-000000000002 --principal-id $PRINCIPAL --scope $COSMOS_SCOPE
+    ```
+
+    > If you're not using Codespace, you also need to add your network's Public IP address to CosmosDB in Azure Portal->CosmosDB->Networking->[FireWall]
+    >
+    > Google or use `dig +short myip.opendns.com @resolver1.opendns.com` or `curl ifconfig.me` to find your Public IP
+
+2. Goto [src/main/resources/application.properties](./src/main/resources/application.properties) and use `cosmos-auth-type=ManagedIdentity`
 
 ### Testing the application
 
