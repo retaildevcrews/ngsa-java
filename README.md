@@ -10,7 +10,7 @@ NGSA Java App is inteneded for platform testing and monitoring in one or many Ku
 - Docker CLI ([download](https://docs.docker.com/install/))
 - Java 11+ ([download](https://www.azul.com/downloads/?package=jdk))
 - Maven ([download](https://maven.apache.org/download.cgi))
-- Cosmos DB setup (follow the steps in the [imdb readme](https://github.com/retaildevcrews/imdb.git) )
+- Cosmos DB setup (follow the steps in the [imdb readme](https://github.com/cse-labs/imdb) )
 - Visual Studio Code (optional) ([download](https://code.visualstudio.com/download))
 
 ## Ngsa-java Usage
@@ -25,7 +25,7 @@ Usage:
         export [env var]=<value>
         mvn clean spring-boot:run
 
-Options: 
+Options:
         --help                                               Show help and usage information
         --version                                            Shows version information
         --dry-run                                            Validates configuration
@@ -33,13 +33,15 @@ Options:
         --prometheus=<true|false>                            Enable prometheus metrics [default: false]
         --zone                                               Zone for log [default: dev]
         --region                                             Region for log [default: dev]
-        --secrets-volume                                     Secrets Volume Path from project root directory [default: secrets]   
-              
-Env vars:                           
+        --secrets-volume                                     Secrets Volume Path from project root directory [default: secrets]
+        --cosmos-auth-type=<ManagedIdentity|SecretKey>       CosmosDB Auth type [default: SecretKey]
+Env vars:
         PROMETHEUS=<true|false>
         ZONE
         REGION
-        SECRETS_VOLUME                              
+        SECRETS_VOLUME
+        COSMOS_AUTH_TYPE=<ManagedIdentity|SecretKey>
+
 ```
 
 ## Run the Application
@@ -50,41 +52,30 @@ Env vars:
 
 1. Set up Codespaces from the GitHub repo
 
-2. Create CosmosKey file within the secrets folder
+2. Write CosmosDB URL in [secrets/CosmosUrl](./secrets/CosmosUrl)
 
-3. Input credentials in CosmosUrl and CosmosKey files within secrets folder
-
+3. Either use a SecretKey or Azure CLI for CosmosDB access
+    - Using __SecretKey__ (recommended for local deployment)
+       - Create `CosmosKey` file in [./secrets](./secrets) folder and write the primary key
+    - Using __Azure CLI__
+       - In terminal run `az login` and login to Azure
+       - Select proper subscription/tenant using `az account set -s 'SUBSCRIPTION-NAME'`
+         > You might need to signin again after changing subscription/tenant
+         >
+         > Make sure you select the tenant where your CosmosDB resides (selected in step 2 ComsosUrl)
+       - Goto [src/main/resources/application.properties](./src/main/resources/application.properties)
+         and use `cosmos-auth-type=ManagedIdentity`
 4. Run the application
+    - From terminal:
 
-```bash
+        ```bash
+        # run the application
+        mvn clean spring-boot:run
+        ```
 
-# run the application
-mvn clean spring-boot:run
-
-```
-
-### Using bash shell
-
-> This will work from a terminal in Visual Studio Codespaces as well
-
-1. Clone the repo
-
-> git clone <https://github.com/retaildevcrews/ngsa-java.git>
-
-2. Create CosmosKey file within secrets folder
-
-3. Input credentials in CosmosUrl and CosmosKey files within secrets folder
-
-4. Run the application
-
-```bash
-
-# run the application
-mvn clean spring-boot:run
-
-```
-
-wait for `Netty started on port(s): 8080`
+    - Codespace/VSCode IDE
+       - Press F5 or select `Run/Start Debugging`
+    > wait for `Netty started on port(s): 8080`
 
 ### Testing the application
 
@@ -116,9 +107,9 @@ mvn test -Dmaven.test.skip=false
 
 ```
 
-## Deploying With Local Cluster
+## Deploying in Local Cluster
 
-Ensure to [create secrets](#using-bash-shell) before running the following commands.
+Ensure to [create CosmosUrl and CosmosKey (secret key) file](#using-visual-studio-codespaces) before running the following commands.
 
 ```bash
 # delete cluster if exists, create cluster, and build/deploy application
