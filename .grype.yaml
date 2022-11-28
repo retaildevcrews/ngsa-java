@@ -13,7 +13,7 @@ ignore:
       type: java-archive
   - package:
       name: spring-core
-      version: 5.3.22
+      version: 5.3.24
       type: java-archive
   
   # latest json-smart installed (2.4.8) compared to 1.3.2 triggering vuln
