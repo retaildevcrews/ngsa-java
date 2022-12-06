@@ -1,31 +1,23 @@
 {
   "name": "ngsa-java",
   "build": { "dockerfile": "Dockerfile" },
-	"runArgs": [
-		"--init",
-		"--privileged"
-	],
-	"overrideCommand": false,
+  "runArgs": ["--init", "--privileged"],
+  "overrideCommand": false,
 
   // Set container specific settings
-	"settings": {
-		"terminal.integrated.defaultProfile.linux": "zsh",
+  "settings": {
+    "terminal.integrated.defaultProfile.linux": "zsh",
     "java.home": "/usr/local/sdkman/candidates/java/current/",
     "java.jdt.ls.java.home": "/usr/local/sdkman/candidates/java/current/",
     "java.configuration.updateBuildConfiguration": "interactive",
-    "java.completion.importOrder": [
-        "",
-        "javax",
-        "java",
-        "#"
-      ],
+    "java.completion.importOrder": ["", "javax", "java", "#"],
     "files.exclude": {
-        "**/.classpath": true,
-        "**/.project": true,
-        "**/.settings": true,
-        "**/.factorypath": true
+      "**/.classpath": true,
+      "**/.project": true,
+      "**/.settings": true,
+      "**/.factorypath": true
     }
-	},
+  },
 
   "remoteUser": "vscode",
 
@@ -34,6 +26,15 @@
   // Added for local developement
   // Without this port forwarding to Windows Network sometime fails
   "appPort": [8080],
+
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "19",
+      "jdkDistro": "zulu",
+      "installers": ["maven","jdk:zulu:19"],
+      "mavenVersion": "3.8.1"
+    }
+  },
 
   // Install extensions
   "extensions": [
