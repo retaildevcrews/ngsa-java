@@ -8,7 +8,7 @@
 
 FROM ghcr.io/cse-labs/k3d:latest
 
-RUN wget https://get.sdkman.io | bash
+RUN wget https://get.sdkman.io
 RUN source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 # use scripts from: https://github.com/microsoft/vscode-dev-containers/tree/main/script-library
