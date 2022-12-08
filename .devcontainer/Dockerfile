@@ -7,11 +7,13 @@
 #checkov:skip=CKV_DOCKER_7: Alright to use "latest" tag
 
 FROM ghcr.io/cse-labs/k3d:latest
-RUN apk update 
-RUN apk upgrade 
-RUN apk add --no-cache bash curl wget unzip zip
 
-RUN wget https://get.sdkman.io | bash
+RUN apk update
+RUN apk upgrade
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+RUN apk -qq -y install curl wget unzip zip bash
+
+RUN curl -s "https://get.sdkman.io" | bash
 RUN source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 # use scripts from: https://github.com/microsoft/vscode-dev-containers/tree/main/script-library

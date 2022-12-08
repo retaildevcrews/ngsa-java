@@ -2,11 +2,12 @@
 #checkov:skip=CKV_DOCKER_2: No healthcheck is needed
 FROM azul/zulu-openjdk-alpine:11.0.16 AS base
 
-RUN apk update 
-RUN apk upgrade 
-RUN apk add --no-cache bash curl wget unzip zip
+RUN apk update
+RUN apk upgrade
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+RUN apk -qq -y install curl wget unzip zip bash
 
-RUN wget https://get.sdkman.io | bash
+RUN curl -s "https://get.sdkman.io" | bash
 RUN source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 WORKDIR /app
