@@ -8,17 +8,17 @@
 
 FROM ghcr.io/cse-labs/k3d:latest
 
-RUN apk update
-RUN apk upgrade
+# RUN apk update
+# RUN apk upgrade
 
-RUN apk install unzip 
-RUN apk install zip 
+# RUN apk install unzip 
+# RUN apk install zip 
 
-RUN apk update
-RUN apk upgrade
+# RUN apk update
+# RUN apk upgrade
 
-RUN wget "https://get.sdkman.io" | bash
-RUN source "$HOME/.sdkman/bin/sdkman-init.sh"
+# RUN wget "https://get.sdkman.io" | bash
+# RUN source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 # use scripts from: https://github.com/microsoft/vscode-dev-containers/tree/main/script-library
 # RUN /bin/bash /scripts/java-debian.sh
