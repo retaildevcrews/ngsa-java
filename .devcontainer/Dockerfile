@@ -11,11 +11,11 @@ FROM ghcr.io/cse-labs/k3d:latest
 RUN apk update
 RUN apk upgrade
 
-RUN apk -qq -y install curl 
-RUN apk -qq -y install wget 
-RUN apk -qq -y install unzip 
-RUN apk -qq -y install zip 
-RUN apk -qq -y install bash
+RUN apk -qq install curl 
+RUN apk -qq install wget 
+RUN apk -qq install unzip 
+RUN apk -qq install zip 
+RUN apk -qq install bash
 
 RUN apk update
 RUN apk upgrade
