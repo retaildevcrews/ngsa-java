@@ -3,7 +3,14 @@
   "build": { "dockerfile": "Dockerfile" },
   "runArgs": ["--init", "--privileged"],
   "overrideCommand": false,
-
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "19",
+      "jdkDistro": "zulu",
+      "installMaven": true,
+      "mavenVersion": "3.8.6"
+    }
+  },
   // Set container specific settings
   "settings": {
     "terminal.integrated.defaultProfile.linux": "zsh",
@@ -26,15 +33,6 @@
   // Added for local developement
   // Without this port forwarding to Windows Network sometime fails
   "appPort": [8080],
-
-  "features": {
-    "ghcr.io/devcontainers/features/java:1": {
-      "version": "19",
-      "jdkDistro": "zulu",
-      "installMaven": true,
-      "mavenVersion": "3.8.1"
-    }
-  },
 
   // Install extensions
   "extensions": [
