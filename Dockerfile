@@ -2,7 +2,7 @@
 #checkov:skip=CKV_DOCKER_2: No healthcheck is needed
 FROM azul/zulu-openjdk-alpine:11.0.16 AS base
 
-RUN apt-get -qq -y install \
+RUN sudo apt -qq -y install \
     curl \
     wget \
     unzip \
