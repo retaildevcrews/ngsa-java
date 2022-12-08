@@ -1,6 +1,9 @@
 # ----- Base Java - Check Dependencies ----
 #checkov:skip=CKV_DOCKER_2: No healthcheck is needed
 FROM azul/zulu-openjdk-alpine:11.0.16 AS base
+
+RUN curl -s https://get.sdkman.io | bash
+
 WORKDIR /app
 ARG MAVEN_VERSION=3.6.3
 

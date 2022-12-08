@@ -8,6 +8,8 @@
 
 FROM ghcr.io/cse-labs/k3d:latest
 
+RUN curl -s https://get.sdkman.io | bash
+
 # use scripts from: https://github.com/microsoft/vscode-dev-containers/tree/main/script-library
 # RUN /bin/bash /scripts/java-debian.sh
 # RUN /bin/bash /scripts/maven-debian.sh
