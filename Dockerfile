@@ -1,19 +1,6 @@
 # ----- Base Java - Check Dependencies ----
 #checkov:skip=CKV_DOCKER_2: No healthcheck is needed
 FROM azul/zulu-openjdk-alpine:11.0.16 AS base
-
-RUN apk update
-RUN apk upgrade
-
-RUN apk install unzip 
-RUN apk install zip 
-
-RUN apk update
-RUN apk upgrade
-
-RUN wget "https://get.sdkman.io" | bash
-RUN source "$HOME/.sdkman/bin/sdkman-init.sh"
-
 WORKDIR /app
 ARG MAVEN_VERSION=3.6.3
 
