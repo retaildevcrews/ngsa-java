@@ -4,7 +4,7 @@ FROM azul/zulu-openjdk-alpine:11.0.16 AS base
 
 RUN apk update && apk upgrade && apk add --no-cache bash git openssh
 
-RUN apt -qq -y install \
+RUN apt-get -qq -y install \
     curl \
     wget \
     unzip \
