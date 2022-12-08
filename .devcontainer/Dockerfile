@@ -11,16 +11,13 @@ FROM ghcr.io/cse-labs/k3d:latest
 RUN apk update
 RUN apk upgrade
 
-RUN apk -qq install curl 
-RUN apk -qq install wget 
 RUN apk -qq install unzip 
 RUN apk -qq install zip 
-RUN apk -qq install bash
 
 RUN apk update
 RUN apk upgrade
 
-RUN curl -s "https://get.sdkman.io" | bash
+RUN wget "https://get.sdkman.io" | bash
 RUN source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 # use scripts from: https://github.com/microsoft/vscode-dev-containers/tree/main/script-library
