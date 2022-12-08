@@ -10,8 +10,15 @@ FROM ghcr.io/cse-labs/k3d:latest
 
 RUN apk update
 RUN apk upgrade
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
-RUN apk -qq -y install curl wget unzip zip bash
+
+RUN apk -qq -y install curl 
+RUN apk -qq -y install wget 
+RUN apk -qq -y install unzip 
+RUN apk -qq -y install zip 
+RUN apk -qq -y install bash
+
+RUN apk update
+RUN apk upgrade
 
 RUN curl -s "https://get.sdkman.io" | bash
 RUN source "$HOME/.sdkman/bin/sdkman-init.sh"
