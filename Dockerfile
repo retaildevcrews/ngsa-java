@@ -5,8 +5,8 @@ FROM azul/zulu-openjdk-alpine:11.0.16 AS base
 RUN apk update
 RUN apk upgrade
 
-RUN apk -qq install unzip 
-RUN apk -qq install zip 
+RUN apk install unzip 
+RUN apk install zip 
 
 RUN apk update
 RUN apk upgrade

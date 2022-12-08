@@ -11,8 +11,8 @@ FROM ghcr.io/cse-labs/k3d:latest
 RUN apk update
 RUN apk upgrade
 
-RUN apk -qq install unzip 
-RUN apk -qq install zip 
+RUN apk install unzip 
+RUN apk install zip 
 
 RUN apk update
 RUN apk upgrade
