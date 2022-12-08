@@ -31,7 +31,7 @@
     "ghcr.io/devcontainers/features/java:1": {
       "version": "19",
       "jdkDistro": "zulu",
-      "installers": ["maven","jdk:zulu:19"],
+      "installMaven": true,
       "mavenVersion": "3.8.1"
     }
   },
