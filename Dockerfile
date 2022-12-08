@@ -4,7 +4,7 @@ FROM azul/zulu-openjdk-alpine:11.0.16 AS base
 
 RUN apk update 
 RUN apk upgrade 
-RUN apk add --no-cache bash apt-utils curl wget unzip zip
+RUN apk add --no-cache bash curl wget unzip zip
 
 RUN wget https://get.sdkman.io | bash
 RUN source "$HOME/.sdkman/bin/sdkman-init.sh"
