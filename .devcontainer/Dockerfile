@@ -12,13 +12,13 @@ FROM ghcr.io/cse-labs/k3d:latest
 # RUN /bin/bash /scripts/java-debian.sh
 # RUN /bin/bash /scripts/maven-debian.sh
 
-# COPY installJava.sh installJava.sh
+ COPY installJava.sh installJava.sh
 
-# RUN chmod +x installJava.sh
+ RUN chmod +x installJava.sh
 
-# RUN ./installJava.sh
+ RUN ./installJava.sh
 
-# RUN install.sh java 19-zulu /usr/local/sdkman/
+ RUN install.sh java 19-zulu /usr/local/sdkman/
 
 # some images require specific values
 ARG USERNAME=vscode
