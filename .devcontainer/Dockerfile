@@ -8,29 +8,5 @@
 
 FROM ghcr.io/cse-labs/k3d:latest
 
-# RUN apk update
-# RUN apk upgrade
-
-# RUN apk install unzip 
-# RUN apk install zip 
-
-# RUN apk update
-# RUN apk upgrade
-
-# RUN wget "https://get.sdkman.io" | bash
-# RUN source "$HOME/.sdkman/bin/sdkman-init.sh"
-
-# use scripts from: https://github.com/microsoft/vscode-dev-containers/tree/main/script-library
-# RUN /bin/bash /scripts/java-debian.sh
-# RUN /bin/bash /scripts/maven-debian.sh
-
-#   COPY installJava.sh installJava.sh
-
-#   RUN chmod +x installJava.sh
-
-#   RUN ./installJava.sh
-
-#   RUN install.sh java 11.0.16.1-zulu /usr/local/sdkman/
-
 # some images require specific values
 ARG USERNAME=vscode
