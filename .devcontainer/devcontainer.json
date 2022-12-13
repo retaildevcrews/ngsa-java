@@ -5,10 +5,10 @@
   "overrideCommand": false,
   "features": {
     "ghcr.io/devcontainers/features/java:1": {
-      "version": "11.0.16.1",
+      "version": "11",
       "jdkDistro": "zulu",
       "installMaven": true,
-      "mavenVersion": "3.6.3"
+      "mavenVersion": "3"
     }
   },
   // Set container specific settings
