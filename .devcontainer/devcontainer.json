@@ -8,7 +8,7 @@
       "version": "11",
       "jdkDistro": "zulu",
       "installMaven": true,
-      "mavenVersion": "3"
+      "mavenVersion": "3.8.6"
     }
   },
   // Set container specific settings
