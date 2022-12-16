@@ -85,9 +85,9 @@ Follow the steps below:
     az account set -s 'SUBSCRIPTION-NAME'
     
     # Get your own Principal ID (replace the email with yours)
-    export PRINCIPAL=$(az ad user show --id YOUR-MSFT-ID@microsoft.com --query 'id' -o tsv)
-    export COSMOS_RG=rg-ngsa-asb-dev-cosmos
-    export COSMOS_NAME=ngsa-asb-dev-cosmos
+    export PRINCIPAL=$(az ad signed-in-user show --query 'id' -o tsv)
+    export COSMOS_RG=rg-wcnp-dev-cosmos
+    export COSMOS_NAME=wcnp-dev-cosmos
     export COSMOS_SCOPE=$(az cosmosdb show -g $COSMOS_RG -n $COSMOS_NAME --query id -o tsv)
     
     # Add yourself to CosmosDB SQL Access
