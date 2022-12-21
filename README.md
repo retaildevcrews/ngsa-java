@@ -82,8 +82,12 @@ Follow the steps below:
     # Login to azure using default tenant
     az login
     # OR using different tenant `az login --tenant <TENANT-ID>`
+
     # Select proper subscription/tenant using 
     az account set -s 'SUBSCRIPTION-NAME'
+    
+    #Set the Environmental Class Variable for AZURE_TENANT_ID
+    export AZURE_TENANT_ID='<TENANT-ID>'
     
     # Get your own Principal ID (replace the email with yours)
     export PRINCIPAL=$(az ad signed-in-user show --query 'id' -o tsv)
