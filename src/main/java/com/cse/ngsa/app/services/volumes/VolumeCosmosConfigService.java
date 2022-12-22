@@ -62,7 +62,7 @@ public class VolumeCosmosConfigService implements IVolumeCosmosConfigService {
 
     if (Files.exists(filePath)) {
       try {
-        val = new String(Files.readAllBytes(filePath));
+        val = new String(Files.readAllBytes(filePath)).strip();
       } catch (IOException ex) {
         logger.error(ex.getMessage());
       }
