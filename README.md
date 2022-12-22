@@ -79,15 +79,20 @@ Follow the steps below:
 1. Add your AAD user to CosmosDB (in terminal):
 
     ```bash
-    # Login to azure
+    # Login to azure using default tenant
     az login
+    # OR using different tenant `az login --tenant <TENANT-ID>`
+
     # Select proper subscription/tenant using 
     az account set -s 'SUBSCRIPTION-NAME'
     
+    #Set the Environmental Class Variable for AZURE_TENANT_ID
+    export AZURE_TENANT_ID='<TENANT-ID>'
+    
     # Get your own Principal ID (replace the email with yours)
     export PRINCIPAL=$(az ad signed-in-user show --query 'id' -o tsv)
-    export COSMOS_RG=rg-wcnp-dev-cosmos
-    export COSMOS_NAME=wcnp-dev-cosmos
+    export COSMOS_RG=<Your-COSMOSDB-Resource-Group>
+    export COSMOS_NAME=<Your-COSMOSDB-Name>
     export COSMOS_SCOPE=$(az cosmosdb show -g $COSMOS_RG -n $COSMOS_NAME --query id -o tsv)
     
     # Add yourself to CosmosDB SQL Access
