@@ -1,6 +1,7 @@
 package com.cse.ngsa.app;
 
 import com.cse.ngsa.app.utils.CommonUtils;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.boot.SpringApplication;
@@ -22,6 +23,7 @@ public class NgsaJavaApplication {
   public static void main(String[] args) {
 
     try {
+      Dotenv.configure().systemProperties().load();
       SpringApplication.run(NgsaJavaApplication.class, args);
       CommonUtils.handleCliOptions(args);
     } catch (Exception ex) {
