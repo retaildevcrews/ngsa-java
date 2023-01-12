@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.7.2</version>
+    <version>2.7.6</version>
     <relativePath/> <!-- lookup parent from repository -->
 </parent>
   <reporting>
@@ -18,7 +18,7 @@
   </reporting>
   <groupId>com.cse</groupId>
   <artifactId>ngsa</artifactId>
-  <version>1.1.1</version>
+  <version>1.2.0</version>
   <name>ngsa-java</name>
   <description>NGSA Java with Spring Boot</description>
   <properties>
@@ -57,17 +57,17 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-webflux</artifactId>
-      <version>2.7.2</version>
+      <version>2.7.6</version>
     </dependency>
     <dependency>
       <groupId>io.projectreactor.netty</groupId>
       <artifactId>reactor-netty-core</artifactId>
-      <version>1.0.22</version>
+      <version>1.0.24</version>
     </dependency>
     <dependency>
       <groupId>io.projectreactor.netty</groupId>
       <artifactId>reactor-netty-http</artifactId>
-      <version>1.0.22</version>
+      <version>1.0.24</version>
     </dependency>
     <dependency>
       <groupId>com.microsoft.azure</groupId>
@@ -110,7 +110,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-validation</artifactId>
-      <version>2.7.2</version>
+      <version>2.7.6</version>
     </dependency>
     <dependency>
       <groupId>com.microsoft.azure</groupId>
@@ -141,7 +141,7 @@
     <dependency>
       <groupId>com.azure</groupId>
       <artifactId>azure-spring-data-cosmos</artifactId>
-      <version>3.25.0</version>
+      <version>3.30.0</version>
     </dependency>
     <dependency>
       <groupId>io.projectreactor</groupId>

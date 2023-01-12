@@ -1,31 +1,30 @@
 {
   "name": "ngsa-java",
   "build": { "dockerfile": "Dockerfile" },
-	"runArgs": [
-		"--init",
-		"--privileged"
-	],
-	"overrideCommand": false,
-
+  "runArgs": ["--init", "--privileged"],
+  "overrideCommand": false,
+  "features": {
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "11",
+      "jdkDistro": "zulu",
+      "installMaven": true,
+      "mavenVersion": "3.8.6"
+    }
+  },
   // Set container specific settings
-	"settings": {
-		"terminal.integrated.defaultProfile.linux": "zsh",
+  "settings": {
+    "terminal.integrated.defaultProfile.linux": "zsh",
     "java.home": "/usr/local/sdkman/candidates/java/current/",
     "java.jdt.ls.java.home": "/usr/local/sdkman/candidates/java/current/",
     "java.configuration.updateBuildConfiguration": "interactive",
-    "java.completion.importOrder": [
-        "",
-        "javax",
-        "java",
-        "#"
-      ],
+    "java.completion.importOrder": ["", "javax", "java", "#"],
     "files.exclude": {
-        "**/.classpath": true,
-        "**/.project": true,
-        "**/.settings": true,
-        "**/.factorypath": true
+      "**/.classpath": true,
+      "**/.project": true,
+      "**/.settings": true,
+      "**/.factorypath": true
     }
-	},
+  },
 
   "remoteUser": "vscode",
 
