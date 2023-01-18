@@ -87,7 +87,7 @@
     <dependency>
       <groupId>com.azure</groupId>
       <artifactId>azure-identity</artifactId>
-      <version>1.7.0</version>
+      <version>1.7.3</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -281,6 +281,9 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
           <skip>false</skip>
+          <environmentVariables>
+            <AZURE_TENANT_ID></AZURE_TENANT_ID>
+          </environmentVariables>
         </configuration>
         <executions>
           <execution>

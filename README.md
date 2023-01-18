@@ -79,15 +79,12 @@ Follow the steps below:
 1. Add your AAD user to CosmosDB (in terminal):
 
     ```bash
-    # Login to azure using default tenant
-    az login
-    # OR using different tenant `az login --tenant <TENANT-ID>`
+    # Login to azure using specific tenant
+    az login --tenant <TENANT-ID>
+    # Or if you only have one tenant `az login`
 
     # Select proper subscription/tenant using 
-    az account set -s 'SUBSCRIPTION-NAME'
-    
-    #Set the Environmental Class Variable for AZURE_TENANT_ID
-    export AZURE_TENANT_ID='<TENANT-ID>'
+    az account set -s '<SUBSCRIPTION-NAME>'
     
     # Get your own Principal ID (replace the email with yours)
     export PRINCIPAL=$(az ad signed-in-user show --query 'id' -o tsv)
@@ -104,6 +101,18 @@ Follow the steps below:
     > Google or use `dig +short myip.opendns.com @resolver1.opendns.com` or `curl ifconfig.me` to find your Public IP
 
 2. Goto [src/main/resources/application.properties](./src/main/resources/application.properties) and use `cosmos-auth-type=ManagedIdentity`
+
+3. In `pom.xml` file under `spring-boot-maven-plugin` plugin, set the <AZURE_TENANT_ID> xml value to your `<TENANT-ID>`.
+
+    ```xml
+    ...
+    <environmentVariables>
+      <AZURE_TENANT_ID>TENANT-ID</AZURE_TENANT_ID>
+    </environmentVariables>
+    ...
+    ```
+
+    > To find your tenant ID run, `az account show --query tenantId -o tsv`
 
 ### Testing the application
 
