@@ -13,30 +13,20 @@ import com.cse.ngsa.app.services.configuration.IConfigurationService;
 import java.text.MessageFormat;
 import java.time.Duration;
 import kotlin.NotImplementedError;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @EnableCosmosRepositories(basePackages = "com.microsoft.azure.ngsa.app.*")
-@PropertySource("classpath:application.properties")
-@ConfigurationProperties(prefix = "azure-config")
 public class CosmosDbConfig extends AbstractCosmosConfiguration {
 
   private static final Logger logger = LogManager.getLogger(CosmosConfig.class);
 
   protected IConfigurationService configurationService;
-
-  @Getter
-  @Setter
-  private String azureTenantId;
 
   /**
    * CosmosDBConfig.
@@ -62,13 +52,7 @@ public class CosmosDbConfig extends AbstractCosmosConfiguration {
       CosmosClientBuilder builder = new CosmosClientBuilder().endpoint(uri);
       String cosmosAuthType = ngsaConfig.ngsaConfigProperties().getCosmosAuthType();
       if (cosmosAuthType.equals(Constants.COSMOS_AUTH_TYPE_MI)) {
-        DefaultAzureCredentialBuilder credBuilder = new DefaultAzureCredentialBuilder();
-
-        // Add the tenant id if specified
-        if (!azureTenantId.isBlank()) {
-          credBuilder.tenantId(azureTenantId);
-        }
-        builder = builder.credential(credBuilder.build());
+        builder = builder.credential(new DefaultAzureCredentialBuilder().build());
       } else if (cosmosAuthType.equals(Constants.COSMOS_AUTH_TYPE_SECRETS)) {
         String key = configurationService.getConfigEntries().getCosmosKey();
         builder = builder.key(key);
