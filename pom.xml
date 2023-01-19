@@ -24,6 +24,8 @@
   <properties>
     <java.version>11</java.version>
     <azure.version>2.2.0</azure.version>
+    <!--Netty dep version is controlled by Spring: https://stackoverflow.com/a/74873775/2129019-->
+    <netty.version>4.1.86.Final</netty.version>
   </properties>
   <repositories>
     <repository>
@@ -62,12 +64,12 @@
     <dependency>
       <groupId>io.projectreactor.netty</groupId>
       <artifactId>reactor-netty-core</artifactId>
-      <version>1.0.24</version>
+      <version>1.1.2</version>
     </dependency>
     <dependency>
       <groupId>io.projectreactor.netty</groupId>
       <artifactId>reactor-netty-http</artifactId>
-      <version>1.0.24</version>
+      <version>1.1.2</version>
     </dependency>
     <dependency>
       <groupId>com.microsoft.azure</groupId>
