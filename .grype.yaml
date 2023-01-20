@@ -2,6 +2,15 @@
 
 ignore:
   # False positives for netty, spring-boot vulns (https://github.com/anchore/grype/issues/431)
+  # Packages are updated to the latest version as of 08/11/22
+  - package:
+      name: reactor-netty-core
+      version: 1.1.2
+      type: java-archive
+  - package:
+      name: reactor-netty-http
+      version: 1.1.2
+      type: java-archive
   - package:
       name: spring-core
       version: 5.3.24
