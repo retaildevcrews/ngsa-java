@@ -10,7 +10,7 @@ NGSA Java App is inteneded for platform testing and monitoring in one or many Ku
 - Docker CLI ([download](https://docs.docker.com/install/))
 - Java 11+ ([download](https://www.azul.com/downloads/?package=jdk))
 - Maven ([download](https://maven.apache.org/download.cgi))
-- Cosmos DB setup (follow the steps in the [imdb readme](https://github.com/retaildevcrews/imdb.git) )
+- Cosmos DB setup (follow the steps in the [imdb readme](https://github.com/cse-labs/imdb) )
 - Visual Studio Code (optional) ([download](https://code.visualstudio.com/download))
 
 ## Ngsa-java Usage
@@ -25,7 +25,7 @@ Usage:
         export [env var]=<value>
         mvn clean spring-boot:run
 
-Options: 
+Options:
         --help                                               Show help and usage information
         --version                                            Shows version information
         --dry-run                                            Validates configuration
@@ -33,13 +33,15 @@ Options:
         --prometheus=<true|false>                            Enable prometheus metrics [default: false]
         --zone                                               Zone for log [default: dev]
         --region                                             Region for log [default: dev]
-        --secrets-volume                                     Secrets Volume Path from project root directory [default: secrets]   
-              
-Env vars:                           
+        --secrets-volume                                     Secrets Volume Path from project root directory [default: secrets]
+        --cosmos-auth-type=<ManagedIdentity|SecretKey>       CosmosDB Auth type [default: SecretKey]
+Env vars:
         PROMETHEUS=<true|false>
         ZONE
         REGION
-        SECRETS_VOLUME                              
+        SECRETS_VOLUME
+        COSMOS_AUTH_TYPE=<ManagedIdentity|SecretKey>
+
 ```
 
 ## Run the Application
@@ -50,41 +52,67 @@ Env vars:
 
 1. Set up Codespaces from the GitHub repo
 
-2. Create CosmosKey file within the secrets folder
+2. Write CosmosDB URL in [secrets/CosmosUrl](./secrets/CosmosUrl)
 
-3. Input credentials in CosmosUrl and CosmosKey files within secrets folder
+3. Create `CosmosKey` file in [./secrets](./secrets) folder and write the primary key
 
-4. Run the application
-
-```bash
-
-# run the application
-mvn clean spring-boot:run
-
-```
-
-### Using bash shell
-
-> This will work from a terminal in Visual Studio Codespaces as well
-
-1. Clone the repo
-
-> git clone <https://github.com/retaildevcrews/ngsa-java.git>
-
-2. Create CosmosKey file within secrets folder
-
-3. Input credentials in CosmosUrl and CosmosKey files within secrets folder
+   > [Optional]: You can also use Azure CLI to authenticate to CosmosDB. See [this section](#alternative-to-secret-key-cosmosdb-access-using-azure-cli)
 
 4. Run the application
+    - From terminal:
 
-```bash
+        ```bash
+        # run the application
+        mvn clean spring-boot:run
+        ```
 
-# run the application
-mvn clean spring-boot:run
+    - Codespace/VSCode IDE
+       - Press F5 or select `Run/Start Debugging`
+    > wait for `Netty started on port(s): 8080`
 
-```
+### [Alternative to secret key] CosmosDB access using Azure CLI
 
-wait for `Netty started on port(s): 8080`
+We can use Azure CLI to authenticate ourselves to use CosmosDB without using Secret Key for Local Development.
+
+Follow the steps below:
+
+1. Add your AAD user to CosmosDB (in terminal):
+
+    ```bash
+    # Login to azure using specific tenant
+    az login --tenant <TENANT-ID>
+    # Or if you only have one tenant `az login`
+
+    # Select proper subscription/tenant using 
+    az account set -s '<SUBSCRIPTION-NAME>'
+    
+    # Get your own Principal ID (replace the email with yours)
+    export PRINCIPAL=$(az ad signed-in-user show --query 'id' -o tsv)
+    export COSMOS_RG=<Your-COSMOSDB-Resource-Group>
+    export COSMOS_NAME=<Your-COSMOSDB-Name>
+    export COSMOS_SCOPE=$(az cosmosdb show -g $COSMOS_RG -n $COSMOS_NAME --query id -o tsv)
+    
+    # Add yourself to CosmosDB SQL Access
+    az cosmosdb sql role assignment create -g $COSMOS_RG --account-name $COSMOS_NAME --role-definition-id 00000000-0000-0000-0000-000000000002 --principal-id $PRINCIPAL --scope $COSMOS_SCOPE
+    ```
+
+    > If you're not using Codespace, you also need to add your network's Public IP address to CosmosDB in Azure Portal->CosmosDB->Networking->[FireWall]
+    >
+    > Google or use `dig +short myip.opendns.com @resolver1.opendns.com` or `curl ifconfig.me` to find your Public IP
+
+2. Goto [src/main/resources/application.properties](./src/main/resources/application.properties) and use `cosmos-auth-type=ManagedIdentity`
+
+3. In `pom.xml` file under `spring-boot-maven-plugin` plugin, set the <AZURE_TENANT_ID> xml value to your `<TENANT-ID>`.
+
+    ```xml
+    ...
+    <environmentVariables>
+      <AZURE_TENANT_ID>TENANT-ID</AZURE_TENANT_ID>
+    </environmentVariables>
+    ...
+    ```
+
+    > To find your tenant ID run, `az account show --query tenantId -o tsv`
 
 ### Testing the application
 
@@ -116,9 +144,9 @@ mvn test -Dmaven.test.skip=false
 
 ```
 
-## Deploying With Local Cluster
+## Deploying in Local Cluster
 
-Ensure to [create secrets](#using-bash-shell) before running the following commands.
+Ensure to [create CosmosUrl and CosmosKey (secret key) file](#using-visual-studio-codespaces) before running the following commands.
 
 ```bash
 # delete cluster if exists, create cluster, and build/deploy application

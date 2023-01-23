@@ -1,6 +1,7 @@
 package com.cse.ngsa.app.services.volumes;
 
 import com.cse.ngsa.app.Constants;
+import com.cse.ngsa.app.models.NgsaConfig;
 import com.cse.ngsa.app.utils.CommonUtils;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,11 +11,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class VolumeCosmosConfigService implements IVolumeCosmosConfigService {
   private static final Logger logger = LogManager.getLogger(VolumeCosmosConfigService.class);
+  @Autowired private NgsaConfig ngsaConfig;
   private static final Pattern cosmosNamePat = 
       Pattern.compile("^https:\\/\\/(.+)\\.documents\\.azure\\.com.*");
 
@@ -27,7 +30,10 @@ public class VolumeCosmosConfigService implements IVolumeCosmosConfigService {
     cosConf.setVolume(volume);
     cosConf.setCosmosCollection(getCosmosConfigFromFile(volume, Constants.COSMOS_COLLECTION_KEYNAME));
     cosConf.setCosmosDatabase(getCosmosConfigFromFile(volume, Constants.COSMOS_DATABASE_KEYNAME));
-    cosConf.setCosmosKey(getCosmosConfigFromFile(volume, Constants.COSMOS_KEY_KEYNAME));
+    var cosmosAuthType = ngsaConfig.ngsaConfigProperties().getCosmosAuthType();
+    if (cosmosAuthType.equals(Constants.COSMOS_AUTH_TYPE_SECRETS)) {
+      cosConf.setCosmosKey(getCosmosConfigFromFile(volume, Constants.COSMOS_KEY_KEYNAME));
+    }
     cosConf.setCosmosUrl(getCosmosConfigFromFile(volume, Constants.COSMOS_URL_KEYNAME));
 
     Matcher m = cosmosNamePat.matcher(cosConf.getCosmosUrl());
@@ -56,7 +62,7 @@ public class VolumeCosmosConfigService implements IVolumeCosmosConfigService {
 
     if (Files.exists(filePath)) {
       try {
-        val = new String(Files.readAllBytes(filePath));
+        val = new String(Files.readAllBytes(filePath)).strip();
       } catch (IOException ex) {
         logger.error(ex.getMessage());
       }
@@ -84,8 +90,10 @@ public class VolumeCosmosConfigService implements IVolumeCosmosConfigService {
       logger.error("CosmosDatabase cannot be empty");
       System.exit(-1);
     }
-
-    if (CommonUtils.isNullWhiteSpace(cosConfigs.getCosmosKey())) {
+    
+    String cosmosAuthType = ngsaConfig.ngsaConfigProperties().getCosmosAuthType();
+    if (cosmosAuthType.equals(Constants.COSMOS_AUTH_TYPE_SECRETS)
+        && CommonUtils.isNullWhiteSpace(cosConfigs.getCosmosKey())) {
       logger.error("CosmosKey cannot be empty");
       System.exit(-1);
     }
@@ -94,7 +102,7 @@ public class VolumeCosmosConfigService implements IVolumeCosmosConfigService {
       logger.error("CosmosUrl cannot be empty");
       System.exit(-1);
     }
-    
+
     String cosmosUrl = cosConfigs.getCosmosUrl().toLowerCase(Locale.ROOT);
     
     Matcher m = cosmosNamePat.matcher(cosConfigs.getCosmosUrl());
@@ -104,8 +112,8 @@ public class VolumeCosmosConfigService implements IVolumeCosmosConfigService {
       logger.error("Invalid value for CosmosUrl: " + cosmosUrl);
       System.exit(-1);
     }
-    
-    if (cosConfigs.getCosmosKey().length() < 64) {
+
+    if (cosmosAuthType.equals(Constants.COSMOS_AUTH_TYPE_SECRETS) && cosConfigs.getCosmosKey().length() < 64) {
       logger.error("Invalid value for CosmosKey");
       System.exit(-1);
     }

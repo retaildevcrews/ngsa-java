@@ -24,6 +24,8 @@
   <properties>
     <java.version>11</java.version>
     <azure.version>2.2.0</azure.version>
+    <!--Netty dep version is controlled by Spring: https://stackoverflow.com/a/74873775/2129019-->
+    <netty.version>4.1.86.Final</netty.version>
   </properties>
   <repositories>
     <repository>
@@ -62,12 +64,12 @@
     <dependency>
       <groupId>io.projectreactor.netty</groupId>
       <artifactId>reactor-netty-core</artifactId>
-      <version>1.0.24</version>
+      <version>1.1.2</version>
     </dependency>
     <dependency>
       <groupId>io.projectreactor.netty</groupId>
       <artifactId>reactor-netty-http</artifactId>
-      <version>1.0.24</version>
+      <version>1.1.2</version>
     </dependency>
     <dependency>
       <groupId>com.microsoft.azure</groupId>
@@ -83,6 +85,12 @@
       <groupId>com.microsoft.azure</groupId>
       <artifactId>adal4j</artifactId>
       <version>1.6.7</version>
+    </dependency>
+    <dependency>
+      <groupId>com.azure</groupId>
+      <artifactId>azure-identity</artifactId>
+      <version>1.7.3</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>net.minidev</groupId>
@@ -275,6 +283,9 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
           <skip>false</skip>
+          <environmentVariables>
+            <AZURE_TENANT_ID></AZURE_TENANT_ID>
+          </environmentVariables>
         </configuration>
         <executions>
           <execution>

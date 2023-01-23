@@ -5,11 +5,11 @@ ignore:
   # Packages are updated to the latest version as of 08/11/22
   - package:
       name: reactor-netty-core
-      version: 1.0.24
+      version: 1.1.2
       type: java-archive
   - package:
       name: reactor-netty-http
-      version: 1.0.24
+      version: 1.1.2
       type: java-archive
   - package:
       name: spring-core
@@ -19,4 +19,7 @@ ignore:
   # latest json-smart installed (2.4.8) compared to 1.3.2 triggering vuln
   - package:
       name: json-smart
+      type: java-archive
+  - package:
+      name: snakeyaml
       type: java-archive
