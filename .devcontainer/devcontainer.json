@@ -14,8 +14,8 @@
   // Set container specific settings
   "settings": {
     "terminal.integrated.defaultProfile.linux": "zsh",
-    "java.home": "/usr/local/sdkman/candidates/java/current/",
-    "java.jdt.ls.java.home": "/usr/local/sdkman/candidates/java/current/",
+    "java.home": "/usr/local/sdkman/candidates/java/current/bin/java/",
+    "java.jdt.ls.java.home": "/usr/local/sdkman/candidates/java/current/bin/java/",
     "java.configuration.updateBuildConfiguration": "interactive",
     "java.completion.importOrder": ["", "javax", "java", "#"],
     "files.exclude": {
