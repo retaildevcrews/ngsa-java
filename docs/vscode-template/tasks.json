@@ -21,8 +21,8 @@
       "command": [
         "mvn",
         "clean", // coz: often mvn fails to detect changed source
-        "compile",
-        "-Dpmd.skip=true" // without pmd check
+        "compile"
+        // "-Dpmd.skip=true" // without pmd checkw
         // "-Dcheckstyle.skip=true" // without style check
       ],
       "group": {
