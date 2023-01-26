@@ -67,7 +67,10 @@ Env vars:
         ```
 
     - Codespace/VSCode IDE
-       - Press F5 or select `Run/Start Debugging`
+      - Wait for the Java Projects to load
+        - Goto File Browser (Ctrl+B)
+        - Expand Java Projects at the bottom, and wait for `ngsa` project to be available
+      - Press F5 or select `Run/Start Debugging`
     > wait for `Netty started on port(s): 8080`
 
 ### [Alternative to secret key] CosmosDB access using Azure CLI
