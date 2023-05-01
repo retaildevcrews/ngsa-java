@@ -3,6 +3,7 @@ package com.cse.ngsa.app.middleware;
 import brave.Span;
 import brave.Tracer;
 import brave.propagation.TraceContext;
+import com.cse.ngsa.app.config.BuildConfig;
 import com.cse.ngsa.app.models.NgsaConfig;
 import com.cse.ngsa.app.services.configuration.IConfigurationService;
 import com.cse.ngsa.app.utils.CpuMonitor;
@@ -22,6 +23,7 @@ import org.apache.logging.log4j.core.config.Configurator;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -35,10 +37,12 @@ public class RequestLogger implements WebFilter {
   private static final Logger logger =   LogManager.getLogger(RequestLogger.class);
 
   MeterRegistry promRegistry;
+  @Autowired ApplicationContext context;
   @Autowired CpuMonitor cpuMonitor;
   @Autowired NgsaConfig ngsaConfig;
   @Autowired private IConfigurationService cfgSvc;
   @Autowired Tracer tracer;
+  @Value("${service.name}") private String serviceName;
   @Value("${region:dev}") private String ngsaRegion;
   @Value("${zone:dev}") private String ngsaZone;
   @Value("${request-log-level:INFO}") private String ngsaRequestLogger;
@@ -62,7 +66,7 @@ public class RequestLogger implements WebFilter {
    *   the results to console.
   */
   @Override
-  public Mono<Void> filter(ServerWebExchange serverWebExchange, 
+  public Mono<Void> filter(ServerWebExchange serverWebExchange,
       WebFilterChain webFilterChain) {
     // get request metadata
     String requestAddress = getRequestAddress(
@@ -88,21 +92,25 @@ public class RequestLogger implements WebFilter {
 
       JSONObject logData = new JSONObject();
       var currentRequest = serverWebExchange.getRequest();
-      String userAgent = currentRequest.getHeaders()
-          .getOrDefault("User-Agent", Arrays.asList("")).get(0);
-      // compute request duration and get status code
-      long duration = System.currentTimeMillis() - startTime;
+
       logData.put("Date", Instant.now().toString());
+      logData.put("AppId", serviceName + context.getBean(BuildConfig.class).getBuildVersion());
       logData.put("LogName", "Ngsa.RequestLog");
-      logData.put("StatusCode", statusCode);
+      String userAgent = currentRequest.getHeaders().getOrDefault("User-Agent", Arrays.asList("")).get(0);
+      logData.put("UserAgent", userAgent);
+      logData.put("HTTPResponse", statusCode);
+      if (statusCode >= 400) {
+        logData.put("HTTPError", statusCode);
+      }
+      // compute request duration
+      long duration = System.currentTimeMillis() - startTime;
       logData.put("TTFB", duration); // Essentially ttfb in Java's case is the same as duraion
-      logData.put("Duration", duration);
+      logData.put("ResponseLatency", duration);
       logData.put("Verb", currentRequest.getMethod().toString());
       logData.put("Path", pathQueryString);
       InetSocketAddress host = currentRequest.getHeaders().getHost();
       logData.put("Host", host == null ? "" : host.toString());
       logData.put("ClientIP", requestAddress);
-      logData.put("UserAgent", userAgent);
 
       // Get Tracing Information
       Set<String> headerKeys = serverWebExchange.getRequest().getHeaders().keySet();
@@ -158,6 +166,8 @@ public class RequestLogger implements WebFilter {
       logData.put("Zone", ngsaZone);
       logData.put("Region", ngsaRegion);
       logData.put("CosmosName", cfgSvc.getConfigEntries().getCosmosName());
+      logData.put("%CPU", cpuMonitor.getCpuUsagePercent());
+
       // log results to console
       logger.info(logData.toString());
     });
